@@ -37,12 +37,9 @@ public class User {
 	    if (obj == null || getClass() != obj.getClass()) {
 	        return false;
 	    }
-	    User other = (User) obj;
-	    if (!Objects.equals(this.email, other.email) || !Objects.equals(this.password, other.password)) {
-	        return false;
-	    }
 
-	    return true;
+	    User other = (User) obj;
+	    return Objects.equals(this.email, other.email) && Objects.equals(this.password, other.password);
 	}
 	
 }
