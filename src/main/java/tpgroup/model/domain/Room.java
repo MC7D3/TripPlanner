@@ -1,4 +1,4 @@
-package tpgroup.model;
+package tpgroup.model.domain;
 
 import java.util.Set;
 

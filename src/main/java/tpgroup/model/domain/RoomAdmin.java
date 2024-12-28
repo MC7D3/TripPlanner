@@ -1,4 +1,4 @@
-package tpgroup.model;
+package tpgroup.model.domain;
 
 public class RoomAdmin extends RoomMember{
 	public RoomAdmin(String email, String password) {
