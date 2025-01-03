@@ -4,12 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import tpgroup.model.LoginCredBean;
+import tpgroup.model.exception.InvalidBeanParamException;
+
 import tpgroup.controller.LoginController;
 
 public class LoginFormState extends CliViewState{
 	BufferedReader in;
 	
-	public LoginFormState(CliViewImpl sm) {
+	public LoginFormState(CliView sm) {
 		super(sm);
 		in = new BufferedReader(new InputStreamReader(System.in));
 	}
@@ -25,19 +28,29 @@ public class LoginFormState extends CliViewState{
 
 	@Override
 	public void show() {
+		CliViewState nextState = new LoggedMenuState(this.machine);
+		Boolean result;
+		LoginCredBean credentials = null;
 		do{
+			result = false;
 			try {
+				System.out.println("NOTE: if u want to go back keep both field blank\n");
 				System.out.print("email:");
 				String email = in.readLine();
 				System.out.print("password:");
 				String password = pwdRead();
-			} catch (IOException e) {
-				//TODO: handle exception crea expetion personalizzate;
-				System.err.println("ERROR processing login credentials");
-				System.exit(-1);
+				if(email.isEmpty() && password.isEmpty()){
+					nextState = new UnloggedMenuState(this.machine);
+					break;
+				}
+				credentials = new LoginCredBean(email, password);
+				result = LoginController.validateCredentials(credentials);
+			} catch (IOException | InvalidBeanParamException e) {
+				System.err.println("ERROR: the credentials inserted are incorrect try again");
 			}
-		}while(!LoginController.validateCredentials());
-		this.machine.setState(new LoggedMenuState(this.machine));
+			System.out.println(result? "login succesfull!": "email or password incorrect, try again");
+		}while(!result);
+		this.machine.setState(nextState);
 	}
 	
 }

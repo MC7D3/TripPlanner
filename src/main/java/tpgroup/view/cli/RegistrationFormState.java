@@ -4,10 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import tpgroup.controller.RegistrationController;
+import tpgroup.model.RegistrationCredBean;
+import tpgroup.model.exception.InvalidBeanParamException;
+
 public class RegistrationFormState extends CliViewState{
 	BufferedReader in;
 	
-	public RegistrationFormState(CliViewImpl sm) {
+	public RegistrationFormState(CliView sm) {
 		super(sm);
 		in = new BufferedReader(new InputStreamReader(System.in));
 	}
@@ -23,21 +27,32 @@ public class RegistrationFormState extends CliViewState{
 
 	@Override
 	public void show() {
+		CliViewState nextState = new LoggedMenuState(this.machine);
+		Boolean validCredentials;
+		RegistrationCredBean credentials = null;
 		do{
+			validCredentials = false;
 			try {
+				System.out.println("NOTE: if u want to go back keep all field blank\n");
 				System.out.print("email:");
 				String email = in.readLine();
 				System.out.print("password:");
 				String password = pwdRead();
-				System.out.print("confirm password:");
-				String confirmPwd = pwdRead();
+				System.out.print("comfirm password:");
+				String confPassword = pwdRead();
+				if(email.isEmpty() && password.isEmpty() && confPassword.isEmpty()){
+					nextState = new UnloggedMenuState(this.machine);
+					break;
+				}
+				credentials = new RegistrationCredBean(email, password, confPassword);
+				validCredentials = true;
 			} catch (IOException e) {
-				//TODO: handle exception crea expetion personalizzate;
-				System.err.println("ERROR processing registration credentials");
-				System.exit(-1);
+				System.err.println("ERROR: unable to process inserted credentials");
+			} catch (InvalidBeanParamException e2){
+				System.err.println("ERROR: " + e2.getMessage());
 			}
-		}while(!RegistrationController.validateRegistration());
-		this.machine.setState(new LoggedMenu(this.machine));
+		}while(!validCredentials || !RegistrationController.executeRegistration(credentials));
+		this.machine.setState(nextState);
 	}
 	
 }

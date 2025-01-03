@@ -2,14 +2,15 @@ package tpgroup.view.cli;
 
 public class LoggedMenuState extends CliViewState{
 
-	public LoggedMenuState(CliViewImpl sm) {
+	public LoggedMenuState(CliView sm) {
 		super(sm);
 	}
 
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'show'");
+		System.out.println("im logged great!");
+		System.exit(0);
 	}
 
 }

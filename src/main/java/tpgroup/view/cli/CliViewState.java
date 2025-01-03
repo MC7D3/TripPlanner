@@ -1,9 +1,9 @@
 package tpgroup.view.cli;
 
 public abstract class CliViewState {
-	protected CliViewImpl machine;
+	protected CliView machine;
 
-	CliViewState(CliViewImpl machine){
+	CliViewState(CliView machine){
 		this.machine = machine;
 	}
 
