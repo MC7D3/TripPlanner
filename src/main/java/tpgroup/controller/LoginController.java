@@ -12,7 +12,7 @@ public class LoginController {
 		super();
 	}
 
-	public static Boolean validateCredentials(LoginCredBean credentials){
+	public static boolean validateCredentials(LoginCredBean credentials){
 		try{
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 			User fullCred = userDao.get(new User(credentials.getEmail(), credentials.getPassword()));

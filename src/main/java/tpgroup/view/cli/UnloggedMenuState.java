@@ -34,7 +34,7 @@ public class UnloggedMenuState extends CliViewState{
 		switch(choice){
 			case 1 -> this.machine.setState(new LoginFormState(this.machine));
 			case 2 -> this.machine.setState(new RegistrationFormState(this.machine));
-			case 3 -> System.exit(0);
+			default -> System.exit(0);
 		}
 	}
 	

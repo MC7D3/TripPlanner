@@ -11,7 +11,7 @@ public class RegistrationController {
 		super();
 	}
 	
-	public static Boolean executeRegistration(RegistrationCredBean credentials){
+	public static boolean executeRegistration(RegistrationCredBean credentials){
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		return userDao.add(new User(credentials.getEmail(), credentials.getPassword()));
 	}
