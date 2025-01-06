@@ -17,10 +17,15 @@ public class RegistrationFormState extends CliViewState{
 	}
 
 	private String pwdRead() throws IOException{ //TODO testing funzionalita
-		StringBuilder password = new StringBuilder(); 
-		for(char pwd_char = (char) in.read(); pwd_char != '\n' && ((int) pwd_char) != -1; pwd_char = (char) in.read()){
-			System.out.println("\b*");
-			password.append(pwd_char);
+		StringBuilder password = new StringBuilder();
+		for(int pwd_char = in.read(); pwd_char != '\n' && pwd_char != -1; pwd_char = in.read()){
+			if(pwd_char != '\b'){
+				System.out.print("\b*");
+				password.append((char) pwd_char);
+			}else if(password.length() > 0){
+				password.deleteCharAt(password.length() - 1);
+				System.out.println("\b \b");
+			}
 		}
 		return password.toString();
 	}
@@ -28,7 +33,7 @@ public class RegistrationFormState extends CliViewState{
 	@Override
 	public void show() {
 		CliViewState nextState = new LoggedMenuState(this.machine);
-		Boolean validCredentials;
+		boolean validCredentials;
 		RegistrationCredBean credentials = null;
 		do{
 			validCredentials = false;

@@ -6,12 +6,13 @@ import tpgroup.persistence.DAO;
 import tpgroup.persistence.factory.DAOFactory;
 
 public class RegistrationController {
+
+	private RegistrationController(){
+		super();
+	}
 	
 	public static Boolean executeRegistration(RegistrationCredBean credentials){
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-		if(!userDao.add(new User(credentials.getEmail(), credentials.getPassword()))){
-			return false;
-		}
-		return true; 
+		return userDao.add(new User(credentials.getEmail(), credentials.getPassword()));
 	}
 }

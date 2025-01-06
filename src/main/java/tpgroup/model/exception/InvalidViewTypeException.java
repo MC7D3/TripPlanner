@@ -1,13 +1,13 @@
 package tpgroup.model.exception;
 
 public class InvalidViewTypeException extends Exception{
-	private static final String msg = "The view type provided is invalid";
+	private static final String MSG = "The view type provided is invalid";
 	public InvalidViewTypeException(){
-		super(msg);
+		super(MSG);
 	}
 
 	public InvalidViewTypeException(Throwable cause){
-		super(msg, cause);
+		super(MSG, cause);
 	}
 	
 }

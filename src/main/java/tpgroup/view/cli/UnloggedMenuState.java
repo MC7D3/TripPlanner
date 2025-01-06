@@ -19,6 +19,7 @@ public class UnloggedMenuState extends CliViewState{
 		do{
 			System.out.println("1. login");
 			System.out.println("2. register");
+			System.out.println("3. exit");
 			System.out.print(">");
 			boolean isInt;
 			try {
@@ -27,12 +28,13 @@ public class UnloggedMenuState extends CliViewState{
 			} catch (IOException | NumberFormatException e) {
 				isInt = false;
 			}
-			outOfRange = choice < 1 || choice > 2;
+			outOfRange = choice < 1 || choice > 3;
 			System.err.println(!isInt || outOfRange? "\nERROR selecting menu option\n": "\n");
 		}while(outOfRange);
 		switch(choice){
 			case 1 -> this.machine.setState(new LoginFormState(this.machine));
 			case 2 -> this.machine.setState(new RegistrationFormState(this.machine));
+			case 3 -> System.exit(0);
 		}
 	}
 	
