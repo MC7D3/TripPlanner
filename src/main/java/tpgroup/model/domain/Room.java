@@ -1,5 +1,6 @@
 package tpgroup.model.domain;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public class Room {
 	Plan plan;
  
 	public Room(String name, RoomAdmin admin, Set<RoomMember> members) {
-		Random rand = new Random();
+		Random rand = new SecureRandom();
 		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(100000) + 1); 
 		this.name = name;
 		this.admin = admin;

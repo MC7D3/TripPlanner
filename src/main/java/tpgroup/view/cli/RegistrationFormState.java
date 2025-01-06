@@ -1,33 +1,15 @@
 package tpgroup.view.cli;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import tpgroup.controller.RegistrationController;
 import tpgroup.model.RegistrationCredBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
-public class RegistrationFormState extends CliViewState{
-	BufferedReader in;
-	
+public class RegistrationFormState extends LoginFormState{
+
 	public RegistrationFormState(CliView sm) {
 		super(sm);
-		in = new BufferedReader(new InputStreamReader(System.in));
-	}
-
-	private String pwdRead() throws IOException{ //TODO testing funzionalita
-		StringBuilder password = new StringBuilder();
-		for(int pwd_char = in.read(); pwd_char != '\n' && pwd_char != -1; pwd_char = in.read()){
-			if(pwd_char != '\b'){
-				System.out.print("\b*");
-				password.append((char) pwd_char);
-			}else if(password.length() > 0){
-				password.deleteCharAt(password.length() - 1);
-				System.out.println("\b \b");
-			}
-		}
-		return password.toString();
 	}
 
 	@Override

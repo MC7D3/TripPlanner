@@ -17,7 +17,7 @@ public class LoginFormState extends CliViewState{
 		in = new BufferedReader(new InputStreamReader(System.in));
 	}
 
-	private String pwdRead() throws IOException{ //TODO testing funzionalita
+	protected String pwdRead() throws IOException{ //TODO testing funzionalita
 		StringBuilder password = new StringBuilder();
 		for(int pwd_char = in.read(); pwd_char != '\n' && pwd_char != -1; pwd_char = in.read()){
 			if(pwd_char != '\b'){
