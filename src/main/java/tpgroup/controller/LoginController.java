@@ -1,5 +1,7 @@
 package tpgroup.controller;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import tpgroup.model.LoginCredBean;
 import tpgroup.persistence.factory.DAOFactory;
 import tpgroup.model.domain.User;
@@ -12,14 +14,18 @@ public class LoginController {
 		super();
 	}
 
-	public static boolean validateCredentials(LoginCredBean credentials){
+	public static Boolean validateCredentials(LoginCredBean credentials){
 		try{
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-			User fullCred = userDao.get(new User(credentials.getEmail(), credentials.getPassword()));
-			Session.getInstance().setLogged(fullCred);
+			User fullCred = userDao.get(new User(credentials.getEmail(), null));
+			boolean res;
+			if(res = BCrypt.checkpw(credentials.getPassword(), fullCred.getPassword())){
+				Session.getInstance().setLogged(fullCred);
+			}
+			return res;
 		}catch(RecordNotFoundException e){
+			System.out.println("record not found");
 			return false;
 		}
-		return true; 
 	}
 }

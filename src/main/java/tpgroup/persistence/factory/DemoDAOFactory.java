@@ -2,6 +2,7 @@ package tpgroup.persistence.factory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import tpgroup.model.domain.User;
 
@@ -18,7 +19,7 @@ class DemoDAOFactory extends DAOFactory{
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> DAO<T> getDAO(Class<T> of) {
-		return (DAO<T>) daos.get(of);
+		return (DAO<T>) Optional.ofNullable(daos.get(of)).orElseThrow();
 	}
 
 }

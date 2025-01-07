@@ -14,6 +14,7 @@ public class UnloggedMenuState extends CliViewState{
 
 	@Override
 	public void show() {
+		System.out.println("im a new build yayyy");
 		int choice = 0;
 		boolean outOfRange; 
 		do{
@@ -29,7 +30,7 @@ public class UnloggedMenuState extends CliViewState{
 				isInt = false;
 			}
 			outOfRange = choice < 1 || choice > 3;
-			System.err.println(!isInt || outOfRange? "\nERROR selecting menu option\n": "\n");
+			System.err.print(!isInt || outOfRange? "\nERROR selecting menu option\n": "");
 		}while(outOfRange);
 		switch(choice){
 			case 1 -> this.machine.setState(new LoginFormState(this.machine));

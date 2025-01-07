@@ -1,8 +1,10 @@
 package tpgroup.persistence.demo;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
@@ -47,6 +49,11 @@ public class UserDAODemo implements DAO<User>{
 	@Override
 	public boolean add(User obj) {
 		return userList.add(obj);
+	}
+
+	@Override
+	public List<User> getAll() {
+		return userList.stream().collect(Collectors.toList());
 	}
 	
 }

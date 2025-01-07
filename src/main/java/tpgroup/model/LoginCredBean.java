@@ -2,16 +2,14 @@ package tpgroup.model;
 
 import java.util.regex.Pattern;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class LoginCredBean {
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 	private static final String PWD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
-	private String email;
-	private String password;
+	protected String email;
+	protected String password;
 
 	public LoginCredBean(String email, String password) throws InvalidBeanParamException {
 		if(!Pattern.matches(EMAIL_REGEX, email)){
@@ -23,7 +21,7 @@ public class LoginCredBean {
 		}
 
 		this.email = email;
-		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+		this.password = password;
 
 	}
 
@@ -43,5 +41,9 @@ public class LoginCredBean {
 		this.password = password;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("LoginCredBean{%s, %s}", this.email, this.password);
+	}
 }
 

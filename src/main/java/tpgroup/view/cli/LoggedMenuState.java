@@ -10,7 +10,7 @@ public class LoggedMenuState extends CliViewState{
 	public void show() {
 		// TODO Auto-generated method stub
 		System.out.println("im logged great!");
-		System.exit(0);
+		this.machine.setState(new UnloggedMenuState(this.machine));
 	}
 
 }

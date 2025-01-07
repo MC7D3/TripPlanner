@@ -25,7 +25,7 @@ public class LoginFormState extends CliViewState{
 				password.append((char) pwd_char);
 			}else if(password.length() > 0){
 				password.deleteCharAt(password.length() - 1);
-				System.out.println("\b \b");
+				System.out.print("\b \b");
 			}
 		}
 		return password.toString();
@@ -39,7 +39,7 @@ public class LoginFormState extends CliViewState{
 		do{
 			result = false;
 			try {
-				System.out.println("NOTE: if u want to go back keep both field blank\n");
+				System.out.println("NOTE: if u want to go back keep both field blank");
 				System.out.print("email:");
 				String email = in.readLine();
 				System.out.print("password:");
@@ -50,8 +50,10 @@ public class LoginFormState extends CliViewState{
 				}
 				credentials = new LoginCredBean(email, password);
 				result = LoginController.validateCredentials(credentials);
-			} catch (IOException | InvalidBeanParamException e) {
-				System.err.println("ERROR: the credentials inserted are incorrect try again");
+			} catch (IOException e) {
+				System.err.println("ERROR: unable to process inserted credentials");
+			} catch (InvalidBeanParamException e2){
+				System.err.println("ERROR: " + e2.getMessage());
 			}
 			System.out.println(result? "login succesfull!": "email or password incorrect, try again");
 		}while(!result);

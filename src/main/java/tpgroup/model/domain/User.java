@@ -39,7 +39,11 @@ public class User {
 	    }
 
 	    User other = (User) obj;
-	    return Objects.equals(this.email, other.email) && Objects.equals(this.password, other.password);
+	    return Objects.equals(this.email, other.email);
 	}
-	
+
+	@Override
+	public String toString() {
+		return String.format("User{%s, %s}", this.email, this.password);
+	}
 }

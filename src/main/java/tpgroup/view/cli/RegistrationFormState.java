@@ -20,7 +20,7 @@ public class RegistrationFormState extends LoginFormState{
 		do{
 			validCredentials = false;
 			try {
-				System.out.println("NOTE: if u want to go back keep all field blank\n");
+				System.out.println("NOTE: if u want to go back keep all field blank");
 				System.out.print("email:");
 				String email = in.readLine();
 				System.out.print("password:");
