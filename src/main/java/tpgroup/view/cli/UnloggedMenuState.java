@@ -1,20 +1,15 @@
 package tpgroup.view.cli;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class UnloggedMenuState extends CliViewState{
-	BufferedReader in;
 	
 	public UnloggedMenuState(CliView sm) {
 		super(sm);
-		in = new BufferedReader(new InputStreamReader(System.in));
 	}
 
 	@Override
 	public void show() {
-		System.out.println("im a new build yayyy");
 		int choice = 0;
 		boolean outOfRange; 
 		do{

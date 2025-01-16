@@ -6,12 +6,15 @@ public class RoomMember extends User{
 	}
 
 	public RoomMember(User user) {
-		super(user.email, user.password);
+		super(user.getEmail(), user.getPassword());
 	}
 
 	@Override
 	public String toString() {
-		return "RoomMember [" + this.email + ", " + this.password + "]";
+		return "RoomMember [email=" + this.getEmail() + ", password=" + this.getPassword() + "]";
 	}
+
+
+
 }
 

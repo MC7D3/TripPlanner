@@ -38,5 +38,4 @@ public abstract class DAOFactory {
 
 	public abstract <T> DAO<T> getDAO(Class<T> of);
 	
-	
 }

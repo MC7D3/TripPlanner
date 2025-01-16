@@ -23,4 +23,8 @@ public class Session {
 		return instance;
 	}
 
+	public void resetSession(){
+		instance = new Session();
+	}
+
 }

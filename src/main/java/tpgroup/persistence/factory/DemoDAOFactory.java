@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 
 import tpgroup.persistence.DAO;
@@ -14,6 +15,7 @@ class DemoDAOFactory extends DAOFactory{
 
 	static{
 		daos.put(User.class, UserDAODemo.getInstance());
+		daos.put(Room.class, RoomDAODemo.getInstance());
 	}
 
 	@Override

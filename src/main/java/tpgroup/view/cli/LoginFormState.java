@@ -1,20 +1,17 @@
 package tpgroup.view.cli;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-import tpgroup.model.LoginCredBean;
+import tpgroup.model.EmailBean;
+import tpgroup.model.PwdBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 import tpgroup.controller.LoginController;
 
 public class LoginFormState extends CliViewState{
-	BufferedReader in;
 	
 	public LoginFormState(CliView sm) {
 		super(sm);
-		in = new BufferedReader(new InputStreamReader(System.in));
 	}
 
 	protected String pwdRead() throws IOException{ //TODO testing funzionalita
@@ -35,7 +32,6 @@ public class LoginFormState extends CliViewState{
 	public void show() {
 		CliViewState nextState = new LoggedMenuState(this.machine);
 		boolean result;
-		LoginCredBean credentials = null;
 		do{
 			result = false;
 			try {
@@ -48,8 +44,7 @@ public class LoginFormState extends CliViewState{
 					nextState = new UnloggedMenuState(this.machine);
 					break;
 				}
-				credentials = new LoginCredBean(email, password);
-				result = LoginController.validateCredentials(credentials);
+				result = LoginController.validateCredentials(new EmailBean(email), new PwdBean(password));
 			} catch (IOException e) {
 				System.err.println("ERROR: unable to process inserted credentials");
 			} catch (InvalidBeanParamException e2){

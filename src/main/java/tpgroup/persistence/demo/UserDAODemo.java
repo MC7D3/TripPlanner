@@ -4,16 +4,47 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.persistence.Cascade;
 import tpgroup.persistence.DAO;
+import tpgroup.persistence.factory.DAOFactory;
 
 public class UserDAODemo implements DAO<User>{
 	private static UserDAODemo instance;
 
 	private final Set<User> userList = new HashSet<>();
+	private final Cascade<User, Room> cascadePolicy = new Cascade<>(DAOFactory.getInstance().getDAO(Room.class)) {
+
+		@Override
+		public boolean propagateAdd(User toAdd) {
+			//not needed
+			return true;
+		}
+
+		@Override
+		public boolean propagateDelete(User toDelete) {
+			for(Room room: cascadePolicy.getTo().getAll()){
+				if(room.getMembers().contains(toDelete)){
+					room.getMembers().remove(toDelete);
+				}
+			}
+			return true;
+		}
+
+		@Override
+		public boolean propagateUpdate(User toUpdate) {
+			for(Room room: cascadePolicy.getTo().getAll()){
+				if(room.isMember(toUpdate)){
+					room.remove(toUpdate);
+					room.add(toUpdate);
+				}
+			}
+			return true;
+		}
+	};
 
 	private UserDAODemo() {
 		super();
@@ -34,11 +65,13 @@ public class UserDAODemo implements DAO<User>{
 			userList.remove(obj);
 			userList.add(obj);
 		}
+		cascadePolicy.propagateUpdate(obj);
 	}
 
 	@Override
 	public void delete(User obj) throws RecordNotFoundException{
 		if(!userList.remove(obj)) throw new RecordNotFoundException();
+		cascadePolicy.propagateDelete(obj);
 	}
 
 	public static UserDAODemo getInstance(){
@@ -53,7 +86,7 @@ public class UserDAODemo implements DAO<User>{
 
 	@Override
 	public List<User> getAll() {
-		return userList.stream().collect(Collectors.toList());
+		return userList.stream().toList();
 	}
 	
 }
