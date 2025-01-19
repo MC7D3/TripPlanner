@@ -17,7 +17,7 @@ public class UpdateCredentialsFormState extends CliViewState{
 	public void show() {
 		try {
 			System.out.println("current credentials:");
-			System.out.println("NOTE: keep the fields u want to keep unchanged empty");
+			System.out.println("NOTE: keep the fields you want to keep unchanged empty");
 			System.out.print("password:");
 			String password = in.readLine();
 			System.out.print("confirm password:");

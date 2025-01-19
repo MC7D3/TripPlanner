@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import tpgroup.model.RoomBean;
 import tpgroup.model.exception.InvalidBeanParamException;
+import tpgroup.model.exception.RoomGenConflictException;
 import tpgroup.controller.RoomController;
 
 public class NewRoomFormState extends CliViewState {
@@ -24,10 +25,13 @@ public class NewRoomFormState extends CliViewState {
 				return;
 			}
 			newRoom = new RoomBean(name);
-			boolean result;
-			do{
-				result = RoomController.createRoom(newRoom);
-			}while(!result);
+			for(int attempt = 0; attempt < 3; attempt++){
+				try{
+					RoomController.createRoom(newRoom);
+					return;
+				}catch(RoomGenConflictException e){}
+			}
+			System.out.println("ERROR: too many rooms with this name are present, try another one");
 		} catch (IOException e) {
 			System.err.println("ERROR: unable to gather the new room informations");
 		} catch (InvalidBeanParamException e2){
