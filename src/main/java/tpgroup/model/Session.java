@@ -23,7 +23,7 @@ public class Session {
 		return instance;
 	}
 
-	public void resetSession(){
+	public static void resetSession(){
 		instance = new Session();
 	}
 

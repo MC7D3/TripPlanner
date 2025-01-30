@@ -2,7 +2,7 @@ package tpgroup.view.cli;
 
 import java.util.List;
 
-import tpgroup.controller.LoginController;
+import tpgroup.model.Session;
 import tpgroup.view.cli.template.CliMenuState;
 
 public class LoggedMenuState extends CliMenuState{
@@ -19,7 +19,7 @@ public class LoggedMenuState extends CliMenuState{
 			case 3 -> this.machine.setState(new AbbandonRoomFormState(this.machine));
 			case 4 -> this.machine.setState(new OptionsMenuState(this.machine));
 			case 5 -> {
-				LoginController.logout();
+				Session.resetSession();
 				this.machine.setState(new UnloggedMenuState(this.machine));
 			}
 			default -> System.exit(0);

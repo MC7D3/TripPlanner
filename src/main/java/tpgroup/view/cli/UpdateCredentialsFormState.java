@@ -1,6 +1,5 @@
 package tpgroup.view.cli;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import tpgroup.controller.OptionsController;
@@ -21,9 +20,9 @@ public class UpdateCredentialsFormState extends CliViewState{
 			System.out.println("current credentials:");
 			System.out.println("NOTE: keep the fields you want to keep unchanged empty");
 			System.out.print("password:");
-			String password = in.readLine();
+			String password = new String(System.console().readPassword());
 			System.out.print("confirm password:");
-			String confPwd = in.readLine();
+			String confPwd = new String(System.console().readPassword());
 
 			if(!password.isEmpty()){
 				Optional<PwdBean> passwordBean = Optional.ofNullable(new PwdBean(password, confPwd));
@@ -31,8 +30,6 @@ public class UpdateCredentialsFormState extends CliViewState{
 				System.out.println("credentials updated succesfully!");
 			}
 			next = new LoggedMenuState(this.machine);
-		} catch (IOException e) {
-			System.err.println("ERROR: unable to process inserted credentials");
 		} catch (InvalidBeanParamException e2){
 			System.err.println("ERROR: " + e2.getMessage());
 		}

@@ -14,6 +14,9 @@ public class ConfirmationForm extends CliViewState{
 
 	public ConfirmationForm(CliView sm, String confirmMsg, CliViewState nextYes, CliViewState nextNo) {
 		super(sm);
+		this.confirmMsg = confirmMsg;
+		this.nextYes = nextYes;
+		this.nextNo = nextNo;
 	}
 
 	@Override
@@ -25,6 +28,7 @@ public class ConfirmationForm extends CliViewState{
 			String answer = in.readLine();
 			if(answer.equals("yes")){
 				OptionsController.deleteAccount(Session.getInstance().getLogged());
+				Session.resetSession();
 				System.out.println(this.confirmMsg);
 				nextState = this.nextNo;
 			}

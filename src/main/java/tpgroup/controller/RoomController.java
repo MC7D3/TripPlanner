@@ -12,6 +12,11 @@ import tpgroup.persistence.DAO;
 import tpgroup.persistence.factory.DAOFactory;
 
 public class RoomController {
+	
+	private RoomController(){
+		super();
+	}
+	
 	public static void createRoom(User creator, RoomBean newRoom) throws RoomGenConflictException {
 		Room room = new Room(newRoom.getName(), new RoomAdmin(creator));
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
@@ -20,9 +25,8 @@ public class RoomController {
 	}
 
 	public static List<Room> getJoinedRooms(User user) {
-		List<Room> joinedRooms = DAOFactory.getInstance().getDAO(Room.class)
+		return DAOFactory.getInstance().getDAO(Room.class)
 				.getFiltered(room -> room.getAdmin().equals(user));
-		return joinedRooms;
 	}
 
 	public static boolean abbandonRoom(User user, Room room) {
@@ -38,6 +42,7 @@ public class RoomController {
 			}
 			roomDao.save(rm);
 		} catch (RecordNotFoundException e) {
+			//room no longer exist, no action needed
 		}
 		return true;
 	}

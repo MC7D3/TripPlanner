@@ -32,7 +32,7 @@ public class AbbandonRoomFormState extends CliMenuState {
 		int chosenRoom = choice - 1;
 		if (chosenRoom < joinedRooms.size()) {
 			RoomController.abbandonRoom(Session.getInstance().getLogged(), joinedRooms.get(chosenRoom));
-			System.out.format("room %s has been abbandoned\n", joinedRooms.get(chosenRoom).getName());
+			System.out.format("room %s has been abbandoned%n", joinedRooms.get(chosenRoom).getName());
 		}
 		this.machine.setState(new LoggedMenuState(this.machine));
 	}

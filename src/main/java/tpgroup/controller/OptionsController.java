@@ -3,13 +3,16 @@ package tpgroup.controller;
 import java.util.Optional;
 
 import tpgroup.model.PwdBean;
-import tpgroup.model.Session;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
 import tpgroup.persistence.factory.DAOFactory;
 
 public class OptionsController {
+
+	private OptionsController(){
+		super();
+	}
 
 	public static void updateCredentials(User user, Optional<PwdBean> newPassword){
 		try{
@@ -28,7 +31,6 @@ public class OptionsController {
 		try {
 			//TODO: cascade fatto solo da testare 
 			userDao.delete(user);
-			Session.getInstance().resetSession();
 		} catch (RecordNotFoundException e) {
 			throw new IllegalStateException(e);
 		}

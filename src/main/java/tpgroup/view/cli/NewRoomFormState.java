@@ -26,19 +26,26 @@ public class NewRoomFormState extends CliViewState {
 				return;
 			}
 			newRoom = new RoomBean(name);
-			for(int attempt = 0; attempt < 3; attempt++){
-				try{
-					RoomController.createRoom(Session.getInstance().getLogged(), newRoom);
-					System.out.println("room created successfully!");
-					return;
-				}catch(RoomGenConflictException e){}
-			}
+			attemptRoomCreation(newRoom, 3);
 			System.out.println("ERROR: too many rooms with this name are present, try another one");
 		} catch (IOException e) {
 			System.err.println("ERROR: unable to gather the new room informations");
 		} catch (InvalidBeanParamException e2){
 			System.err.println("ERROR: " + e2.getMessage());
 		}
+	}
+
+	private boolean attemptRoomCreation(RoomBean newRoom, int attempts){
+		for(int attempt = 0; attempt < attempts; attempt++){
+			try{
+				RoomController.createRoom(Session.getInstance().getLogged(), newRoom);
+				System.out.println("room created successfully!");
+				return true;
+			}catch(RoomGenConflictException e){
+				//it does another attempt, no actions needed
+			}
+		}
+		return false;
 	}
 
 }

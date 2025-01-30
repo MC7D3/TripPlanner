@@ -11,6 +11,7 @@ import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.Session;
 
 public class LoginController {
+
 	private LoginController() {
 		super();
 	}
@@ -28,9 +29,5 @@ public class LoginController {
 			System.out.println("record not found");
 			return false;
 		}
-	}
-
-	public static void logout() {
-		Session.getInstance().resetSession();
 	}
 }
