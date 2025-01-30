@@ -14,20 +14,6 @@ public class LoginFormState extends CliViewState{
 		super(sm);
 	}
 
-	protected String pwdRead() throws IOException{ //TODO testing funzionalita
-		StringBuilder password = new StringBuilder();
-		for(int pwd_char = in.read(); pwd_char != '\n' && pwd_char != -1; pwd_char = in.read()){
-			if(pwd_char != '\b'){
-				System.out.print("\b*");
-				password.append((char) pwd_char);
-			}else if(password.length() > 0){
-				password.deleteCharAt(password.length() - 1);
-				System.out.print("\b \b");
-			}
-		}
-		return password.toString();
-	}
-
 	@Override
 	public void show() {
 		CliViewState nextState = new LoggedMenuState(this.machine);
@@ -39,7 +25,7 @@ public class LoginFormState extends CliViewState{
 				System.out.print("email:");
 				String email = in.readLine();
 				System.out.print("password:");
-				String password = pwdRead();
+				String password = new String(System.console().readPassword()); 
 				if(email.isEmpty() && password.isEmpty()){
 					nextState = new UnloggedMenuState(this.machine);
 					break;

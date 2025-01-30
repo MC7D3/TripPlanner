@@ -7,7 +7,7 @@ import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
-public class RegistrationFormState extends LoginFormState {
+public class RegistrationFormState extends CliViewState{
 
 	public RegistrationFormState(CliView sm) {
 		super(sm);
@@ -17,6 +17,7 @@ public class RegistrationFormState extends LoginFormState {
 	public void show() {
 		CliViewState nextState = new LoggedMenuState(this.machine);
 		boolean validCredentials;
+		boolean registrationRes;
 		String email;
 		String password;
 		String confPassword;
@@ -24,14 +25,15 @@ public class RegistrationFormState extends LoginFormState {
 		PwdBean passwordBean = null;
 		do {
 			validCredentials = false;
+			registrationRes = false;
 			try {
-				System.out.println("NOTE: if u want to go back keep all field blank");
+				System.out.println("NOTE: if you want to go back keep all field blank");
 				System.out.print("email:");
 				email = in.readLine();
 				System.out.print("password:");
-				password = pwdRead();
+				password = new String(System.console().readPassword()); 
 				System.out.print("comfirm password:");
-				confPassword = pwdRead();
+				confPassword = new String(System.console().readPassword());
 				if (email.isEmpty() && password.isEmpty() && confPassword.isEmpty()) {
 					nextState = new UnloggedMenuState(this.machine);
 					break;
@@ -39,12 +41,17 @@ public class RegistrationFormState extends LoginFormState {
 				emailBean = new EmailBean(email);
 				passwordBean = new PwdBean(password, confPassword);
 				validCredentials = true;
+				registrationRes = RegistrationController.executeRegistration(emailBean, passwordBean);
+				if(!registrationRes){
+					System.out.println("ERROR: there is already an account binded to the inserted email");
+				}
+				System.out.println("registration succesfull!");
 			} catch (IOException e) {
 				System.err.println("ERROR: unable to process inserted credentials");
 			} catch (InvalidBeanParamException e2) {
 				System.err.println("ERROR: " + e2.getMessage());
 			}
-		} while (!validCredentials || !RegistrationController.executeRegistration(emailBean, passwordBean));
+		} while (!validCredentials || !registrationRes);
 		this.machine.setState(nextState);
 	}
 

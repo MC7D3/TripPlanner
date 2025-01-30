@@ -11,24 +11,23 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class OptionsController {
 
-	public static void updateCredentials(Optional<PwdBean> newPassword){
+	public static void updateCredentials(User user, Optional<PwdBean> newPassword){
 		try{
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-			User curCred = Session.getInstance().getLogged();
-			User updatedCred = new User(curCred.getEmail(), 
-				newPassword.isEmpty()? curCred.getPassword(): newPassword.get().getPassword());
-			userDao.delete(curCred);
+			User updatedCred = new User(user.getEmail(), 
+				newPassword.isEmpty()? user.getPassword(): newPassword.get().getPassword());
+			userDao.delete(user);
 			userDao.add(updatedCred);
 		}catch(RecordNotFoundException e){
 			throw new IllegalStateException(e);
 		}
 	}
 
-	public static void deleteLoggedAccount(){
+	public static void deleteAccount(User user){
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		try {
 			//TODO: cascade fatto solo da testare 
-			userDao.delete(Session.getInstance().getLogged());
+			userDao.delete(user);
 			Session.getInstance().resetSession();
 		} catch (RecordNotFoundException e) {
 			throw new IllegalStateException(e);

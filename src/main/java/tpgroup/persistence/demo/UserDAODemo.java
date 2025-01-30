@@ -4,19 +4,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.Cascade;
 import tpgroup.persistence.DAO;
-import tpgroup.persistence.factory.DAOFactory;
-
 public class UserDAODemo implements DAO<User>{
 	private static UserDAODemo instance;
 
 	private final Set<User> userList = new HashSet<>();
-	private final Cascade<User, Room> cascadePolicy = new Cascade<>(DAOFactory.getInstance().getDAO(Room.class)) {
+	private final Cascade<User, Room> cascadePolicy = new Cascade<>(RoomDAODemo.getInstance()) {
 
 		@Override
 		public boolean propagateAdd(User toAdd) {
@@ -29,6 +28,7 @@ public class UserDAODemo implements DAO<User>{
 			for(Room room: cascadePolicy.getTo().getAll()){
 				if(room.getMembers().contains(toDelete)){
 					room.getMembers().remove(toDelete);
+					cascadePolicy.getTo().save(room);
 				}
 			}
 			return true;
@@ -40,6 +40,7 @@ public class UserDAODemo implements DAO<User>{
 				if(room.isMember(toUpdate)){
 					room.remove(toUpdate);
 					room.add(toUpdate);
+					cascadePolicy.getTo().save(room);
 				}
 			}
 			return true;
@@ -89,4 +90,8 @@ public class UserDAODemo implements DAO<User>{
 		return userList.stream().toList();
 	}
 	
+	@Override
+	public List<User> getFiltered(Predicate<User> filter) {
+		return userList.stream().filter(filter).toList();
+	}
 }

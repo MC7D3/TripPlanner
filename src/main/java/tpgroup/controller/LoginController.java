@@ -11,26 +11,26 @@ import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.Session;
 
 public class LoginController {
-	private LoginController(){
+	private LoginController() {
 		super();
 	}
 
-	public static Boolean validateCredentials(EmailBean email, PwdBean password){
-		try{
+	public static Boolean validateCredentials(EmailBean email, PwdBean password) {
+		try {
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 			User fullCred = userDao.get(new User(email.getEmail(), null));
 			boolean res = BCrypt.checkpw(password.getPassword(), fullCred.getPassword());
-			if(res){
+			if (res) {
 				Session.getInstance().setLogged(fullCred);
 			}
 			return res;
-		}catch(RecordNotFoundException e){
+		} catch (RecordNotFoundException e) {
 			System.out.println("record not found");
 			return false;
 		}
 	}
 
-	public static void logout(){
+	public static void logout() {
 		Session.getInstance().resetSession();
 	}
 }

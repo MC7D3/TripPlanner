@@ -1,8 +1,11 @@
-package tpgroup.view.cli;
+package tpgroup.view.cli.template;
 
 import java.io.IOException;
 
 import tpgroup.controller.OptionsController;
+import tpgroup.model.Session;
+import tpgroup.view.cli.CliView;
+import tpgroup.view.cli.CliViewState;
 
 public class ConfirmationForm extends CliViewState{
 	private String confirmMsg;
@@ -21,7 +24,7 @@ public class ConfirmationForm extends CliViewState{
 			System.out.print(">");
 			String answer = in.readLine();
 			if(answer.equals("yes")){
-				OptionsController.deleteLoggedAccount();
+				OptionsController.deleteAccount(Session.getInstance().getLogged());
 				System.out.println(this.confirmMsg);
 				nextState = this.nextNo;
 			}

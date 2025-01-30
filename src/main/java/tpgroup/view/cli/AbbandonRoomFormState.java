@@ -8,10 +8,10 @@ import tpgroup.model.Session;
 import tpgroup.model.domain.Room;
 import tpgroup.view.cli.template.CliMenuState;
 
-public class JoinRoomFormState extends CliMenuState {
-	protected static List<Room> joinedRooms;
+public class AbbandonRoomFormState extends CliMenuState {
+	private static List<Room> joinedRooms;
 
-	JoinRoomFormState(CliView sm) {
+	public AbbandonRoomFormState(CliView sm) {
 		super(sm, 
 			Stream.concat(
 				initJoinedRooms()
@@ -21,20 +21,20 @@ public class JoinRoomFormState extends CliMenuState {
 			).toList()
 		);
 	}
-
+	
 	private static List<Room> initJoinedRooms(){
 		joinedRooms = RoomController.getJoinedRooms(Session.getInstance().getLogged());
 		return joinedRooms;
 	}
 
-
 	@Override
 	protected void handleChoice(int choice) {
-		if(choice < joinedRooms.size()){
-			this.machine.setState(new RoomMenuState(this.machine, joinedRooms.get(choice - 1)));
-		}else{
-			this.machine.setState(new LoggedMenuState(this.machine));
+		int chosenRoom = choice - 1;
+		if (chosenRoom < joinedRooms.size()) {
+			RoomController.abbandonRoom(Session.getInstance().getLogged(), joinedRooms.get(chosenRoom));
+			System.out.format("room %s has been abbandoned\n", joinedRooms.get(chosenRoom).getName());
 		}
+		this.machine.setState(new LoggedMenuState(this.machine));
 	}
 
 }

@@ -5,9 +5,9 @@ import java.io.InputStreamReader;
 
 public abstract class CliViewState {
 	protected CliView machine;
-	BufferedReader in;
+	protected BufferedReader in;
 
-	CliViewState(CliView machine){
+	public CliViewState(CliView machine){
 		this.machine = machine;
 		this.in = new BufferedReader(new InputStreamReader(System.in));
 	}

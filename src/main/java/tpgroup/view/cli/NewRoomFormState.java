@@ -3,6 +3,7 @@ package tpgroup.view.cli;
 import java.io.IOException;
 
 import tpgroup.model.RoomBean;
+import tpgroup.model.Session;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
 import tpgroup.controller.RoomController;
@@ -18,7 +19,7 @@ public class NewRoomFormState extends CliViewState {
 		RoomBean newRoom = null;
 		try {
 			this.machine.setState(new LoggedMenuState(this.machine));
-			System.out.println("NOTE: if u want to go back keep both field blank");
+			System.out.println("NOTE: if you want to go back keep the field blank");
 			System.out.print("room's name:");
 			String name = in.readLine();
 			if(name.isEmpty()){
@@ -27,7 +28,8 @@ public class NewRoomFormState extends CliViewState {
 			newRoom = new RoomBean(name);
 			for(int attempt = 0; attempt < 3; attempt++){
 				try{
-					RoomController.createRoom(newRoom);
+					RoomController.createRoom(Session.getInstance().getLogged(), newRoom);
+					System.out.println("room created successfully!");
 					return;
 				}catch(RoomGenConflictException e){}
 			}

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import tpgroup.model.domain.Room;
 import tpgroup.model.exception.RecordNotFoundException;
@@ -53,6 +54,11 @@ public class RoomDAODemo implements DAO<Room>{
 	@Override
 	public List<Room> getAll() {
 		return roomList.stream().toList();
+	}
+
+	@Override
+	public List<Room> getFiltered(Predicate<Room> filter) {
+		return roomList.stream().filter(filter).toList();
 	}
 
 }

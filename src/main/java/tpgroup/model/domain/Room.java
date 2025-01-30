@@ -17,7 +17,8 @@ public class Room {
 		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(100000) + 1); 
 		this.name = name;
 		this.admin = admin;
-		this.members = Set.copyOf(members);
+		this.members = new HashSet<>();
+		members.addAll(members);
 		members.add(admin);
 		this.plan = new Plan();
 	}

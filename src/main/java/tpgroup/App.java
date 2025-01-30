@@ -19,6 +19,7 @@ public class App {
 
 			do{
 				view.show();
+				System.out.println();
 			}while(true);
 
 		}catch(IOException | InvalidPersistenceTypeException | InvalidViewTypeException e){

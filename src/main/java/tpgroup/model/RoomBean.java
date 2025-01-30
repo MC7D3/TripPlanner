@@ -9,7 +9,7 @@ public class RoomBean {
 	private String name;
 
 	public RoomBean(String name) throws InvalidBeanParamException{	 
-		if(Pattern.matches(NAME_REGEX, name)){
+		if(!Pattern.matches(NAME_REGEX, name)){
 			throw new InvalidBeanParamException("name");
 		}
 		this.name = name;
