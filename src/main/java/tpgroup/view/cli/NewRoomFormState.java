@@ -1,17 +1,19 @@
 package tpgroup.view.cli;
 
 import java.io.IOException;
+import java.util.List;
 
 import tpgroup.model.RoomBean;
 import tpgroup.model.Session;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
+import tpgroup.view.cli.template.CliMultipleChoiceForm;
 import tpgroup.controller.RoomController;
 
-public class NewRoomFormState extends CliViewState {
+public class NewRoomFormState extends CliMultipleChoiceForm<String>{
 
 	public NewRoomFormState(CliView sm) {
-	 	super(sm);
+	 	super(sm, List.of("") /*TODO insert list of destinations*/);
 	}
 
 	@Override
@@ -22,10 +24,11 @@ public class NewRoomFormState extends CliViewState {
 			System.out.println("NOTE: if you want to go back keep the field blank");
 			System.out.print("room's name:");
 			String name = in.readLine();
-			if(name.isEmpty()){
+			String destination = getChosen();
+			if(name.isEmpty() && destination.isEmpty()){
 				return;
 			}
-			newRoom = new RoomBean(name);
+			newRoom = new RoomBean(name, destination);
 			attemptRoomCreation(newRoom, 3);
 			System.out.println("ERROR: too many rooms with this name are present, try another one");
 		} catch (IOException e) {

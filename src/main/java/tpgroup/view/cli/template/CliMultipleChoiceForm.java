@@ -10,20 +10,21 @@ import java.util.stream.IntStream;
 import tpgroup.view.cli.CliView;
 import tpgroup.view.cli.CliViewState;
 
-public abstract class CliMenuState extends CliViewState {
-	private final Map<Integer, String> menuOptions;
+public abstract class CliMultipleChoiceForm<T> extends CliViewState {
+	private final Map<Integer, T> choices;
+	private Integer chosen;
 
-	protected CliMenuState(CliView sm, List<String> menuOptions) {
+	protected CliMultipleChoiceForm(CliView sm, List<T> choices) {
 		super(sm);
-		this.menuOptions = IntStream.range(0, menuOptions.size()).boxed()
-				.collect(Collectors.toMap(key -> key + 1, key -> menuOptions.get(key)));
+		this.choices = IntStream.range(0, choices.size()).boxed()
+				.collect(Collectors.toMap(key -> key + 1, key -> choices.get(key)));
 	}
 
 	protected int selectMenuOption() {
 		int choice = 0;
 		boolean outOfRange;
 		do {
-			for (Entry<Integer, String> option : menuOptions.entrySet()) {
+			for (Entry<Integer, T> option : choices.entrySet()) {
 				System.out.println(option.getKey() + ". " + option.getValue());
 			}
 			System.out.print(">");
@@ -34,7 +35,7 @@ public abstract class CliMenuState extends CliViewState {
 			} catch (IOException | NumberFormatException e) {
 				isInt = false;
 			}
-			outOfRange = !menuOptions.containsKey(choice);
+			outOfRange = !choices.containsKey(choice);
 			if(!isInt || outOfRange){
 				System.err.println("ERROR: invalid menu option");
 			}
@@ -42,13 +43,9 @@ public abstract class CliMenuState extends CliViewState {
 		return choice;
 	}
 
-	@Override
-	public void show() {
-		int choice = selectMenuOption();
-		handleChoice(choice);
+	protected T getChosen(){
+		return choices.get(chosen);
 
 	}
-
-	protected abstract void handleChoice(int choice);
 
 }

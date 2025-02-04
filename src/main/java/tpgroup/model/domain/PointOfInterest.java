@@ -1,5 +1,5 @@
 package tpgroup.model.domain;
 
-public class Plan {
+public class PointOfInterest {
 	//TODO
 }

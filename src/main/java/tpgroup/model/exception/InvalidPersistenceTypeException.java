@@ -1,7 +1,7 @@
 package tpgroup.model.exception;
 
 public class InvalidPersistenceTypeException extends Exception {
-	private static final String MSG= "The persistence type provided is invalid";
+	private static final String MSG = "the persistence type provided is invalid";
 
 	public InvalidPersistenceTypeException() {
 		super(MSG);
@@ -11,4 +11,4 @@ public class InvalidPersistenceTypeException extends Exception {
 		super(MSG, cause);
 	}
 
-}	
+}

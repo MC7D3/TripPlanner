@@ -1,7 +1,7 @@
 package tpgroup.model.exception;
 
-public class InvalidBeanParamException extends Exception{
-	private static final String DEF_MSG = "Invalid field format";
+public class InvalidBeanParamException extends Exception {
+	private static final String DEF_MSG = "invalid field format";
 
 	public InvalidBeanParamException(String paramName, String msg) {
 		super(String.format("(%s) %s", paramName, msg));
@@ -11,4 +11,3 @@ public class InvalidBeanParamException extends Exception{
 		this(paramName, DEF_MSG);
 	}
 }
-

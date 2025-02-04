@@ -10,9 +10,9 @@ public class Room {
 	private String name;
 	private RoomAdmin admin;
 	private Set<RoomMember> members;
-	private Plan plan;
+	private Trip plan;
  
-	public Room(String name, RoomAdmin admin, Set<RoomMember> members) {
+	public Room(String name, RoomAdmin admin, Set<RoomMember> members, String destination) {
 		Random rand = new SecureRandom();
 		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(100000) + 1); 
 		this.name = name;
@@ -22,11 +22,11 @@ public class Room {
 		this.members.addAll(members);
 		this.members.add(admin);
 
-		this.plan = new Plan();
+		this.plan = new Trip(destination);
 	}
 
-	public Room(String name, RoomAdmin admin) {
-		this(name, admin, new HashSet<RoomMember>());
+	public Room(String name, RoomAdmin admin, String destination) {
+		this(name, admin, new HashSet<RoomMember>(), destination);
 	}
 
 	public String getCode() {
@@ -73,11 +73,11 @@ public class Room {
 		this.members = members;
 	}
 
-	public Plan getPlan() {
+	public Trip getPlan() {
 		return plan;
 	}
 
-	public void setPlan(Plan plan) {
+	public void setPlan(Trip plan) {
 		this.plan = plan;
 	}
 

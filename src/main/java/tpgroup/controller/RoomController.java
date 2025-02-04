@@ -18,7 +18,7 @@ public class RoomController {
 	}
 	
 	public static void createRoom(User creator, RoomBean newRoom) throws RoomGenConflictException {
-		Room room = new Room(newRoom.getName(), new RoomAdmin(creator));
+		Room room = new Room(newRoom.getName(), new RoomAdmin(creator), newRoom.getDestination());
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		if (!roomDao.add(room))
 			throw new RoomGenConflictException();
