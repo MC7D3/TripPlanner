@@ -10,12 +10,11 @@ import tpgroup.model.domain.Room;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
 
-public class RoomDAODemo implements DAO<Room>{
-	private static RoomDAODemo instance;
+public class RoomDAODemo implements DAO<Room> {
 
 	private final Set<Room> roomList = new HashSet<>();
 
-	private RoomDAODemo() {
+	public RoomDAODemo() {
 		super();
 	}
 
@@ -30,20 +29,16 @@ public class RoomDAODemo implements DAO<Room>{
 
 	@Override
 	public void save(Room obj) {
-		if(!roomList.add(obj)){
+		if (!roomList.add(obj)) {
 			roomList.remove(obj);
 			roomList.add(obj);
 		}
 	}
 
 	@Override
-	public void delete(Room obj) throws RecordNotFoundException{
-		if(!roomList.remove(obj)) throw new RecordNotFoundException();
-	}
-
-	public static RoomDAODemo getInstance(){
-		if(instance == null) instance = new RoomDAODemo();
-		return instance;
+	public void delete(Room obj) throws RecordNotFoundException {
+		if (!roomList.remove(obj))
+			throw new RecordNotFoundException();
 	}
 
 	@Override

@@ -1,34 +1,33 @@
 package tpgroup.view.cli;
 
 import java.io.IOException;
-import java.util.List;
 
 import tpgroup.model.RoomBean;
-import tpgroup.model.Session;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
-import tpgroup.view.cli.template.CliMultipleChoiceForm;
 import tpgroup.controller.RoomController;
 
-public class NewRoomFormState extends CliMultipleChoiceForm<String>{
+public class NewRoomFormState extends CliViewState{
+	private String location;
 
 	public NewRoomFormState(CliView sm) {
-	 	super(sm, List.of("") /*TODO insert list of destinations*/);
+	 	super(sm);
 	}
 
 	@Override
 	public void show() {
 		RoomBean newRoom = null;
+		this.machine.setState(new LoggedMenuState(this.machine));
 		try {
-			this.machine.setState(new LoggedMenuState(this.machine));
 			System.out.println("NOTE: if you want to go back keep the field blank");
 			System.out.print("room's name:");
 			String name = in.readLine();
-			String destination = getChosen();
+			System.out.println("trip destination:");
+			String destination = in.readLine();
 			if(name.isEmpty() && destination.isEmpty()){
 				return;
 			}
-			newRoom = new RoomBean(name, destination);
+			newRoom = new RoomBean(name, location);
 			attemptRoomCreation(newRoom, 3);
 			System.out.println("ERROR: too many rooms with this name are present, try another one");
 		} catch (IOException e) {
@@ -41,7 +40,7 @@ public class NewRoomFormState extends CliMultipleChoiceForm<String>{
 	private boolean attemptRoomCreation(RoomBean newRoom, int attempts){
 		for(int attempt = 0; attempt < attempts; attempt++){
 			try{
-				RoomController.createRoom(Session.getInstance().getLogged(), newRoom);
+				RoomController.createRoom(newRoom);
 				System.out.println("room created successfully!");
 				return true;
 			}catch(RoomGenConflictException e){

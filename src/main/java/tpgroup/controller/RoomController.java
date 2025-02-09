@@ -3,8 +3,8 @@ package tpgroup.controller;
 import java.util.List;
 
 import tpgroup.model.RoomBean;
+import tpgroup.model.Session;
 import tpgroup.model.domain.Room;
-import tpgroup.model.domain.RoomAdmin;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.exception.RoomGenConflictException;
@@ -17,33 +17,44 @@ public class RoomController {
 		super();
 	}
 	
-	public static void createRoom(User creator, RoomBean newRoom) throws RoomGenConflictException {
-		Room room = new Room(newRoom.getName(), new RoomAdmin(creator), newRoom.getDestination());
+	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException {
+		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getDestination());
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		if (!roomDao.add(room))
 			throw new RoomGenConflictException();
 	}
 
-	public static List<Room> getJoinedRooms(User user) {
+	public static List<Room> getJoinedRooms() {
 		return DAOFactory.getInstance().getDAO(Room.class)
-				.getFiltered(room -> room.getAdmin().equals(user));
+				.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()));
 	}
 
-	public static boolean abbandonRoom(User user, Room room) {
+	public static boolean abbandonRoom(String roomCode) {
+		User user = Session.getInstance().getLogged();
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		try {
-			Room rm = roomDao.get(room);
+			Room rm = roomDao.get(new Room(roomCode));
 			rm.getMembers().remove(user);
-			if (user.equals(room.getAdmin()) && room.getMembers().size() > 1) {
-				rm.setAdmin(new RoomAdmin(rm.getMembers().stream().findAny().get()));	
-			}else if (user.equals(room.getAdmin())){
+			if (user.equals(rm.getAdmin()) && rm.getMembers().size() > 1) {
+				rm.setAdmin(rm.getMembers().stream().findAny().get());	
+			}else if (user.equals(rm.getAdmin())){
 				roomDao.delete(rm);
 				return true;
 			}
 			roomDao.save(rm);
 		} catch (RecordNotFoundException e) {
-			//room no longer exist, no action needed
+			return false;
 		}
 		return true;
 	}
+
+	public static void enterRoom(Room room){
+		Session.getInstance().setEnteredRoom(room);
+	}
+
+	public static boolean amIAdmin(){
+		return Session.getInstance().getEnteredRoom().getAdmin().equals(Session.getInstance().getLogged());
+	}
+
+
 }

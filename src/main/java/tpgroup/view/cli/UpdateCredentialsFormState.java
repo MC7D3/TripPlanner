@@ -1,10 +1,7 @@
 package tpgroup.view.cli;
 
-import java.util.Optional;
-
 import tpgroup.controller.OptionsController;
 import tpgroup.model.PwdBean;
-import tpgroup.model.Session;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class UpdateCredentialsFormState extends CliViewState{
@@ -24,9 +21,9 @@ public class UpdateCredentialsFormState extends CliViewState{
 			System.out.print("confirm password:");
 			String confPwd = new String(System.console().readPassword());
 
-			if(!password.isEmpty()){
-				Optional<PwdBean> passwordBean = Optional.ofNullable(new PwdBean(password, confPwd));
-				OptionsController.updateCredentials(Session.getInstance().getLogged(), passwordBean);
+			if(!password.isEmpty() && !confPwd.isEmpty()){
+				PwdBean passwordBean = new PwdBean(password, confPwd);
+				OptionsController.updatePassword(passwordBean);
 				System.out.println("credentials updated succesfully!");
 			}
 			next = new LoggedMenuState(this.machine);

@@ -10,9 +10,8 @@ import tpgroup.persistence.DAO;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.Session;
 
-public class LoginController {
-
-	private LoginController() {
+public class AuthController {
+	private AuthController() {
 		super();
 	}
 
@@ -26,8 +25,21 @@ public class LoginController {
 			}
 			return res;
 		} catch (RecordNotFoundException e) {
-			System.out.println("record not found");
 			return false;
 		}
+	}
+
+	public static boolean executeRegistration(EmailBean email, PwdBean password) {
+		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
+		User newUser = new User(email.getEmail(), password.getPassword());
+		boolean res = userDao.add(newUser);
+		if(res){
+			Session.getInstance().setLogged(newUser);
+		}
+		return res;
+	}
+
+	public static void logout() {
+		Session.resetSession();
 	}
 }

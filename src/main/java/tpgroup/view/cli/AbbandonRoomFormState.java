@@ -1,38 +1,20 @@
 package tpgroup.view.cli;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 import tpgroup.controller.RoomController;
-import tpgroup.model.Session;
 import tpgroup.model.domain.Room;
-import tpgroup.view.cli.template.CliMenuState;
+import tpgroup.view.cli.template.CliSelectItemFormState;
 
-public class AbbandonRoomFormState extends CliMenuState {
-	private static List<Room> joinedRooms;
+public class AbbandonRoomFormState extends CliSelectItemFormState<Room> {
 
 	public AbbandonRoomFormState(CliView sm) {
-		super(sm, 
-			Stream.concat(
-				initJoinedRooms()
-				.stream()
-				.map(room -> room.getName()),
-				Stream.of("go back")
-			).toList()
-		);
-	}
-	
-	private static List<Room> initJoinedRooms(){
-		joinedRooms = RoomController.getJoinedRooms(Session.getInstance().getLogged());
-		return joinedRooms;
+		super(sm, RoomController.getJoinedRooms(), true);
 	}
 
 	@Override
-	protected void handleChoice(int choice) {
-		int chosenRoom = choice - 1;
-		if (chosenRoom < joinedRooms.size()) {
-			RoomController.abbandonRoom(Session.getInstance().getLogged(), joinedRooms.get(chosenRoom));
-			System.out.format("room %s has been abbandoned%n", joinedRooms.get(chosenRoom).getName());
+	protected void handleChosenElement(Room chosen) {
+		if (chosen != null) {
+			RoomController.abbandonRoom(chosen.getCode());
+			System.out.format("room %s has been abbandoned%n", chosen);
 		}
 		this.machine.setState(new LoggedMenuState(this.machine));
 	}

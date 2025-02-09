@@ -82,5 +82,10 @@ public class Event implements Comparable<Event>{
 		return this.start.compareTo(arg0.start);
 	}
 
+	@Override
+	public String toString() {
+		return "Event [" + info + ", start=" + start + ", end=" + end + "]";
+	}
+
 
 }

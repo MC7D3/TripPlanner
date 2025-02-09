@@ -12,10 +12,9 @@ import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.Cascade;
 import tpgroup.persistence.DAO;
 public class UserDAODemo implements DAO<User>{
-	private static UserDAODemo instance;
 
 	private final Set<User> userList = new HashSet<>();
-	private final Cascade<User, Room> cascadePolicy = new Cascade<>(RoomDAODemo.getInstance()) {
+	private final Cascade<User, Room> cascadePolicy = new Cascade<>(new RoomDAODemo()) {
 
 		@Override
 		public boolean propagateAdd(User toAdd) {
@@ -47,7 +46,7 @@ public class UserDAODemo implements DAO<User>{
 		}
 	};
 
-	private UserDAODemo() {
+	public UserDAODemo() {
 		super();
 	}
 
@@ -73,11 +72,6 @@ public class UserDAODemo implements DAO<User>{
 	public void delete(User obj) throws RecordNotFoundException{
 		if(!userList.remove(obj)) throw new RecordNotFoundException();
 		cascadePolicy.propagateDelete(obj);
-	}
-
-	public static UserDAODemo getInstance(){
-		if(instance == null) instance = new UserDAODemo();
-		return instance;
 	}
 
 	@Override

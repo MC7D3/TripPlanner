@@ -36,6 +36,10 @@ public class EventsGraph {
 		return newNode;
 	}
 
+	public List<EventsNode> getAllNodes() {
+		return nodes.stream().toList();
+	}
+
 	public EventsNode getNode(String nodeName) {
 		return nodes.stream().filter(node -> node.getName().equals(nodeName)).findFirst().get();
 	}
@@ -123,6 +127,43 @@ public class EventsGraph {
 	public void notifySplit(EventsNode eventsNode, EventsNode newNode) {
 		connectionsMapping.put(newNode, connectionsMapping.get(eventsNode));
 		connect(eventsNode, newNode);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((root == null) ? 0 : root.hashCode());
+		result = prime * result + ((connectionsMapping == null) ? 0 : connectionsMapping.hashCode());
+		result = prime * result + ((nodes == null) ? 0 : nodes.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EventsGraph other = (EventsGraph) obj;
+		if (root == null) {
+			if (other.root != null)
+				return false;
+		} else if (!root.equals(other.root))
+			return false;
+		if (connectionsMapping == null) {
+			if (other.connectionsMapping != null)
+				return false;
+		} else if (!connectionsMapping.equals(other.connectionsMapping))
+			return false;
+		if (nodes == null) {
+			if (other.nodes != null)
+				return false;
+		} else if (!nodes.equals(other.nodes))
+			return false;
+		return true;
 	}
 
 }

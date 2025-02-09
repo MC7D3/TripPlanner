@@ -1,8 +1,7 @@
 package tpgroup.controller;
 
-import java.util.Optional;
-
 import tpgroup.model.PwdBean;
+import tpgroup.model.Session;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
@@ -10,30 +9,26 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class OptionsController {
 
-	private OptionsController(){
+	private OptionsController() {
 		super();
 	}
 
-	public static void updateCredentials(User user, Optional<PwdBean> newPassword){
-		try{
-			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-			User updatedCred = new User(user.getEmail(), 
-				newPassword.isEmpty()? user.getPassword(): newPassword.get().getPassword());
-			userDao.delete(user);
-			userDao.add(updatedCred);
-		}catch(RecordNotFoundException e){
-			throw new IllegalStateException(e);
-		}
+	public static void updatePassword(PwdBean newPassword) {
+		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
+		User updatedCred = new User(Session.getInstance().getLogged().getEmail(),
+				newPassword.getPassword());
+		userDao.save(updatedCred);
+		Session.getInstance().setLogged(updatedCred);
 	}
 
-	public static void deleteAccount(User user){
+	public static void deleteAccount() {
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		try {
-			//TODO: cascade fatto solo da testare 
-			userDao.delete(user);
+			userDao.delete(Session.getInstance().getLogged());
+			Session.resetSession();
 		} catch (RecordNotFoundException e) {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 }

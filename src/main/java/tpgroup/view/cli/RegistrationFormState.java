@@ -2,7 +2,7 @@ package tpgroup.view.cli;
 
 import java.io.IOException;
 
-import tpgroup.controller.RegistrationController;
+import tpgroup.controller.AuthController;
 import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
 import tpgroup.model.exception.InvalidBeanParamException;
@@ -41,7 +41,7 @@ public class RegistrationFormState extends CliViewState{
 				emailBean = new EmailBean(email);
 				passwordBean = new PwdBean(password, confPassword);
 				validCredentials = true;
-				registrationRes = RegistrationController.executeRegistration(emailBean, passwordBean);
+				registrationRes = AuthController.executeRegistration(emailBean, passwordBean);
 				if(!registrationRes){
 					System.out.println("ERROR: there is already an account binded to the inserted email");
 				}

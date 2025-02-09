@@ -8,11 +8,11 @@ import java.util.Set;
 public class Room {
 	private final String code;
 	private String name;
-	private RoomAdmin admin;
-	private Set<RoomMember> members;
-	private Trip plan;
+	private User admin;
+	private Set<User> members;
+	private Trip trip;
  
-	public Room(String name, RoomAdmin admin, Set<RoomMember> members, String destination) {
+	public Room(String name, User admin, Set<User> members, String destination) {
 		Random rand = new SecureRandom();
 		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(100000) + 1); 
 		this.name = name;
@@ -22,11 +22,19 @@ public class Room {
 		this.members.addAll(members);
 		this.members.add(admin);
 
-		this.plan = new Trip(destination);
+		this.trip = new Trip(destination);
 	}
 
-	public Room(String name, RoomAdmin admin, String destination) {
-		this(name, admin, new HashSet<RoomMember>(), destination);
+	public Room(String code){
+		this.code = code;
+		this.name = null;
+		this.admin = null;
+		this.members = null;
+		this.trip = null;
+	}
+
+	public Room(String name, User admin, String destination) {
+		this(name, admin, new HashSet<User>(), destination);
 	}
 
 	public String getCode() {
@@ -41,20 +49,20 @@ public class Room {
 		this.name = name;
 	}
 
-	public RoomAdmin getAdmin() {
+	public User getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(RoomAdmin admin) {
+	public void setAdmin(User admin) {
 		this.admin = admin;
 	}
 
-	public Set<RoomMember> getMembers() {
+	public Set<User> getMembers() {
 		return members;
 	}
 
 	public boolean add(User user) {
-		return members.add(new RoomMember(user));
+		return members.add(user);
 	}
 
 	public boolean isMember(User user) {
@@ -69,16 +77,16 @@ public class Room {
 		return members.size();
 	}
 
-	public void setMembers(Set<RoomMember> members) {
+	public void setMembers(Set<User> members) {
 		this.members = members;
 	}
 
-	public Trip getPlan() {
-		return plan;
+	public Trip getTrip() {
+		return trip;
 	}
 
-	public void setPlan(Trip plan) {
-		this.plan = plan;
+	public void setTrip(Trip plan) {
+		this.trip = plan;
 	}
 
 	@Override
