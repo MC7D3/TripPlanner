@@ -1,29 +1,28 @@
 package tpgroup.view.cli;
 
-
 import tpgroup.controller.RoomController;
-import tpgroup.model.Session;
-import tpgroup.model.domain.Room;
-import tpgroup.view.cli.template.CliSelectItemFormState;
+import tpgroup.model.RoomCodeBean;
+import tpgroup.model.exception.InvalidBeanParamException;
+import tpgroup.view.cli.component.FormFieldFactory;
 
-public class JoinRoomFormState extends CliSelectItemFormState<Room>{
+public class JoinRoomFormState extends CliViewState{
 
-	JoinRoomFormState(CliView sm) {
-		super(sm, RoomController.getJoinedRooms(), true);
+	protected JoinRoomFormState(CliView machine) {
+		super(machine);
 	}
 
 	@Override
-	protected void handleChosenElement(Room chosen) {
-		if(chosen == null) {
-			this.machine.setState(new LoggedMenuState(this.machine));
+	public void show() {
+		try {
+			String roomCode = FormFieldFactory.getInstance().newDefault("room's code:", str -> str).get();
+			if(RoomController.joinRoom(new RoomCodeBean(roomCode))){
+				System.out.println("room joined successfully!");
+				this.machine.setState(new RoomMemberMenuState(this.machine));
+			}
+		} catch (InvalidBeanParamException e) {
+			System.err.println("ERROR: " + e.getMessage());
 		}
-		RoomController.enterRoom(chosen);
-		if(chosen.getAdmin().equals(Session.getInstance().getLogged())){
-			this.machine.setState(new RoomAdminMenuState(this.machine));
-		}else{
-			this.machine.setState(new RoomMemberMenuState(this.machine));
-		}
-		
+		this.machine.setState(new LoggedMenuState(this.machine));
 	}
 
 }

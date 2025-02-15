@@ -2,25 +2,33 @@ package tpgroup.view.cli;
 
 import java.util.List;
 
-import tpgroup.controller.TripController;
-import tpgroup.view.cli.template.CliMenuState;
+import tpgroup.view.cli.component.FormFieldFactory;
 
-public class RoomMemberMenuState extends CliMenuState{
+public class RoomMemberMenuState extends CliViewState{
+	protected final List<String> menuOptions;
 
-	public RoomMemberMenuState(CliView sm) {
-		super(sm, List.of("propose new Event", "propose event removal", "list other proposals", "propose event update", "unpropose proposal", "go back"));
+	public RoomMemberMenuState(CliView machine) {
+		super(machine);
+		menuOptions = List.of("propose new Event", "propose event removal", "list other proposals", "propose event update", "undo proposal", "go back");
+	}
+
+
+
+	protected void handleChoice(String choice) {
+		switch(choice){
+			case "propose new Event" -> this.machine.setState(new ProposeAddForm(this.machine));
+			case "propose event removal" -> this.machine.setState(new ProposeRemovalForm(this.machine));
+			case "list other proposals" -> this.machine.setState(new ListAndLikeProposalsState(this.machine));
+			case "propose event update" -> this.machine.setState(new ProposeUpdateForm(this.machine));
+			case "undo proposal" -> this.machine.setState(new RemoveProposalForm(this.machine));
+			case "go back" -> this.machine.setState(new LoggedMenuState(this.machine));
+		}
 	}
 
 	@Override
-	protected void handleChoice(int choice) {
-		switch(choice){
-			case 1 -> this.machine.setState(new ProposeAddForm(this.machine));
-			case 2 -> this.machine.setState(new ProposeRemovalForm(this.machine));
-			case 3 -> TripController.getProposals().forEach(System.out::println);
-			case 4 -> this.machine.setState(new ProposeUpdateForm(this.machine));
-			case 5 -> this.machine.setState(new RemoveProposalForm(this.machine));
-			default -> this.machine.setState(new LoggedMenuState(this.machine));
-		}
+	public void show() {
+		String chosen = FormFieldFactory.getInstance().newSelectItem(menuOptions).get();
+		handleChoice(chosen);
 	}
 
 }

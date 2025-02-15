@@ -2,21 +2,20 @@ package tpgroup.view.cli;
 
 import tpgroup.controller.RoomController;
 import tpgroup.model.domain.Room;
-import tpgroup.view.cli.template.CliSelectItemFormState;
+import tpgroup.view.cli.component.FormFieldFactory;
 
-public class AbbandonRoomFormState extends CliSelectItemFormState<Room> {
+public class AbbandonRoomFormState extends CliViewState{
 
-	public AbbandonRoomFormState(CliView sm) {
-		super(sm, RoomController.getJoinedRooms(), true);
+
+	protected AbbandonRoomFormState(CliView machine) {
+		super(machine);
 	}
 
 	@Override
-	protected void handleChosenElement(Room chosen) {
-		if (chosen != null) {
-			RoomController.abbandonRoom(chosen.getCode());
-			System.out.format("room %s has been abbandoned%n", chosen);
-		}
+	public void show() {
+		Room chosen = FormFieldFactory.getInstance().newSelectItem("room's code:", RoomController.getJoinedRooms()).get();
+		RoomController.abbandonRoom(chosen);
+		System.out.println("room abbandoned succesfully!");
 		this.machine.setState(new LoggedMenuState(this.machine));
 	}
-
 }

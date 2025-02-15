@@ -2,19 +2,21 @@ package tpgroup.view.cli;
 
 import java.util.List;
 
-import tpgroup.view.cli.template.CliMenuState;
+import tpgroup.view.cli.component.FormFieldFactory;
 
-public class OptionsMenuState extends CliMenuState{
+public class OptionsMenuState extends CliViewState{
 
-	public OptionsMenuState(CliView sm) {
-		super(sm, List.of("update informations", "delete account", "go back"));
+
+	protected OptionsMenuState(CliView machine) {
+		super(machine);
 	}
 
 	@Override
-	protected void handleChoice(int choice) {
+	public void show() {
+		String choice = FormFieldFactory.getInstance().newSelectItem(List.of("change password", "delete account", "go back")).get();
 		switch(choice){
-			case 1 -> this.machine.setState(new UpdateCredentialsFormState(this.machine));
-			case 2 -> this.machine.setState(new DeleteConfirmationForm(this.machine));
+			case "change password" -> this.machine.setState(new UpdatePwdFormState(this.machine));
+			case "delete account" -> this.machine.setState(new DeleteAccountConfForm(this.machine));
 			default -> this.machine.setState(new LoggedMenuState(this.machine));
 		}
 	}

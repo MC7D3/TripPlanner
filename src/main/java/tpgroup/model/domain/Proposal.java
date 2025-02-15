@@ -1,48 +1,50 @@
 package tpgroup.model.domain;
 
+import java.util.Optional;
+
 import tpgroup.model.Event;
 import tpgroup.model.EventsNode;
 
 public class Proposal {
 	private final User creator;
 	private final EventsNode node;
-	private final Event proposal;
+	private final Event event;
+	private final Optional<Event> updateEvent;
 	private final ProposalType proposalType;
 	private int likes;
-	private int dislikes;
 
-	public Proposal(ProposalType proposalType, EventsNode node, Event proposal, User creator) {
+	private Proposal(ProposalType proposalType, EventsNode node, Event event, Optional<Event> updateEvent, User creator) {
 		super();
 		this.proposalType = proposalType;
 		this.node = node;
-		this.proposal = proposal;
+		this.event = event;
 		this.creator = creator;
 		this.likes = 0;
-		this.dislikes = 0;
+		this.updateEvent = updateEvent;
+	}
+
+	public Proposal(ProposalType proposalType, EventsNode node, Event event, User creator){
+		this(proposalType, node, event, Optional.empty(), creator);
+	}
+
+	public Proposal(ProposalType proposalType, EventsNode node, Event event, Event updatedEvent, User creator){
+		this(proposalType, node, event, Optional.of(updatedEvent), creator);
 	}
 
 	public EventsNode getNode() {
 		return node;
 	}
 
-	public Event getProposal() {
-		return proposal;
+	public Event getEvent() {
+		return event;
 	}
 
 	public int getLikes() {
 		return likes;
 	}
 
-	public int getDislikes() {
-		return dislikes;
-	}
-
 	public void like(){
 		this.likes++;
-	}
-
-	public void dislike(){
-		this.dislikes++;
 	}
 
 	public User getCreator() {
@@ -59,7 +61,7 @@ public class Proposal {
 		int result = 1;
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 		result = prime * result + ((node == null) ? 0 : node.hashCode());
-		result = prime * result + ((proposal == null) ? 0 : proposal.hashCode());
+		result = prime * result + ((event == null) ? 0 : event.hashCode());
 		return result;
 	}
 
@@ -82,18 +84,23 @@ public class Proposal {
 				return false;
 		} else if (!node.equals(other.node))
 			return false;
-		if (proposal == null) {
-			if (other.proposal != null)
+		if (event == null) {
+			if (other.event != null)
 				return false;
-		} else if (!proposal.equals(other.proposal))
+		} else if (!event.equals(other.event))
 			return false;
 		return true;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Proposal [creator=" + creator + ", node=" + node + ", proposal=" + proposal + ", proposalType="
-				+ proposalType + "]";
+		return "Proposal [creator=" + creator + ", node=" + node + ", event=" + event + ", updateEvent=" + updateEvent
+				+ ", proposalType=" + proposalType + ", likes=" + likes + "]";
+	}
+
+	public Optional<Event> getUpdateEvent() {
+		return updateEvent;
 	}
 
 }

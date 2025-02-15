@@ -1,11 +1,9 @@
 package tpgroup.view.cli;
 
-import java.io.IOException;
-
 import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
 import tpgroup.model.exception.InvalidBeanParamException;
-
+import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.controller.AuthController;
 
 public class LoginFormState extends CliViewState {
@@ -21,18 +19,15 @@ public class LoginFormState extends CliViewState {
 		do {
 			result = false;
 			try {
+				FormFieldFactory ref = FormFieldFactory.getInstance();
 				System.out.println("NOTE: if u want to go back keep both field blank");
-				System.out.print("email:");
-				String email = in.readLine();
-				System.out.print("password:");
-				String password = new String(System.console().readPassword());
+				String email = ref.newDefault("email:", str -> str).get();
+				String password = ref.newPwdField("password:").get();
 				if (email.isEmpty() && password.isEmpty()) {
 					nextState = new UnloggedMenuState(this.machine);
 					break;
 				}
 				result = AuthController.validateCredentials(new EmailBean(email), new PwdBean(password));
-			} catch (IOException e) {
-				System.err.println("ERROR: unable to process inserted credentials");
 			} catch (InvalidBeanParamException e2) {
 				System.err.println("ERROR: " + e2.getMessage());
 			}

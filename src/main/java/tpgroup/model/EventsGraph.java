@@ -25,6 +25,10 @@ public class EventsGraph {
 		connectionsMapping.put(this.root, new HashSet<>());
 	}
 
+	public List<EventsNode> getConnectedNodes(EventsNode of){
+		return connectionsMapping.get(of).stream().toList();
+	}
+
 	public EventsNode createEmptyNode(EventsNode parent, String newNodeName) throws NodeConflictException {
 		if (parent == null)
 			parent = root;
@@ -57,6 +61,21 @@ public class EventsGraph {
 			throw new NodeConnectionException("cannot create a cycle in the graph");
 		}
 		connectionsMapping.get(parent).add(child);
+	}
+
+	public void disconnect(EventsNode parent, EventsNode child) throws NodeConnectionException {
+		if (parent == null)
+			parent = root;
+		if (!nodes.contains(parent) || !nodes.contains(child)) {
+			throw new NodeConnectionException("those nodes arent of the same graph");
+		}
+		if (!getConnectedNodes(parent).contains(child)) {
+			throw new NodeConnectionException("the nodes arent connected");
+		}
+		if(this.findFathers(child).size() <= 1) {
+			throw new NodeConnectionException("cannot disconnect the nodes, the child would remain orphan, consider deletion instead");
+		}
+		connectionsMapping.get(parent).remove(child);
 	}
 
 	private boolean isCycle(EventsNode start, EventsNode target) {

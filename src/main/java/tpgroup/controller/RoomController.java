@@ -3,6 +3,7 @@ package tpgroup.controller;
 import java.util.List;
 
 import tpgroup.model.RoomBean;
+import tpgroup.model.RoomCodeBean;
 import tpgroup.model.Session;
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
@@ -24,24 +25,33 @@ public class RoomController {
 			throw new RoomGenConflictException();
 	}
 
+	public static void deleteRoom() {
+		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+		try {
+			roomDao.delete(Session.getInstance().getEnteredRoom());
+			Session.getInstance().setEnteredRoom(null);
+		} catch (RecordNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 	public static List<Room> getJoinedRooms() {
 		return DAOFactory.getInstance().getDAO(Room.class)
 				.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()));
 	}
 
-	public static boolean abbandonRoom(String roomCode) {
+	public static boolean abbandonRoom(Room toAbbandon) {
 		User user = Session.getInstance().getLogged();
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		try {
-			Room rm = roomDao.get(new Room(roomCode));
-			rm.getMembers().remove(user);
-			if (user.equals(rm.getAdmin()) && rm.getMembers().size() > 1) {
-				rm.setAdmin(rm.getMembers().stream().findAny().get());	
-			}else if (user.equals(rm.getAdmin())){
-				roomDao.delete(rm);
+			toAbbandon.getMembers().remove(user);
+			if (user.equals(toAbbandon.getAdmin()) && toAbbandon.getMembers().size() > 1) {
+				toAbbandon.setAdmin(toAbbandon.getMembers().stream().findAny().get());	
+			}else if (user.equals(toAbbandon.getAdmin())){
+				roomDao.delete(toAbbandon);
 				return true;
 			}
-			roomDao.save(rm);
+			roomDao.save(toAbbandon);
 		} catch (RecordNotFoundException e) {
 			return false;
 		}
@@ -54,6 +64,22 @@ public class RoomController {
 
 	public static boolean amIAdmin(){
 		return Session.getInstance().getEnteredRoom().getAdmin().equals(Session.getInstance().getLogged());
+	}
+
+	public static boolean joinRoom(RoomCodeBean roomCode){
+		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+		List<Room> matches = roomDao.getFiltered(room -> room.getCode().equals(roomCode.getCode()));
+		if(matches.isEmpty()){
+			return false;
+		}
+		if(matches.size() > 1){
+			throw new IllegalStateException();
+		}
+		Room chosen = matches.get(0);
+		chosen.add(Session.getInstance().getLogged());
+		Session.getInstance().setEnteredRoom(chosen);
+		roomDao.save(chosen);
+		return true;
 	}
 
 

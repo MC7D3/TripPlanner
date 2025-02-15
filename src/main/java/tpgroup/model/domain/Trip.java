@@ -6,6 +6,8 @@ import java.util.List;
 
 import tpgroup.model.EventsGraph;
 import tpgroup.model.EventsNode;
+import tpgroup.model.exception.NodeConflictException;
+import tpgroup.model.exception.NodeConnectionException;
 
 public class Trip {
 	private final String destination;
@@ -16,6 +18,14 @@ public class Trip {
 		this.destination = destination;
 		tripGraph = new EventsGraph();
 		proposals = new ArrayList<>();
+	}
+
+	public List<EventsNode> getConnectedBranches(EventsNode of) {
+		return tripGraph.getConnectedNodes(of);
+	}
+
+	public int connCount(EventsNode of){
+		return tripGraph.connCount(of);
 	}
 
 	public String getDestination() {
@@ -46,8 +56,25 @@ public class Trip {
 		return this.proposals;
 	}
 
-	public List<EventsNode> getSequenceNodes(){
+	public List<EventsNode> getEventsNodes(){
 		return tripGraph.getAllNodes();
+	}
+
+
+	public EventsNode createBranch(EventsNode parent, String newNodeName) throws NodeConflictException {
+		return tripGraph.createEmptyNode(parent, newNodeName);
+	}
+
+	public void connectBranches(EventsNode parent, EventsNode child) throws NodeConnectionException {
+		tripGraph.connect(parent, child);
+	}
+
+	public void disconnectBranches(EventsNode parent, EventsNode child){
+		tripGraph.disconnect(parent, child);
+	}
+
+	public void removeNode(EventsNode toRemove) {
+		tripGraph.removeNode(toRemove);
 	}
 
 	@Override

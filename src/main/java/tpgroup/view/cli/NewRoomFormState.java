@@ -1,10 +1,10 @@
 package tpgroup.view.cli;
 
-import java.io.IOException;
 
 import tpgroup.model.RoomBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
+import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.controller.RoomController;
 
 public class NewRoomFormState extends CliViewState{
@@ -17,23 +17,21 @@ public class NewRoomFormState extends CliViewState{
 	@Override
 	public void show() {
 		RoomBean newRoom = null;
-		this.machine.setState(new LoggedMenuState(this.machine));
 		try {
+			FormFieldFactory ref = FormFieldFactory.getInstance();
 			System.out.println("NOTE: if you want to go back keep the field blank");
-			System.out.print("room's name:");
-			String name = in.readLine();
-			System.out.println("trip destination:");
-			String destination = in.readLine();
+			String name = ref.newDefault("room's name:", str -> str).get();
+			String destination = ref.newDefault("trip destination:", str -> str).get();
 			if(name.isEmpty() && destination.isEmpty()){
 				return;
 			}
 			newRoom = new RoomBean(name, location);
 			attemptRoomCreation(newRoom, 3);
 			System.out.println("ERROR: too many rooms with this name are present, try another one");
-		} catch (IOException e) {
-			System.err.println("ERROR: unable to gather the new room informations");
+			this.machine.setState(new RoomAdminMenuState(this.machine));
 		} catch (InvalidBeanParamException e2){
 			System.err.println("ERROR: " + e2.getMessage());
+			this.machine.setState(new LoggedMenuState(this.machine));
 		}
 	}
 
