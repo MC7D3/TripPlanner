@@ -35,4 +35,22 @@ public class ConfigReader {
 		}
 	}
 
+	//TODO: fix exceptions raised
+	public String readJdbcUrl() {
+		String res = conf.getProperty("jdbc.url");
+		return res != null? res : "";
+	}
+	
+	public String readJdbcUsername(){
+		String res = conf.getProperty("jdbc.username");
+		return res != null? res : "";
+	}
+	public String readJdbcPassword(){
+		String res = conf.getProperty("jdbc.password");
+		return res != null? res : "";
+	}
+	public String readJdbcDriver(){
+		String res = conf.getProperty("jdbc.driver");
+		return res != null? res : "";
+	}
 }

@@ -14,10 +14,14 @@ public class Trip {
 	private final EventsGraph tripGraph;
 	private final List<Proposal> proposals;
 	
-	public Trip(String destination) {
+	public Trip(String destination, List<Proposal> proposals, EventsGraph tripGraph) {
+		this.proposals = proposals;
 		this.destination = destination;
-		tripGraph = new EventsGraph();
-		proposals = new ArrayList<>();
+		this.tripGraph = tripGraph;
+	}
+
+	public Trip(String destination) {
+		this(destination, new ArrayList<>(), new EventsGraph());
 	}
 
 	public List<EventsNode> getConnectedBranches(EventsNode of) {
@@ -75,6 +79,10 @@ public class Trip {
 
 	public void removeNode(EventsNode toRemove) {
 		tripGraph.removeNode(toRemove);
+	}
+
+	public EventsGraph getTripGraph() {
+		return tripGraph;
 	}
 
 	@Override

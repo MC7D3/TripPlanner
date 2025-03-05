@@ -18,11 +18,11 @@ public abstract class DAOFactory {
 				instance = new DemoDAOFactory();
 				break;
 			case MYSQLDB:
-				//TODO
+				instance = new DBDAOFactory();
 				break;
 			case FILE:
-				//TODO
-				break;
+				instance = new FileDAOFactory();
+
 			default:
 				throw new InvalidPersistenceTypeException();
 		}

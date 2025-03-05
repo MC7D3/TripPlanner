@@ -16,6 +16,10 @@ public class PointOfInterest {
 		this.rating = rating;
 	}
 
+	public PointOfInterest(String name, String location){
+		this(name, location, null, null, null);
+	}
+
 	public String getName() {
 		return name;
 	}

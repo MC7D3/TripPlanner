@@ -10,11 +10,11 @@ import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
 
-public class POIDAODemo implements DAO<PointOfInterest>{
+public class PointOfInterestDAODemo implements DAO<PointOfInterest>{
 
 	private static final Set<PointOfInterest> poiSet = new HashSet<>();
 
-	public POIDAODemo() {
+	public PointOfInterestDAODemo() {
 		super();
 	}
 

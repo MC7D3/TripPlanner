@@ -12,7 +12,7 @@ public class Room {
 	private Set<User> members;
 	private Trip trip;
  
-	public Room(String name, User admin, Set<User> members, String destination) {
+	public Room(String name, User admin, Set<User> members, Trip trip) {
 		Random rand = new SecureRandom();
 		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(100000) + 1); 
 		this.name = name;
@@ -22,7 +22,11 @@ public class Room {
 		this.members.addAll(members);
 		this.members.add(admin);
 
-		this.trip = new Trip(destination);
+		this.trip = trip;
+	}
+
+	public Room(String name, User admin, Set<User> members, String destination) {
+		this(name, admin, members, new Trip(destination));
 	}
 
 	public Room(String code){

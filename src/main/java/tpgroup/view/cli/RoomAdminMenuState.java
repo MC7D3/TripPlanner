@@ -11,7 +11,6 @@ public class RoomAdminMenuState extends RoomMemberMenuState{
 		super(machine);
 	}
 
-	//TODO
 	@Override
 	public void show() {
 		List<String> adminMenuOptions = new ArrayList<>(List.of("accept proposals", "create alternative sequence", "split a sequence into two", "connect sequences", "disconnect branches", "delete branches", "delete room"));

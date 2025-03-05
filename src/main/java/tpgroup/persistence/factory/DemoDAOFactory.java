@@ -9,15 +9,22 @@ import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 
 import tpgroup.persistence.DAO;
+import tpgroup.persistence.cascade.UserToRoomCascade;
 import tpgroup.persistence.demo.*;
 
 class DemoDAOFactory extends DAOFactory{
 	private static Map<Class<?>, DAO<?>> daos = new HashMap<>();
 
 	static{
-		daos.put(User.class, new UserDAODemo());
-		daos.put(Room.class, new RoomDAODemo());
-		daos.put(PointOfInterest.class, new POIDAODemo());
+		UserDAODemo userDaoDemo = new UserDAODemo();
+		RoomDAODemo roomDaoDemo = new RoomDAODemo();
+		PointOfInterestDAODemo poiDaoDemo = new PointOfInterestDAODemo();
+
+		userDaoDemo.setCascadePolicy(new UserToRoomCascade(roomDaoDemo));
+
+		daos.put(User.class, userDaoDemo);
+		daos.put(Room.class, roomDaoDemo);
+		daos.put(PointOfInterest.class, poiDaoDemo);
 	}
 
 	@Override

@@ -14,41 +14,23 @@ import tpgroup.persistence.DAO;
 public class UserDAODemo implements DAO<User>{
 
 	private final Set<User> userList = new HashSet<>();
-	private final Cascade<User, Room> cascadePolicy = new Cascade<>(new RoomDAODemo()) {
-
-		@Override
-		public boolean propagateAdd(User toAdd) {
-			//not needed
-			return true;
-		}
-
-		@Override
-		public boolean propagateDelete(User toDelete) {
-			for(Room room: cascadePolicy.getTo().getAll()){
-				if(room.getMembers().contains(toDelete)){
-					room.getMembers().remove(toDelete);
-					cascadePolicy.getTo().save(room);
-				}
-			}
-			return true;
-		}
-
-		@Override
-		public boolean propagateUpdate(User toUpdate) {
-			for(Room room: cascadePolicy.getTo().getAll()){
-				if(room.isMember(toUpdate)){
-					room.remove(toUpdate);
-					room.add(toUpdate);
-					cascadePolicy.getTo().save(room);
-				}
-			}
-			return true;
-		}
-	};
+	private Cascade<User, Room> cascadePolicy;
 
 	public UserDAODemo() {
 		super();
 	}
+	
+
+
+	public Set<User> getUserList() {
+		return userList;
+	}
+
+	public void setCascadePolicy(Cascade<User, Room> cascadePolicy) {
+		this.cascadePolicy = cascadePolicy;
+	}
+
+
 
 	@Override
 	public User get(User obj) throws RecordNotFoundException {
