@@ -14,7 +14,7 @@ public class Room {
  
 	public Room(String name, User admin, Set<User> members, Trip trip) {
 		Random rand = new SecureRandom();
-		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(100000) + 1); 
+		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(99999) + 1); 
 		this.name = name;
 		this.admin = admin;
 

@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import tpgroup.model.exception.InvalidPathException;
 import tpgroup.persistence.DAO;
 
 public abstract class FileDAO<T> implements DAO<T> {
@@ -25,6 +26,14 @@ public abstract class FileDAO<T> implements DAO<T> {
 		this.file = new File(filePath);
 		this.gson = config.setPrettyPrinting().create();
 		this.collectionType = new TypeToken<List<T>>() {}.getType();
+		if(!file.exists()){
+			try(Writer wr = new FileWriter(file)){
+				wr.write("");
+			}catch(IOException e){
+				throw new InvalidPathException();
+			}
+
+		}
 	}
 
 	protected List<T> readAll() {
@@ -32,7 +41,7 @@ public abstract class FileDAO<T> implements DAO<T> {
 			List<T> list = gson.fromJson(reader, collectionType);
 			return list != null ? list : new ArrayList<>();
 		} catch (IOException e) {
-			throw new RuntimeException("failed access from file", e);
+			throw new InvalidPathException();
 		}
 	}
 
@@ -40,7 +49,7 @@ public abstract class FileDAO<T> implements DAO<T> {
 		try (Writer writer = new FileWriter(file)) {
 			gson.toJson(list, collectionType, writer);
 		} catch (IOException e) {
-			throw new RuntimeException("failed writing to file", e);
+			throw new InvalidPathException();
 		}
 	}
 }

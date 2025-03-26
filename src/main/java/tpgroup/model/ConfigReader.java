@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import tpgroup.model.exception.InvalidPersistenceTypeException;
 import tpgroup.model.exception.InvalidViewTypeException;
+import tpgroup.model.exception.PropertyNotFoundException;
 import tpgroup.persistence.PersistenceType;
 import tpgroup.view.ViewType;
 
@@ -36,9 +37,10 @@ public class ConfigReader {
 	}
 
 	//TODO: fix exceptions raised
-	public String readJdbcUrl() {
+	public String readJdbcUrl() throws PropertyNotFoundException{
 		String res = conf.getProperty("jdbc.url");
-		return res != null? res : "";
+		if(res != null) return res;
+		throw new PropertyNotFoundException();
 	}
 	
 	public String readJdbcUsername(){

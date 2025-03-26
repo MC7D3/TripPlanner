@@ -20,6 +20,10 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class TripController {
 
+	private TripController(){
+		super();
+	}
+
 	public static List<Proposal> getProposals() {
 		return Session.getInstance().getEnteredRoom().getTrip().getProposals();
 	}

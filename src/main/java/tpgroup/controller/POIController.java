@@ -12,6 +12,10 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class POIController {
 
+	private POIController() {
+		super();
+	}
+
 	public static List<PointOfInterest> getAllPOI(){
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 		return poiDao.getAll();

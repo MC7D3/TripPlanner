@@ -4,18 +4,17 @@ import java.util.List;
 
 import tpgroup.view.cli.component.FormFieldFactory;
 
-public class RoomMemberMenuState extends CliViewState{
+public class RoomMemberMenuState extends CliViewState {
 	protected final List<String> menuOptions;
 
 	public RoomMemberMenuState(CliView machine) {
 		super(machine);
-		menuOptions = List.of("propose new Event", "propose event removal", "list other proposals", "propose event update", "undo proposal", "go back");
+		menuOptions = List.of("propose new Event", "propose event removal", "list other proposals",
+				"propose event update", "undo proposal", "go back");
 	}
 
-
-
 	protected void handleChoice(String choice) {
-		switch(choice){
+		switch (choice) {
 			case "propose new Event" -> this.machine.setState(new ProposeAddForm(this.machine));
 			case "propose event removal" -> this.machine.setState(new ProposeRemovalForm(this.machine));
 			case "list other proposals" -> this.machine.setState(new ListAndLikeProposalsState(this.machine));
@@ -32,4 +31,3 @@ public class RoomMemberMenuState extends CliViewState{
 	}
 
 }
-

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class RoomCodeBean {
-	private static final String CODE_REG = "^[a-z0-9]+(?:-[a-z0-9]+)*-\\d{1,5}$";
+	private static final String CODE_REG = "^[a-z0-9]+(?:-[a-z0-9]+)*+-\\d{1,5}$";
 	private final String code;
 
 	public RoomCodeBean(String code) throws InvalidBeanParamException {

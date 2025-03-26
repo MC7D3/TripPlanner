@@ -26,11 +26,7 @@ public class POIFilterBean {
 		}
 		try{
 			this.chosenTags = tagsTxt.stream().map(str -> {
-				try {
-					return Tag.getTagFromName(str);
-				} catch (EnumNotFoundException e) {
-					throw new RuntimeException(e);
-				}
+				return Tag.getTagFromName(str);
 			}).toList();
 		}catch(RuntimeException e){
 			throw new InvalidBeanParamException("tags");

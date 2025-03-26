@@ -16,6 +16,7 @@ import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Rating;
 import tpgroup.model.domain.Tag;
 import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.model.exception.SQLConnInterruptedException;
 import tpgroup.persistence.DAO;
 
 public class PointOfInterestDAODB implements DAO<PointOfInterest> {
@@ -44,7 +45,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
                 throw new RecordNotFoundException();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during get()", e);
+            throw new SQLConnInterruptedException(e);
         } finally {
             closeQuietly(rs);
             closeQuietly(stmt);
@@ -67,7 +68,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
             }
             return pois;
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during getAll()", e);
+            throw new SQLConnInterruptedException(e);
         } finally {
             closeQuietly(rs);
             closeQuietly(stmt);
@@ -92,7 +93,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
                 add(poi);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during save()", e);
+            throw new SQLConnInterruptedException(e);
         } finally {
             closeQuietly(stmt);
         }
@@ -117,7 +118,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
             if (e.getErrorCode() == 1062) { // Duplicate entry
                 return false;
             }
-            throw new RuntimeException("Database error during add()", e);
+            throw new SQLConnInterruptedException(e);
         } finally {
             closeQuietly(stmt);
         }
@@ -137,7 +138,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
                 throw new RecordNotFoundException();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error during delete()", e);
+            throw new SQLConnInterruptedException(e);
         } finally {
             closeQuietly(stmt);
         }

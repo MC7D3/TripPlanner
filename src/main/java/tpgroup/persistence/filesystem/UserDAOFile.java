@@ -1,9 +1,5 @@
 package tpgroup.persistence.filesystem;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,16 +11,8 @@ import tpgroup.model.exception.RecordNotFoundException;
 
 public class UserDAOFile extends FileDAO<User>{
 
-
 	public UserDAOFile(String filePath) {
 		super(filePath, new GsonBuilder());
-		if (!file.exists()) {
-			try (Writer writer = new FileWriter(file)) {
-				gson.toJson(new ArrayList<User>(), collectionType, writer);
-			} catch (IOException e) {
-				throw new RuntimeException("failed to create or recover the file", e);
-			}
-		}
 	}
 
 
@@ -42,17 +30,10 @@ public class UserDAOFile extends FileDAO<User>{
 	@Override
 	public void save(User user) {
 		List<User> users = readAll();
-		boolean updated = false;
-		for (int i = 0; i < users.size(); i++) {
-			if (users.get(i).equals(user)) {
-				users.set(i, user);
-				updated = true;
-				break;
-			}
+		if (users.contains(user)) {
+			users.remove(user);
 		}
-		if (!updated) {
-			users.add(user);
-		}
+		users.add(user);
 		writeAll(users);
 	}
 

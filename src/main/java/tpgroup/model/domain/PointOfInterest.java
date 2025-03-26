@@ -14,6 +14,7 @@ public class PointOfInterest {
 		this.description = description;
 		this.location = location;
 		this.rating = rating;
+		this.tags = tags;
 	}
 
 	public PointOfInterest(String name, String location){

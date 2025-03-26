@@ -15,6 +15,7 @@ import tpgroup.model.Event;
 import tpgroup.model.EventsGraph;
 import tpgroup.model.EventsNode;
 import tpgroup.model.domain.PointOfInterest;
+import tpgroup.model.exception.MalformedJSONException;
 import tpgroup.model.exception.NodeConnectionException;
 
 public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
@@ -90,6 +91,8 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 					}
 					in.endArray();
 					break;
+				default:
+					throw new MalformedJSONException();
 			}
 		}
 		in.endObject();
@@ -152,6 +155,8 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 				case "end":
 					end = LocalDateTime.parse(in.nextString());
 					break;
+				default:
+					throw new MalformedJSONException();
 			}
 		}
 		in.endObject();
@@ -176,6 +181,8 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 				case "to":
 					to = in.nextString();
 					break;
+				default:
+					throw new MalformedJSONException();
 			}
 		}
 		in.endObject();

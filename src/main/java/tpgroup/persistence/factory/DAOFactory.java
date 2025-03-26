@@ -22,7 +22,7 @@ public abstract class DAOFactory {
 				break;
 			case FILE:
 				instance = new FileDAOFactory();
-
+				break;
 			default:
 				throw new InvalidPersistenceTypeException();
 		}

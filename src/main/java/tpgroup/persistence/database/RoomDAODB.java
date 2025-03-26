@@ -28,6 +28,7 @@ import tpgroup.model.domain.Room;
 import tpgroup.model.domain.Trip;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.model.exception.SQLConnInterruptedException;
 import tpgroup.persistence.DAO;
 import tpgroup.persistence.EventsGraphJSONTypeAdapter;
 import tpgroup.persistence.LocalDateTimeJSONTypeAdaper;
@@ -98,7 +99,7 @@ public class RoomDAODB implements DAO<Room> {
 					new Trip(rs.getString("destination"), proposals, tripGraph));
 
 		} catch (SQLException e) {
-			throw new RuntimeException("Database error during get()", e);
+			throw new SQLConnInterruptedException(e);
 		}
 	}
 
@@ -126,7 +127,7 @@ public class RoomDAODB implements DAO<Room> {
 			updateMembers(room);
 
 		} catch (SQLException e) {
-			throw new RuntimeException("Database error during save()", e);
+			throw new SQLConnInterruptedException(e);
 		}
 	}
 
@@ -161,35 +162,32 @@ public class RoomDAODB implements DAO<Room> {
 		final String insertRoom = "INSERT INTO room_tbl (code, name, admin_email, destination, proposals, tripgraph) "
 				+ "VALUES (?, ?, ?, ?, ?, ?)";
 
-		try {
-			try (PreparedStatement stmt = conn.prepareStatement(insertRoom)) {
-				String proposalsJson = gson.toJson(room.getTrip().getProposals());
-				String tripGraphJson = gson.toJson(room.getTrip().getTripGraph());
+		try (PreparedStatement stmt = conn.prepareStatement(insertRoom)) {
+			String proposalsJson = gson.toJson(room.getTrip().getProposals());
+			String tripGraphJson = gson.toJson(room.getTrip().getTripGraph());
 
-				stmt.setString(1, room.getCode());
-				stmt.setString(2, room.getName());
-				stmt.setString(3, room.getAdmin().getEmail());
-				stmt.setString(4, room.getTrip().getDestination());
-				stmt.setString(5, proposalsJson);
-				stmt.setString(6, tripGraphJson);
+			stmt.setString(1, room.getCode());
+			stmt.setString(2, room.getName());
+			stmt.setString(3, room.getAdmin().getEmail());
+			stmt.setString(4, room.getTrip().getDestination());
+			stmt.setString(5, proposalsJson);
+			stmt.setString(6, tripGraphJson);
 
-				if (stmt.executeUpdate() == 0) {
-					return false;
-				}
-
-				updateMembers(room);
-				return true;
-
-			} catch (SQLException e) {
-				conn.rollback();
-				if (e.getErrorCode() == 1062) { // Duplicate entry
-					return false;
-				}
-				throw e;
+			if (stmt.executeUpdate() == 0) {
+				return false;
 			}
+
+			updateMembers(room);
+			return true;
+
 		} catch (SQLException e) {
-			throw new RuntimeException("Database error during add()", e);
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				throw new SQLConnInterruptedException(e);
+			}
 		}
+		return false;
 	}
 
 	@Override
@@ -197,23 +195,19 @@ public class RoomDAODB implements DAO<Room> {
 		final String deleteRoom = "DELETE FROM room_tbl WHERE code = ?";
 
 		try {
-			try {
-				PreparedStatement stmt = conn.prepareStatement(deleteRoom);
-				stmt.setString(1, room.getCode());
+			PreparedStatement stmt = conn.prepareStatement(deleteRoom);
+			stmt.setString(1, room.getCode());
 
-				if (stmt.executeUpdate() == 0) {
-					throw new RecordNotFoundException();
-				}
-
-				PreparedStatement deleteMembers = conn.prepareStatement(
-						"DELETE FROM member_of_tbl WHERE room_code = ?");
-				deleteMembers.setString(1, room.getCode());
-				deleteMembers.executeUpdate();
-			} catch (SQLException e) {
-				throw e;
+			if (stmt.executeUpdate() == 0) {
+				throw new RecordNotFoundException();
 			}
+
+			PreparedStatement deleteMembers = conn.prepareStatement(
+					"DELETE FROM member_of_tbl WHERE room_code = ?");
+			deleteMembers.setString(1, room.getCode());
+			deleteMembers.executeUpdate();
 		} catch (SQLException e) {
-			throw new RuntimeException("Database error during delete()", e);
+			throw new SQLConnInterruptedException(e);
 		}
 	}
 
@@ -230,7 +224,7 @@ public class RoomDAODB implements DAO<Room> {
 				rooms.add(get(new Room(rs.getString("code"))));
 			}
 		} catch (SQLException | RecordNotFoundException e) {
-			throw new RuntimeException("Database error during getAll()", e);
+			throw new SQLConnInterruptedException(e);
 		}
 		return rooms;
 	}

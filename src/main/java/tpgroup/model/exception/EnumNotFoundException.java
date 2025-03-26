@@ -1,6 +1,6 @@
 package tpgroup.model.exception;
 
-public class EnumNotFoundException extends Exception{
+public class EnumNotFoundException extends RuntimeException{
 	private static final String DEF_MSG = "no enum constant was found binded to the provided name";
 
 	public EnumNotFoundException(String msg) {
