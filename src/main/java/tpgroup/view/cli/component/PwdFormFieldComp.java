@@ -1,6 +1,9 @@
 package tpgroup.view.cli.component;
 
 import java.io.Console;
+import java.io.IOError;
+
+import tpgroup.model.exception.FormFieldIOException;
 
 public class PwdFormFieldComp implements FormFieldComp<String>{
 	private final Console in = System.console();
@@ -12,10 +15,14 @@ public class PwdFormFieldComp implements FormFieldComp<String>{
 	}
 
 	@Override
-	public String get() {
-		System.out.println(prompt);
-		System.out.print(">");
-		return new String(in.readPassword());
+	public String get() throws FormFieldIOException{
+		try {
+			System.out.println(prompt);
+			System.out.print(">");
+			return new String(in.readPassword());
+		} catch (IOError e) {
+			throw new FormFieldIOException();
+		}
 	}
 	
 	

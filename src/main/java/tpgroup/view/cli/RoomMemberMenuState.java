@@ -2,6 +2,7 @@ package tpgroup.view.cli;
 
 import java.util.List;
 
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
 public class RoomMemberMenuState extends CliViewState {
@@ -20,14 +21,18 @@ public class RoomMemberMenuState extends CliViewState {
 			case "list other proposals" -> this.machine.setState(new ListAndLikeProposalsState(this.machine));
 			case "propose event update" -> this.machine.setState(new ProposeUpdateForm(this.machine));
 			case "undo proposal" -> this.machine.setState(new RemoveProposalForm(this.machine));
-			case "go back" -> this.machine.setState(new LoggedMenuState(this.machine));
+			default -> this.machine.setState(new LoggedMenuState(this.machine));
 		}
 	}
 
 	@Override
 	public void show() {
-		String chosen = FormFieldFactory.getInstance().newSelectItem(menuOptions).get();
-		handleChoice(chosen);
+		try {
+			String chosen = FormFieldFactory.getInstance().newSelectItem(menuOptions).get();
+			handleChoice(chosen);
+		} catch (FormFieldIOException e) {
+			System.err.println("ERROR: " + e);
+		}
 	}
 
 }

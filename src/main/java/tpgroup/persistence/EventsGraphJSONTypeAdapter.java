@@ -117,6 +117,8 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 					}
 					in.endArray();
 					break;
+				default:
+					throw new MalformedJSONException();
 			}
 		}
 		in.endObject();
@@ -145,6 +147,8 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 							case "location":
 								poiLocation = in.nextString();
 								break;
+							default:
+								throw new MalformedJSONException();
 						}
 					}
 					in.endObject();

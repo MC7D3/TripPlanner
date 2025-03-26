@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import tpgroup.model.exception.FormFieldIOException;
+
 public class SelectItemFormFieldComp<T> implements FormFieldComp<T>{
 	private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -35,7 +37,7 @@ public class SelectItemFormFieldComp<T> implements FormFieldComp<T>{
 		this(prompt, choices, false);
 	}
 
-	private int selectMenuOption() {
+	private int selectMenuOption() throws IOException{
 		int choice = 0;
 		boolean outOfRange;
 		do {
@@ -51,7 +53,7 @@ public class SelectItemFormFieldComp<T> implements FormFieldComp<T>{
 			try {
 				choice = Integer.parseInt(in.readLine());
 				isInt = true;
-			} catch (IOException | NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				isInt = false;
 			}
 			outOfRange = !(choices.containsKey(choice) || (nullable && choice == choices.size() + 1));
@@ -63,10 +65,15 @@ public class SelectItemFormFieldComp<T> implements FormFieldComp<T>{
 	}
 
 	@Override
-	public T get(){
-		int chosen = selectMenuOption();
-		if(nullable && chosen == choices.size() + 1){
-			return null;
+	public T get() throws FormFieldIOException{
+		int chosen;
+		try {
+			chosen = selectMenuOption();
+			if(nullable && chosen == choices.size() + 1){
+				return null;
+			}
+		} catch (IOException e) {
+			throw new FormFieldIOException();
 		}
 		return this.choices.get(chosen);
 	}

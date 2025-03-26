@@ -2,6 +2,7 @@ package tpgroup.view.cli;
 
 import tpgroup.controller.RoomController;
 import tpgroup.model.domain.Room;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
 public class EnterRoomFormState extends CliViewState{
@@ -12,8 +13,12 @@ public class EnterRoomFormState extends CliViewState{
 
 	@Override
 	public void show() {
-		Room chosen = FormFieldFactory.getInstance().newSelectItem(RoomController.getJoinedRooms()).get();
-		RoomController.enterRoom(chosen);
+		try {
+			Room chosen = FormFieldFactory.getInstance().newSelectItem(RoomController.getJoinedRooms()).get();
+			RoomController.enterRoom(chosen);
+		} catch (FormFieldIOException e) {
+			System.err.println("ERROR: " + e.getMessage());
+		}
 		this.machine.setState(RoomController.amIAdmin()? new RoomAdminMenuState(this.machine) : new RoomMemberMenuState(this.machine));
 	}
 	

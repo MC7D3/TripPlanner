@@ -2,6 +2,7 @@ package tpgroup.view.cli;
 
 
 import tpgroup.model.RoomBean;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
 import tpgroup.view.cli.component.FormFieldFactory;
@@ -29,8 +30,8 @@ public class NewRoomFormState extends CliViewState{
 			attemptRoomCreation(newRoom, 3);
 			System.out.println("ERROR: too many rooms with this name are present, try another one");
 			this.machine.setState(new RoomAdminMenuState(this.machine));
-		} catch (InvalidBeanParamException e2){
-			System.err.println("ERROR: " + e2.getMessage());
+		} catch (InvalidBeanParamException | FormFieldIOException e){
+			System.err.println("ERROR: " + e.getMessage());
 			this.machine.setState(new LoggedMenuState(this.machine));
 		}
 	}

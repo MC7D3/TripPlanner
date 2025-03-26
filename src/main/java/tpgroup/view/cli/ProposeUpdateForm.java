@@ -5,6 +5,7 @@ import tpgroup.controller.TripController;
 import tpgroup.model.Event;
 import tpgroup.model.EventsNode;
 import tpgroup.model.IntervalBean;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
@@ -32,7 +33,7 @@ public class ProposeUpdateForm extends CliViewState {
 			} else {
 				System.out.println("proposal invalid or malformed");
 			}
-		} catch (InvalidBeanParamException e) {
+		} catch (InvalidBeanParamException | FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 		this.machine.setState(RoomController.amIAdmin() ? new RoomAdminMenuState(this.machine)

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import tpgroup.model.exception.FormFieldIOException;
+
 public class ConfFormFieldComp implements FormFieldComp<Boolean>{
 	private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	private final String prompt;
@@ -14,7 +16,7 @@ public class ConfFormFieldComp implements FormFieldComp<Boolean>{
 	}
 
 	@Override
-	public Boolean get() {
+	public Boolean get() throws FormFieldIOException {
 		String answer = "";
 		try{
 			System.out.println(prompt);
@@ -23,8 +25,7 @@ public class ConfFormFieldComp implements FormFieldComp<Boolean>{
 			answer = in.readLine();
 			return answer.equals("yes");
 		}catch(IOException e){
-			System.err.println("ERROR: unable to process input");
-			return false;
+			throw new FormFieldIOException();
 		}
 	}
 

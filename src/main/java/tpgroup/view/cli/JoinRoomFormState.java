@@ -2,6 +2,7 @@ package tpgroup.view.cli;
 
 import tpgroup.controller.RoomController;
 import tpgroup.model.RoomCodeBean;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
@@ -19,7 +20,7 @@ public class JoinRoomFormState extends CliViewState{
 				System.out.println("room joined successfully!");
 				this.machine.setState(new RoomMemberMenuState(this.machine));
 			}
-		} catch (InvalidBeanParamException e) {
+		} catch (InvalidBeanParamException | FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 		this.machine.setState(new LoggedMenuState(this.machine));

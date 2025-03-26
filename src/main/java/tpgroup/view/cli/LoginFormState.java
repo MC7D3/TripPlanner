@@ -2,6 +2,7 @@ package tpgroup.view.cli;
 
 import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.controller.AuthController;
@@ -28,8 +29,8 @@ public class LoginFormState extends CliViewState {
 					break;
 				}
 				result = AuthController.validateCredentials(new EmailBean(email), new PwdBean(password));
-			} catch (InvalidBeanParamException e2) {
-				System.err.println("ERROR: " + e2.getMessage());
+			} catch (InvalidBeanParamException | FormFieldIOException e) {
+				System.err.println("ERROR: " + e.getMessage());
 			}
 			System.out.println(result ? "login succesfull!" : "email or password incorrect, try again");
 		} while (!result);

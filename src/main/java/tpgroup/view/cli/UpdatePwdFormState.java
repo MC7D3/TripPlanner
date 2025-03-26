@@ -2,6 +2,7 @@ package tpgroup.view.cli;
 
 import tpgroup.controller.OptionsController;
 import tpgroup.model.PwdBean;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
@@ -23,8 +24,8 @@ public class UpdatePwdFormState extends CliViewState{
 				OptionsController.updatePassword(passwordBean);
 				System.out.println("password updated succesfully!");
 			}
-		} catch (InvalidBeanParamException e2){
-			System.err.println("ERROR: " + e2.getMessage());
+		} catch (InvalidBeanParamException | FormFieldIOException e){
+			System.err.println("ERROR: " + e.getMessage());
 		}
 		this.machine.setState(new OptionsMenuState(this.machine));
 	}

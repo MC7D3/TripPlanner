@@ -3,6 +3,7 @@ package tpgroup.view.cli;
 import java.util.List;
 
 import tpgroup.model.Session;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
 public class LoggedMenuState extends CliViewState{
@@ -13,7 +14,12 @@ public class LoggedMenuState extends CliViewState{
 
 	@Override
 	public void show() {
-		String choice = FormFieldFactory.getInstance().newSelectItem(List.of("create new room", "join room", "enter room", "abbandon room", "options", "logout", "exit")).get();
+		String choice = "";
+		try {
+			choice = FormFieldFactory.getInstance().newSelectItem(List.of("create new room", "join room", "enter room", "abbandon room", "options", "logout", "exit")).get();
+		} catch (FormFieldIOException e) {
+			System.err.println("ERROR: " + e.getMessage());
+		}
 		switch(choice){
 			case "create new room" -> this.machine.setState(new NewRoomFormState(this.machine));
 			case "join room" -> this.machine.setState(new JoinRoomFormState(this.machine));

@@ -9,6 +9,7 @@ import tpgroup.model.EventsNode;
 import tpgroup.model.IntervalBean;
 import tpgroup.model.POIFilterBean;
 import tpgroup.model.domain.PointOfInterest;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
@@ -44,7 +45,7 @@ public class ProposeAddForm extends CliViewState {
 			} else {
 				System.out.println("proposal invalid or malformed");
 			}
-		} catch (InvalidBeanParamException e) {
+		} catch (InvalidBeanParamException | FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 		this.machine.setState(RoomController.amIAdmin() ? new RoomAdminMenuState(this.machine)

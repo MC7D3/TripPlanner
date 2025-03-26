@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import tpgroup.model.exception.FormFieldIOException;
+
 public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 	private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	private final String prompt;
@@ -19,7 +21,7 @@ public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 	}
 
 	@Override
-	public List<T> get() {
+	public List<T> get() throws FormFieldIOException{
 		List<T> items = new ArrayList<>();
 		do{
 			try {
@@ -30,8 +32,7 @@ public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 				}
 				items.add(conversion.apply(in.readLine()));
 			} catch (IOException e) {
-				System.err.println("ERROR: unable to process input");
-				throw new RuntimeException(e);
+				throw new FormFieldIOException();
 			}
 		}while(true);
 		return items;

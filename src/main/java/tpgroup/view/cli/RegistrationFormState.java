@@ -3,6 +3,7 @@ package tpgroup.view.cli;
 import tpgroup.controller.AuthController;
 import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
+import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
 
@@ -39,8 +40,8 @@ public class RegistrationFormState extends CliViewState{
 					System.out.println("ERROR: there is already an account binded to the inserted email");
 				}
 				System.out.println("registration succesfull!");
-			} catch (InvalidBeanParamException e2) {
-				System.err.println("ERROR: " + e2.getMessage());
+			} catch (InvalidBeanParamException | FormFieldIOException e) {
+				System.err.println("ERROR: " + e.getMessage());
 			}
 		} while (!validCredentials || !registrationRes);
 		this.machine.setState(nextState);

@@ -2,7 +2,6 @@ package tpgroup.persistence.filesystem;
 
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.google.gson.GsonBuilder;
 
@@ -44,7 +43,7 @@ public class UserDAOFile extends FileDAO<User>{
 
 	@Override
 	public List<User> getFiltered(Predicate<User> filter) {
-		return readAll().stream().filter(filter).collect(Collectors.toList());
+		return readAll().stream().filter(filter).toList();
 	}
 
 	@Override

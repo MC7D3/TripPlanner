@@ -22,7 +22,7 @@ public class FormFieldFactory {
 	}
 
 	public <T> FormFieldComp<T> newSelectItem(String prompt, List<T> items, boolean nullable){
-		return new SelectItemFormFieldComp<>(prompt, items);
+		return new SelectItemFormFieldComp<>(prompt, items, nullable);
 	}
 
 	public <T> FormFieldComp<T> newSelectItem(List<T> items){

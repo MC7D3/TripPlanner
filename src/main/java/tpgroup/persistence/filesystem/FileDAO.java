@@ -22,7 +22,7 @@ public abstract class FileDAO<T> implements DAO<T> {
 	protected final Gson gson;
 	protected final Type collectionType;
 
-	public FileDAO(String filePath, GsonBuilder config) {
+	protected FileDAO(String filePath, GsonBuilder config) {
 		this.file = new File(filePath);
 		this.gson = config.setPrettyPrinting().create();
 		this.collectionType = new TypeToken<List<T>>() {}.getType();
