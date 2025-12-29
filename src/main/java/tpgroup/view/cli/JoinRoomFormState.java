@@ -1,29 +1,26 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.RoomController;
-import tpgroup.model.RoomCodeBean;
+import tpgroup.controller.graphical.cli.LoggedMenuGController;
 import tpgroup.model.exception.FormFieldIOException;
-import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class JoinRoomFormState extends CliViewState{
 
-	protected JoinRoomFormState(CliView machine) {
-		super(machine);
+	public JoinRoomFormState() {
+		super();
 	}
 
 	@Override
-	public void show() {
+	public void present() {
 		try {
+			System.out.println("NOTE: if you want to go back keep the field blank");
 			String roomCode = FormFieldFactory.getInstance().newDefault("room's code:", str -> str).get();
-			if(RoomController.joinRoom(new RoomCodeBean(roomCode))){
-				System.out.println("room joined successfully!");
-				this.machine.setState(new RoomMemberMenuState(this.machine));
-			}
-		} catch (InvalidBeanParamException | FormFieldIOException e) {
+			CliViewState next = LoggedMenuGController.joinRoom(roomCode);
+			this.machine.setState(next);
+		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
-		this.machine.setState(new LoggedMenuState(this.machine));
 	}
 
 }

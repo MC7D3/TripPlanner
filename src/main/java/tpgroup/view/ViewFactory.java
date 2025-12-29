@@ -1,7 +1,8 @@
 package tpgroup.view;
 
-import tpgroup.view.cli.CliView;
 import tpgroup.model.exception.InvalidViewTypeException;
+import tpgroup.view.cli.stateMachine.CliView;
+import tpgroup.view.javaFX.FxView;
 
 public class ViewFactory {
 	private static ViewFactory instance = null;
@@ -15,7 +16,7 @@ public class ViewFactory {
 			case CLI:
 				return new CliView();
 			case GUI:
-				//TODO javafx view;
+				return new FxView();
 			default:
 				throw new InvalidViewTypeException();
 		}

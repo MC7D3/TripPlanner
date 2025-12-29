@@ -2,35 +2,25 @@ package tpgroup.view.cli;
 
 import java.util.List;
 
-import tpgroup.model.Session;
+import tpgroup.controller.graphical.cli.LoggedMenuGController;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class LoggedMenuState extends CliViewState{
 
-	protected LoggedMenuState(CliView machine) {
-		super(machine);
+	public LoggedMenuState() {
+		super();
 	}
 
 	@Override
-	public void show() {
-		String choice = "";
+	public void present() {
 		try {
-			choice = FormFieldFactory.getInstance().newSelectItem(List.of("create new room", "join room", "enter room", "abbandon room", "options", "logout", "exit")).get();
+			String choice = FormFieldFactory.getInstance().newSelectItem(List.of("create new room", "join room", "enter room", "abbandon room", "options", "logout", "exit")).get();
+			CliViewState next = LoggedMenuGController.process(choice);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
-		}
-		switch(choice){
-			case "create new room" -> this.machine.setState(new NewRoomFormState(this.machine));
-			case "join room" -> this.machine.setState(new JoinRoomFormState(this.machine));
-			case "enter room" -> this.machine.setState(new EnterRoomFormState(this.machine));
-			case "abbandon room" -> this.machine.setState(new AbbandonRoomFormState(this.machine));
-			case "options" -> this.machine.setState(new OptionsMenuState(this.machine));
-			case "logout" -> {
-				Session.resetSession();
-				this.machine.setState(new UnloggedMenuState(this.machine));
-			}
-			default -> System.exit(0);
 		}
 	}
 

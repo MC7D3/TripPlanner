@@ -1,30 +1,27 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.RoomController;
 import tpgroup.controller.TripController;
+import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.domain.Proposal;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class AcceptProposalFormState extends CliViewState{
 
-	protected AcceptProposalFormState(CliView machine) {
-		super(machine);
+	public AcceptProposalFormState() {
+		super();
 	}
 
 	@Override
-	public void show() {
+	public void present() {
 		try {
-			Proposal accepted = FormFieldFactory.getInstance().newSelectItem("select the proposal you intend to accept:\n", TripController.getProposals(), true).get();
-			if(accepted != null){
-				TripController.acceptProposal(accepted);
-				System.out.println("proposal accepted succesfully!");
-			}
+			Proposal accepted = FormFieldFactory.getInstance().newSelectItem("select the proposal you intend to accept:\n", TripController.getAllProposals(), true).get();
+			CliViewState next = RoomGController.acceptProposal(accepted);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
-		this.machine.setState(RoomController.amIAdmin() ? new RoomAdminMenuState(this.machine)
-				: new RoomMemberMenuState(this.machine));
 	}
 	
 }

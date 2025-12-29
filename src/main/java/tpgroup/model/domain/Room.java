@@ -25,8 +25,8 @@ public class Room {
 		this.trip = trip;
 	}
 
-	public Room(String name, User admin, Set<User> members, String destination) {
-		this(name, admin, members, new Trip(destination));
+	public Room(String name, User admin, Set<User> members, String country, String mainCity) {
+		this(name, admin, members, new Trip(country, mainCity));
 	}
 
 	public Room(String code){
@@ -37,8 +37,8 @@ public class Room {
 		this.trip = null;
 	}
 
-	public Room(String name, User admin, String destination) {
-		this(name, admin, new HashSet<User>(), destination);
+	public Room(String name, User admin, String country, String mainCity) {
+		this(name, admin, new HashSet<User>(), country, mainCity);
 	}
 
 	public String getCode() {

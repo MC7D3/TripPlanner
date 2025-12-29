@@ -12,6 +12,7 @@ import tpgroup.model.ConfigReader;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
+import tpgroup.model.exception.PropertyNotFoundException;
 import tpgroup.persistence.DAO;
 import tpgroup.persistence.cascade.UserToRoomCascade;
 import tpgroup.persistence.database.PointOfInterestDAODB;
@@ -24,6 +25,7 @@ public class DBDAOFactory extends DAOFactory{
 	static{
 		Connection conn;
 		try {
+			System.out.println("im here");
 			ConfigReader reader = new ConfigReader("configuration.properties");
 			Class.forName(reader.readJdbcDriver());
 			conn = DriverManager.getConnection(reader.readJdbcUrl(), reader.readJdbcUsername(), reader.readJdbcPassword());
@@ -37,7 +39,7 @@ public class DBDAOFactory extends DAOFactory{
 			daos.put(User.class, userDao);
 			daos.put(PointOfInterest.class, poiDao);
 			daos.put(Room.class, roomDao);
-		} catch (ClassNotFoundException | IOException | SQLException e) {
+		} catch (ClassNotFoundException | IOException | SQLException | PropertyNotFoundException e) {
 			throw new IllegalStateException(e);
 		}
 	}

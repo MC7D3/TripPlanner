@@ -1,7 +1,7 @@
 package tpgroup.model.domain;
 
-
 public class User {
+
 	private final String email;
 	private String password;
 
@@ -10,7 +10,7 @@ public class User {
 		this.password = password;
 	}
 
-	public User(String email){
+	public User(String email) {
 		this.email = email;
 		this.password = null;
 	}
@@ -56,5 +56,5 @@ public class User {
 	public String toString() {
 		return "User [email=" + email + ", password=" + password + "]";
 	}
-	
+
 }

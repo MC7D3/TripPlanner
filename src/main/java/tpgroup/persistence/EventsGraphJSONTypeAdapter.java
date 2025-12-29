@@ -14,10 +14,14 @@ import com.google.gson.stream.JsonWriter;
 import tpgroup.model.Event;
 import tpgroup.model.EventsGraph;
 import tpgroup.model.EventsNode;
+import tpgroup.model.domain.Coordinates;
 import tpgroup.model.domain.PointOfInterest;
+import tpgroup.model.domain.Rating;
+import tpgroup.model.domain.Tag;
 import tpgroup.model.exception.MalformedJSONException;
 import tpgroup.model.exception.NodeConnectionException;
 
+//TODO
 public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 
 	@Override
@@ -50,7 +54,12 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 			out.name("poi");
 			out.beginObject();
 			out.name("name").value(event.getInfo().getName());
-			out.name("location").value(event.getInfo().getLocation());
+			out.name("country").value(event.getInfo().getCountry());
+			out.name("city").value(event.getInfo().getCity());
+			out.endObject();
+			out.beginObject();
+			out.name("latitude").value(event.getInfo().getCoordinates().getLatitude());
+			out.name("longitude").value(event.getInfo().getCoordinates().getLongitude());
 			out.endObject();
 			out.name("start").value(event.getStart().toString());
 			out.name("end").value(event.getEnd().toString());
@@ -131,9 +140,16 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 	private Event deserializeEvent(JsonReader in) throws IOException {
 		in.beginObject();
 		String poiName = null;
-		String poiLocation = null;
+		String poiDescription = null;
+		String poiCountry = null;
+		String poiCity = null;
+		String poiLatitude = null;
+		String poiLongitude = null;
 		LocalDateTime start = null;
 		LocalDateTime end = null;
+		Rating poiRating = null;
+		List<Tag> poiTags = null;
+		
 
 		while (in.hasNext()) {
 			switch (in.nextName()) {
@@ -144,9 +160,9 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 							case "name":
 								poiName = in.nextString();
 								break;
-							case "location":
-								poiLocation = in.nextString();
-								break;
+							// case "location":
+							// 	poiLocation = in.nextString();
+							// 	break;
 							default:
 								throw new MalformedJSONException();
 						}
@@ -166,7 +182,7 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 		in.endObject();
 
 		return new Event(
-				new PointOfInterest(poiName, poiLocation),
+				new PointOfInterest(poiName, poiDescription, poiCity, poiCountry, new Coordinates(Double.parseDouble(poiLatitude), Double.parseDouble(poiLongitude)), poiRating, poiTags),
 				start,
 				end);
 	}

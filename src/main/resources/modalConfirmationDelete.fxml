@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox style="-fx-max-height: 170; -fx-min-height: 170; -fx-max-width: 400; -fx-min-width: 400;" styleClass="form-container" stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.view.javafx.modalConfDelGUIController">
+   <children>
+      <Text style="-fx-font-size: 15; -fx-font-weight: normal;" styleClass="heading" text="Are you sure u want to proceed with the deletion? " />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 15; -fx-font-weight: normal;" styleClass="heading" text="(this operation cannot be undone)" />
+      <HBox style="-fx-spacing: 15;">
+         <children>
+            <Button fx:id="proceedBtn" styleClass="button-cancel" text="Proceed" onAction="#onProceed"/>
+            <Button fx:id="abortBtn" styleClass="button-logout" text="Abort" onAction="#onAbort"/>
+         </children>
+      </HBox>
+   </children>
+</VBox>

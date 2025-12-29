@@ -19,7 +19,7 @@ public class EventsGraph {
 
 	public EventsGraph() {
 		super();
-		this.root = new EventsNode(this, "root");
+		this.root = new EventsNode(this);
 		this.connectionsMapping = new HashMap<>();
 		this.nodes = new TreeSet<>();
 		connectionsMapping.put(this.root, new HashSet<>());
@@ -29,10 +29,10 @@ public class EventsGraph {
 		return connectionsMapping.get(of).stream().toList();
 	}
 
-	public EventsNode createEmptyNode(EventsNode parent, String newNodeName) throws NodeConflictException {
+	public EventsNode createEmptyNode(EventsNode parent) throws NodeConflictException {
 		if (parent == null)
 			parent = root;
-		EventsNode newNode = new EventsNode(this, newNodeName);
+		EventsNode newNode = new EventsNode(this);
 		if (!nodes.add(newNode))
 			throw new NodeConflictException();
 		connectionsMapping.put(newNode, new HashSet<>());
@@ -42,10 +42,6 @@ public class EventsGraph {
 
 	public List<EventsNode> getAllNodes() {
 		return nodes.stream().toList();
-	}
-
-	public EventsNode getNode(String nodeName) {
-		return nodes.stream().filter(node -> node.getName().equals(nodeName)).findFirst().get();
 	}
 
 	public void connect(EventsNode parent, EventsNode child) throws NodeConnectionException {

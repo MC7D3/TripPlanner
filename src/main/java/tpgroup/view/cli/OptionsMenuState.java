@@ -2,28 +2,27 @@ package tpgroup.view.cli;
 
 import java.util.List;
 
+import tpgroup.controller.graphical.cli.LoggedMenuGController;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class OptionsMenuState extends CliViewState{
 
 
-	protected OptionsMenuState(CliView machine) {
-		super(machine);
+	public OptionsMenuState() {
+		super();
 	}
 
 	@Override
-	public void show() {
-		String choice = "";
+	public void present() {
 		try {
+			String choice = "";
 			choice = FormFieldFactory.getInstance().newSelectItem(List.of("change password", "delete account", "go back")).get();
+			CliViewState next = LoggedMenuGController.processOptionsChoice(choice);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
-		}
-		switch(choice){
-			case "change password" -> this.machine.setState(new UpdatePwdFormState(this.machine));
-			case "delete account" -> this.machine.setState(new DeleteAccountConfForm(this.machine));
-			default -> this.machine.setState(new LoggedMenuState(this.machine));
 		}
 	}
 

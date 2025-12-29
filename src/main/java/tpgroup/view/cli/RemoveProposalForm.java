@@ -1,36 +1,27 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.RoomController;
-import tpgroup.controller.TripController;
-import tpgroup.model.Event;
-import tpgroup.model.EventsNode;
+import tpgroup.controller.graphical.cli.RoomGController;
+import tpgroup.model.domain.Proposal;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
-public class RemoveProposalForm extends CliViewState{
+public class RemoveProposalForm extends CliViewState {
 
-	protected RemoveProposalForm(CliView machine) {
-		super(machine);
+	public RemoveProposalForm() {
+		super();
 	}
 
 	@Override
-	public void show() {
+	public void present() {
 		try {
-			EventsNode chosenNode = FormFieldFactory.getInstance().newSelectItem(
-					"select the branch:", TripController.getBranches()).get();
-			Event chosenEvent = FormFieldFactory.getInstance()
-					.newSelectItem("select the event you want to update:", TripController.getEvents(chosenNode)).get();
-			if (TripController.createRemoveProposal(chosenNode, chosenEvent)) {
-				System.out.println("proposal inserted succesfully!");
-			} else {
-				System.out.println("proposal invalid or malformed");
-			}
+			Proposal toRemove = FormFieldFactory.getInstance().newSelectItem(
+					"select the proposal u want to remove:", RoomGController.getLoggedUserProposals()).get();
+			CliViewState next = RoomGController.removeProposal(toRemove);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
-		this.machine.setState(RoomController.amIAdmin() ? new RoomAdminMenuState(this.machine)
-				: new RoomMemberMenuState(this.machine));
 	}
 
-	
 }

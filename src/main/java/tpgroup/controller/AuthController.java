@@ -4,11 +4,11 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
-import tpgroup.persistence.factory.DAOFactory;
-import tpgroup.model.domain.User;
-import tpgroup.persistence.DAO;
-import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.Session;
+import tpgroup.model.domain.User;
+import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.persistence.DAO;
+import tpgroup.persistence.factory.DAOFactory;
 
 public class AuthController {
 	private AuthController() {

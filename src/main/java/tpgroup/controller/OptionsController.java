@@ -14,6 +14,7 @@ public class OptionsController {
 	}
 
 	public static void updatePassword(PwdBean newPassword) {
+		System.out.println(newPassword.getPassword());
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		User updatedCred = new User(Session.getInstance().getLogged().getEmail(),
 				newPassword.getPassword());

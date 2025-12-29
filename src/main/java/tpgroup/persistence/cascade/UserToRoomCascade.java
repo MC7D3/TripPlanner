@@ -1,5 +1,7 @@
 package tpgroup.persistence.cascade;
 
+import java.util.List;
+
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.persistence.Cascade;
@@ -38,6 +40,16 @@ public class UserToRoomCascade extends Cascade<User, Room> {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public List<User> propagateGetAll(List<User> toGet) {
+		return toGet; //not needed
+	}
+
+	@Override
+	public User propagateGet(User toGet) {
+		return toGet; //not needed
 	}
 
 }

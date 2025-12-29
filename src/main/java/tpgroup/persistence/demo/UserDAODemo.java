@@ -6,15 +6,12 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
-import tpgroup.persistence.Cascade;
 import tpgroup.persistence.DAO;
 public class UserDAODemo implements DAO<User>{
 
 	private final Set<User> userList = new HashSet<>();
-	private Cascade<User, Room> cascadePolicy;
 
 	public UserDAODemo() {
 		super();
@@ -25,11 +22,6 @@ public class UserDAODemo implements DAO<User>{
 	public Set<User> getUserList() {
 		return userList;
 	}
-
-	public void setCascadePolicy(Cascade<User, Room> cascadePolicy) {
-		this.cascadePolicy = cascadePolicy;
-	}
-
 
 
 	@Override
@@ -47,13 +39,11 @@ public class UserDAODemo implements DAO<User>{
 			userList.remove(obj);
 			userList.add(obj);
 		}
-		cascadePolicy.propagateUpdate(obj);
 	}
 
 	@Override
 	public void delete(User obj) throws RecordNotFoundException{
 		if(!userList.remove(obj)) throw new RecordNotFoundException();
-		cascadePolicy.propagateDelete(obj);
 	}
 
 	@Override

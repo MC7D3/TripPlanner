@@ -11,7 +11,7 @@ import tpgroup.view.ViewFactory;
 
 public class App {
 
-	private static void start(){
+	private static void start() {
 		try {
 			ConfigReader confRd = new ConfigReader("configuration.properties");
 			DAOFactory.initDAOFactory(confRd.readPersistenceType());
@@ -19,7 +19,6 @@ public class App {
 
 			do{
 				view.show();
-				System.out.println();
 			}while(true);
 
 		}catch(IOException | InvalidPersistenceTypeException | InvalidViewTypeException e){

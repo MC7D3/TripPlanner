@@ -1,8 +1,8 @@
 package tpgroup.model.domain;
 
-
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import tpgroup.model.EventsGraph;
 import tpgroup.model.EventsNode;
@@ -10,110 +10,107 @@ import tpgroup.model.exception.NodeConflictException;
 import tpgroup.model.exception.NodeConnectionException;
 
 public class Trip {
-	private final String destination;
-	private final EventsGraph tripGraph;
-	private final List<Proposal> proposals;
-	
-	public Trip(String destination, List<Proposal> proposals, EventsGraph tripGraph) {
+	protected String country;
+	protected String mainCity;
+	protected EventsGraph tripGraph;
+	protected Set<Proposal> proposals;
+
+	public Trip(String country, String mainCity, Set<Proposal> proposals, EventsGraph tripGraph) {
 		this.proposals = proposals;
-		this.destination = destination;
+		this.country = country;
 		this.tripGraph = tripGraph;
 	}
 
-	public Trip(String destination) {
-		this(destination, new ArrayList<>(), new EventsGraph());
+	public Trip(String country, String mainCity) {
+		this(country, mainCity, new HashSet<>(), new EventsGraph());
 	}
 
 	public List<EventsNode> getConnectedBranches(EventsNode of) {
 		return tripGraph.getConnectedNodes(of);
 	}
 
-	public int connCount(EventsNode of){
+	public int connCount(EventsNode of) {
 		return tripGraph.connCount(of);
 	}
 
 	public String getDestination() {
-		return destination;
+		return country;
 	}
 
-	public boolean addProposal(Proposal arg0) {
-		return proposals.add(arg0);
+	public boolean addProposal(Proposal proposal) {
+		if(proposal.getProposalType().equals(ProposalType.UPDATE) && !proposal.getNodeName().getEvents().contains(proposal.getEvent())){
+			return false;
+		}
+		return proposals.add(proposal);
 	}
 
-	public boolean containsProposal(Proposal event) {
-		return proposals.contains(event);
+	public boolean containsProposal(Proposal proposal) {
+		return proposals.contains(proposal);
 	}
 
-	public boolean ProposalIsEmpty() {
+	public boolean proposalIsEmpty() {
 		return proposals.isEmpty();
 	}
 
-	public boolean removeProposal(Proposal event) {
-		return proposals.remove(event);
+	public boolean acceptProposal(Proposal proposal){
+		return proposal.accept();
 	}
 
-	public int ProposalSize() {
+	public boolean removeProposal(Proposal proposal) {
+		return proposals.remove(proposal);
+	}
+
+	public int proposalSize() {
 		return proposals.size();
 	}
 
-	public List<Proposal> getProposals(){
+	public Set<Proposal> getProposals() {
 		return this.proposals;
 	}
 
-	public List<EventsNode> getEventsNodes(){
+	public List<EventsNode> getAllBranches() {
 		return tripGraph.getAllNodes();
 	}
 
-
-	public EventsNode createBranch(EventsNode parent, String newNodeName) throws NodeConflictException {
-		return tripGraph.createEmptyNode(parent, newNodeName);
+	public void createBranch(EventsNode parentNode) throws NodeConflictException {
+		tripGraph.createEmptyNode(parentNode);
 	}
 
-	public void connectBranches(EventsNode parent, EventsNode child) throws NodeConnectionException {
-		tripGraph.connect(parent, child);
+	public void connectBranches(EventsNode parentNode, EventsNode childNode) throws NodeConnectionException {
+		tripGraph.connect(parentNode, childNode);
 	}
 
-	public void disconnectBranches(EventsNode parent, EventsNode child){
-		tripGraph.disconnect(parent, child);
+	public void disconnectBranches(EventsNode parentNode, EventsNode childNode) {
+		tripGraph.disconnect(parentNode, childNode);
 	}
 
 	public void removeNode(EventsNode toRemove) {
 		tripGraph.removeNode(toRemove);
 	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public String getMainCity() {
+		return mainCity;
+	}
+
 	public EventsGraph getTripGraph() {
 		return tripGraph;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((destination == null) ? 0 : destination.hashCode());
-		result = prime * result + ((tripGraph == null) ? 0 : tripGraph.hashCode());
-		return result;
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Trip other = (Trip) obj;
-		if (destination == null) {
-			if (other.destination != null)
-				return false;
-		} else if (!destination.equals(other.destination))
-			return false;
-		if (tripGraph == null) {
-			if (other.tripGraph != null)
-				return false;
-		} else if (!tripGraph.equals(other.tripGraph))
-			return false;
-		return true;
+	public void setMainCity(String mainCity) {
+		this.mainCity = mainCity;
+	}
+
+	public void resetTrip() {
+		this.tripGraph = new EventsGraph();
+		this.proposals = new HashSet<Proposal>();
 	}
 
 }

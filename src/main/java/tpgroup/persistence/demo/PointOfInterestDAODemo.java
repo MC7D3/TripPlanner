@@ -39,12 +39,15 @@ public class PointOfInterestDAODemo implements DAO<PointOfInterest>{
 
 	@Override
 	public void save(PointOfInterest obj) {
-		throw new UnsupportedOperationException("no 'save' required");
+		if(!poiSet.add(obj)){
+			poiSet.remove(obj);
+			poiSet.add(obj);
+		}
 	}
 
 	@Override
 	public boolean add(PointOfInterest obj) {
-		throw new UnsupportedOperationException("no 'add' required");
+		return poiSet.add(obj);
 	}
 
 	@Override

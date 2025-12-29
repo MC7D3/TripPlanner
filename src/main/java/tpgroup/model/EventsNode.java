@@ -3,17 +3,17 @@ package tpgroup.model;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Objects;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class EventsNode implements Comparable<EventsNode> {
-	private String name;
 	private TreeSet<Event> events;
 	private EventsGraph graph;
 
-	public EventsNode(EventsGraph graph, String name) {
+	public EventsNode(EventsGraph graph) {
 		this.events = new TreeSet<>();
 		this.graph = graph;
-		this.name = name;
 	}
 
 	public boolean addEvent(Event event) {
@@ -56,20 +56,12 @@ public class EventsNode implements Comparable<EventsNode> {
 		return events.last().getEnd();
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public TreeSet<Event> getEvents() {
+	public SortedSet<Event> getEvents() {
 		return events;
 	}
 
-	public void setEvents(TreeSet<Event> events) {
-		this.events = events;
+	public void setEvents(SortedSet<Event> events) {
+		this.events = new TreeSet<>(events);
 	}
 
 	public EventsGraph getGraph() {
@@ -89,12 +81,12 @@ public class EventsNode implements Comparable<EventsNode> {
 		return true;
 	}
 
-	public boolean split(Event pivot, String newNodeName) {
+	public boolean split(Event pivot) {
 		if (!this.events.contains(pivot)) {
 			return false;
 		}
 		NavigableSet<Event> toNewNode = this.events.tailSet(pivot, false);
-		EventsNode newNode = new EventsNode(graph, newNodeName);
+		EventsNode newNode = new EventsNode(graph);
 		newNode.events.addAll(toNewNode);
 		graph.notifySplit(this, newNode);
 		return true;
@@ -103,32 +95,27 @@ public class EventsNode implements Comparable<EventsNode> {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+		return Objects.hash(events, graph);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		EventsNode other = (EventsNode) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		return Objects.equals(events, other.events) && Objects.equals(graph, other.graph);
 	}
 
 	@Override
 	public int compareTo(EventsNode arg0) {
-		if (this.name.equals(arg0.name))
+		if (this.equals(arg0))
 			return 0;
 
 		return this.getEventsStart().compareTo(arg0.getEventsStart());

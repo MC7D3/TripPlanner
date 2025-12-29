@@ -1,33 +1,28 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.OptionsController;
-import tpgroup.model.PwdBean;
+import tpgroup.controller.graphical.cli.LoggedMenuGController;
 import tpgroup.model.exception.FormFieldIOException;
-import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class UpdatePwdFormState extends CliViewState{
 
-	public UpdatePwdFormState(CliView sm) {
-		super(sm);
+	public UpdatePwdFormState() {
+		super();
 	}
 
 	@Override
-	public void show() {
+	public void present() {
 		try {
 			FormFieldFactory ref = FormFieldFactory.getInstance();
 			System.out.println("NOTE: keep the fields you want to keep the password unchanged");
 			String password = ref.newPwdField("new password").get();
 			String confPwd = ref.newPwdField("confirm new password:").get();
-			if(!password.isEmpty() && !confPwd.isEmpty()){
-				PwdBean passwordBean = new PwdBean(password, confPwd);
-				OptionsController.updatePassword(passwordBean);
-				System.out.println("password updated succesfully!");
-			}
-		} catch (InvalidBeanParamException | FormFieldIOException e){
+			CliViewState next = LoggedMenuGController.updatePwd(password, confPwd);
+			this.machine.setState(next);
+		} catch (FormFieldIOException e){
 			System.err.println("ERROR: " + e.getMessage());
 		}
-		this.machine.setState(new OptionsMenuState(this.machine));
 	}
 }
 

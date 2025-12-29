@@ -10,7 +10,7 @@ public class EmailBean {
 	
 	public EmailBean(String email) throws InvalidBeanParamException {
 		if(!Pattern.matches(EMAIL_REGEX, email)){
-			throw new InvalidBeanParamException("email");
+			throw new InvalidBeanParamException("email", "email format:\nemailtext@provider.it/org/eu...");
 		}
 
 		this.email = email;

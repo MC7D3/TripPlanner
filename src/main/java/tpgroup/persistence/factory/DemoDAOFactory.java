@@ -7,10 +7,14 @@ import java.util.Optional;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
-
+import tpgroup.persistence.CacheDecorator;
+import tpgroup.persistence.CascadeDecorator;
 import tpgroup.persistence.DAO;
+import tpgroup.persistence.cascade.UserToProposalCascadeDemo;
 import tpgroup.persistence.cascade.UserToRoomCascade;
-import tpgroup.persistence.demo.*;
+import tpgroup.persistence.demo.PointOfInterestDAODemo;
+import tpgroup.persistence.demo.RoomDAODemo;
+import tpgroup.persistence.demo.UserDAODemo;
 
 class DemoDAOFactory extends DAOFactory{
 	private static Map<Class<?>, DAO<?>> daos = new HashMap<>();
@@ -20,11 +24,14 @@ class DemoDAOFactory extends DAOFactory{
 		RoomDAODemo roomDaoDemo = new RoomDAODemo();
 		PointOfInterestDAODemo poiDaoDemo = new PointOfInterestDAODemo();
 
-		userDaoDemo.setCascadePolicy(new UserToRoomCascade(roomDaoDemo));
+		CascadeDecorator<User> usrDaoDemoCascade = new CascadeDecorator<>(userDaoDemo)
+			.addCascadePolicy(new UserToRoomCascade(roomDaoDemo))
+			.addCascadePolicy(new UserToProposalCascadeDemo(roomDaoDemo));
 
-		daos.put(User.class, userDaoDemo);
-		daos.put(Room.class, roomDaoDemo);
-		daos.put(PointOfInterest.class, poiDaoDemo);
+
+		daos.put(User.class, new CacheDecorator<>(usrDaoDemoCascade));
+		daos.put(Room.class, new CacheDecorator<>(roomDaoDemo));
+		daos.put(PointOfInterest.class, new CacheDecorator<>(poiDaoDemo));
 	}
 
 	@Override

@@ -1,22 +1,24 @@
-package tpgroup.view.cli;
+package tpgroup.view.cli.stateMachine;
 
 import tpgroup.view.ViewElement;
+import tpgroup.view.cli.UnloggedMenuState;
 
 public class CliView implements ViewElement{
 	CliViewState state;
 
 	public CliView() {
-		state = new UnloggedMenuState(this);
+		setState(new UnloggedMenuState());
 	}
 
 	@Override
 	public void show(){
-		state.show();
+		state.present();
 	}
 
 	public void setState(CliViewState state) {
+		state.machine = this;
 		this.state = state;
 	}
-	
+
 }
 

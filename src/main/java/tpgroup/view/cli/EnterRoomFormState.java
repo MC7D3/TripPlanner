@@ -1,25 +1,27 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.RoomController;
+import tpgroup.controller.graphical.cli.LoggedMenuGController;
 import tpgroup.model.domain.Room;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
+import tpgroup.view.cli.stateMachine.CliViewState;
 
-public class EnterRoomFormState extends CliViewState{
+public class EnterRoomFormState extends CliViewState {
 
-	protected EnterRoomFormState(CliView machine) {
-		super(machine);
+	public EnterRoomFormState() {
+		super();
 	}
 
 	@Override
-	public void show() {
+	public void present() {
 		try {
-			Room chosen = FormFieldFactory.getInstance().newSelectItem(RoomController.getJoinedRooms()).get();
-			RoomController.enterRoom(chosen);
+			Room chosen = FormFieldFactory.getInstance()
+					.newSelectItem("select a room to enter:", LoggedMenuGController.getJoinedRooms(), true).get();
+			CliViewState next = LoggedMenuGController.enterRoom(chosen);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
-		this.machine.setState(RoomController.amIAdmin()? new RoomAdminMenuState(this.machine) : new RoomMemberMenuState(this.machine));
 	}
-	
+
 }
