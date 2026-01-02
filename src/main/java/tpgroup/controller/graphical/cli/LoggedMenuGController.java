@@ -22,7 +22,7 @@ import tpgroup.view.cli.RoomAdminMenuState;
 import tpgroup.view.cli.RoomMemberMenuState;
 import tpgroup.view.cli.UnloggedMenuState;
 import tpgroup.view.cli.UpdatePwdFormState;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class LoggedMenuGController {
 	private static final String ERROR_PROMPT = "ERROR: ";
@@ -52,7 +52,7 @@ public class LoggedMenuGController {
 
 	}
 
-	private static boolean attemptCreation(RoomBean roomBean, int attempts) {
+	private static boolean attemptCreation(RoomBean roomBean, int attempts) throws InvalidBeanParamException{
 		for (int attempt = 0; attempt < attempts; attempt++) {
 			try {
 				RoomController.createRoom(roomBean);

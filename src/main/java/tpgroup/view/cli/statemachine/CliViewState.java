@@ -1,4 +1,4 @@
-package tpgroup.view.cli.stateMachine;
+package tpgroup.view.cli.statemachine;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

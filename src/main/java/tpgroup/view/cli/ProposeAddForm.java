@@ -7,7 +7,7 @@ import tpgroup.model.EventsNode;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class ProposeAddForm extends CliViewState {
 

@@ -38,11 +38,11 @@ public class POIDataLoader {
 		}
 
 		Gson gson = new Gson();
-		try(FileReader PoiReader = new FileReader(dataPath)){
+		try(FileReader poiReader = new FileReader(dataPath)){
 
 			Type listType = new TypeToken<List<PointOfInterest>>(){}.getType();
 
-			List<PointOfInterest> parsedPois = gson.fromJson(PoiReader, listType);
+			List<PointOfInterest> parsedPois = gson.fromJson(poiReader, listType);
 
 			DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 			for (PointOfInterest poi : parsedPois) {

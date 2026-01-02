@@ -3,7 +3,7 @@ package tpgroup.view.cli;
 import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class DeleteRoomConfirmationState extends CliViewState {
 

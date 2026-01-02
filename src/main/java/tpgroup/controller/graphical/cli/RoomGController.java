@@ -33,7 +33,7 @@ import tpgroup.view.cli.ProposeUpdateForm;
 import tpgroup.view.cli.RemoveProposalForm;
 import tpgroup.view.cli.RoomAdminMenuState;
 import tpgroup.view.cli.RoomMemberMenuState;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class RoomGController {
 	private static final String PROPOSAL_SUCCESS = "proposal inserted succesfully!";

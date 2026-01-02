@@ -6,7 +6,7 @@ import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.EventsNode;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class ConnectBranchesFormState extends CliViewState {
 

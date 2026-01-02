@@ -6,6 +6,7 @@ import tpgroup.model.RoomBean;
 import tpgroup.model.Session;
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
+import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.exception.RoomGenConflictException;
 import tpgroup.persistence.DAO;
@@ -17,9 +18,13 @@ public class RoomController {
 		super();
 	}
 
-	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException {
+	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException{
 		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getCountry(),
 				newRoom.getCity());
+		if(!(POIController.isValidCountry(room.getTrip().getCountry()) || POIController.isValidCity(room.getTrip().getMainCity()))){
+		}else{
+			throw new InvalidBeanParamException("country");
+		}
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		if (!roomDao.add(room))
 			throw new RoomGenConflictException();

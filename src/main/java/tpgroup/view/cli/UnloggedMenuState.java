@@ -5,7 +5,7 @@ import java.util.List;
 import tpgroup.controller.graphical.cli.UnloggedGController;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class UnloggedMenuState extends CliViewState{
 

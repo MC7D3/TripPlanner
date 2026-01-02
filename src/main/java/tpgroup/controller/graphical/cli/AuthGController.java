@@ -8,9 +8,13 @@ import tpgroup.view.cli.LoggedMenuState;
 import tpgroup.view.cli.LoginFormState;
 import tpgroup.view.cli.RegistrationFormState;
 import tpgroup.view.cli.UnloggedMenuState;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class AuthGController {
+
+	private AuthGController() {
+	}
+
 	public static CliViewState login(String email, String password) {
 		if (email.isEmpty() && password.isEmpty()) {
 			return new UnloggedMenuState();

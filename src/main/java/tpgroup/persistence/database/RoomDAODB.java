@@ -38,7 +38,7 @@ public class RoomDAODB implements DAO<Room> {
 				INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph)
 				VALUES (?, ?, ?, ?, ?, ?)
 				""";
-		Boolean res = false;
+		boolean res = false;
 		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
 			connection.setAutoCommit(false);
@@ -52,7 +52,7 @@ public class RoomDAODB implements DAO<Room> {
 
 			res = stmt.executeUpdate() > 0;
 
-			if(!res){
+			if (!res) {
 				return res;
 			}
 
@@ -62,21 +62,20 @@ public class RoomDAODB implements DAO<Room> {
 
 			connection.commit();
 
-			return res;
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException rollbackEx) {
-				//no handling required
+				// no handling required
 			}
 			throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
-		} finally {
-			try {
-				connection.setAutoCommit(true);
-			} catch (SQLException e) {
-				throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
-			}
 		}
+		try {
+			connection.setAutoCommit(true);
+		} catch (Exception e) {
+			throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
+		}
+		return res;
 	}
 
 	@Override
@@ -207,15 +206,14 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.rollback();
 			} catch (SQLException rollbackEx) {
-				//no handling needed
+				// no handling needed
 			}
 			throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
-		} finally {
-			try {
-				connection.setAutoCommit(true);
-			} catch (SQLException e) {
-				throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
-			}
+		}
+		try {
+			connection.setAutoCommit(true);
+		} catch (Exception e) {
+			throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
 		}
 	}
 
@@ -256,15 +254,14 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.rollback();
 			} catch (SQLException rollbackEx) {
-				//no handling needed
+				// no handling needed
 			}
 			throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
-		} finally {
-			try {
-				connection.setAutoCommit(true);
-			} catch (SQLException e) {
-				throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
-			}
+		}
+		try {
+			connection.setAutoCommit(true);
+		} catch (Exception e) {
+			throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
 		}
 	}
 

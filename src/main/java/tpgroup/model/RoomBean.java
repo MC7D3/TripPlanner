@@ -3,7 +3,6 @@ package tpgroup.model;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import tpgroup.controller.POIController;
 import tpgroup.model.domain.Room;
 import tpgroup.model.exception.InvalidBeanParamException;
 
@@ -22,10 +21,6 @@ public class RoomBean {
 	public RoomBean(String name, String country, String city) throws InvalidBeanParamException{	 
 		if(!Pattern.matches(NAME_REGEX, name)){
 			throw new InvalidBeanParamException("name");
-		}
-		if(POIController.isValidCountry(country) && POIController.isValidCity(city)){
-		}else{
-			throw new InvalidBeanParamException("country");
 		}
 		room = new Room(name, null, null, country, city);
 	}

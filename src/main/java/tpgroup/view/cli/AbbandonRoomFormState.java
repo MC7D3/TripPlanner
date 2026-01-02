@@ -4,7 +4,7 @@ import tpgroup.controller.graphical.cli.LoggedMenuGController;
 import tpgroup.model.domain.Room;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class AbbandonRoomFormState extends CliViewState{
 

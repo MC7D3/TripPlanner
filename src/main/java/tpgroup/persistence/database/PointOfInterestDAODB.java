@@ -56,7 +56,8 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public List<PointOfInterest> getAll() {
-        final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";        Statement stmt = null;
+        final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";
+		Statement stmt = null;
         ResultSet rs = null;
         List<PointOfInterest> pois = new ArrayList<>();
         

@@ -7,7 +7,7 @@ import java.util.List;
 import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class RoomMemberMenuState extends CliViewState {
 	protected final List<String> menuOptions;

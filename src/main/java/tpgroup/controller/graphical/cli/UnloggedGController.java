@@ -2,7 +2,7 @@ package tpgroup.controller.graphical.cli;
 
 import tpgroup.view.cli.LoginFormState;
 import tpgroup.view.cli.RegistrationFormState;
-import tpgroup.view.cli.stateMachine.CliViewState;
+import tpgroup.view.cli.statemachine.CliViewState;
 
 public class UnloggedGController {
 

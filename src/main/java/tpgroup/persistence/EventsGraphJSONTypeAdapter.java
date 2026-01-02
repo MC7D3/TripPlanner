@@ -133,8 +133,7 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 		}
 		in.endObject();
 
-		EventsNode node = new EventsNode(UUID.fromString(name), new TreeSet<>(events), graph);
-		return node;
+		return new EventsNode(UUID.fromString(name), new TreeSet<>(events), graph);
 	}
 
 	private Event deserializeEvent(JsonReader in) throws IOException {
@@ -155,7 +154,7 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 			switch (in.nextName()) {
 				case "poi":
 					in.beginObject();
-					if(in.nextName() == "name") {
+					if(in.nextName().equals("name")){
 						poiName = in.nextString();
 					}else{
 						throw new MalformedJSONException();

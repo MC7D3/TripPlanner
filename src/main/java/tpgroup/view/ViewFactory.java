@@ -1,8 +1,8 @@
 package tpgroup.view;
 
 import tpgroup.model.exception.InvalidViewTypeException;
-import tpgroup.view.cli.stateMachine.CliView;
-import tpgroup.view.javaFX.FxView;
+import tpgroup.view.cli.statemachine.CliView;
+import tpgroup.view.javafx.FxView;
 
 public class ViewFactory {
 	private static ViewFactory instance = null;

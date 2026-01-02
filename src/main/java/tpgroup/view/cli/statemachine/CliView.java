@@ -1,4 +1,4 @@
-package tpgroup.view.cli.stateMachine;
+package tpgroup.view.cli.statemachine;
 
 import tpgroup.view.ViewElement;
 import tpgroup.view.cli.UnloggedMenuState;
