@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -6,7 +6,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.RoomController;
-import tpgroup.model.RoomCodeBean;
+import tpgroup.model.RoomBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class JoinRoomGUIController extends FxController{
@@ -25,7 +25,7 @@ public class JoinRoomGUIController extends FxController{
 				outLogTxt.setText("room's code not provided");
 				return;
 			}
-			if(RoomController.joinRoom(new RoomCodeBean(roomCode))){
+			if(RoomController.joinRoom(new RoomBean(roomCode))){
 				Stage joinRoomStage = (Stage) outLogTxt.getScene().getWindow();
 				Stage rootStage = (Stage) joinRoomStage.getOwner();
 				joinRoomStage.close();

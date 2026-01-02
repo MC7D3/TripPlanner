@@ -1,6 +1,5 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.TripController;
 import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.domain.Proposal;
 import tpgroup.model.exception.FormFieldIOException;
@@ -16,7 +15,7 @@ public class AcceptProposalFormState extends CliViewState{
 	@Override
 	public void present() {
 		try {
-			Proposal accepted = FormFieldFactory.getInstance().newSelectItem("select the proposal you intend to accept:\n", TripController.getAllProposals(), true).get();
+			Proposal accepted = FormFieldFactory.getInstance().newSelectItem("select the proposal you intend to accept:\n", RoomGController.getProposalsSortedByLike(), true).get();
 			CliViewState next = RoomGController.acceptProposal(accepted);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {

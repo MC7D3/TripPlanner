@@ -1,7 +1,6 @@
 package tpgroup.controller.graphical.cli;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import tpgroup.controller.OptionsController;
 import tpgroup.controller.POIController;
@@ -26,6 +25,10 @@ import tpgroup.view.cli.UpdatePwdFormState;
 import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class LoggedMenuGController {
+	private static final String ERROR_PROMPT = "ERROR: ";
+
+	private LoggedMenuGController() {
+	}
 
 	public static CliViewState process(String choice) {
 		switch (choice) {
@@ -39,15 +42,26 @@ public class LoggedMenuGController {
 				return new AbbandonRoomFormState();
 			case "options":
 				return new OptionsMenuState();
-			case "logout": {
+			case "logout":
 				Session.resetSession();
-				new UnloggedMenuState();
-			}
+				return new UnloggedMenuState();
 			default:
 				System.exit(0);
 				return null;
 		}
 
+	}
+
+	private static boolean attemptCreation(RoomBean roomBean, int attempts) {
+		for (int attempt = 0; attempt < attempts; attempt++) {
+			try {
+				RoomController.createRoom(roomBean);
+				return true;
+			} catch (RoomGenConflictException e) {
+				// it does another attempt, no actions needed
+			}
+		}
+		return false;
 	}
 
 	public static CliViewState createNewRoom(String name, String country, String city) {
@@ -58,22 +72,15 @@ public class LoggedMenuGController {
 		try {
 			RoomBean newRoom = new RoomBean(name, country, city);
 			boolean created = false;
-			for (int attempt = 0; attempt < 3; attempt++) {
-				try {
-					RoomController.createRoom(newRoom);
-					ret = new RoomAdminMenuState();
-					ret.setOutLogTxt("room created successfully!");
-					created = true;
-					break;
-				} catch (RoomGenConflictException e) {
-					// it does another attempt, no actions needed
-				}
+			if(attemptCreation(newRoom, 3)){
+				ret = new RoomAdminMenuState();
+				ret.setOutLogTxt("room created successfully!");
 			}
 			if (!created) {
-				ret.setOutLogTxt("ERROR: too many rooms with this name are present, try another one");
+				ret.setOutLogTxt(ERROR_PROMPT + "too many rooms with this name are present, try another one");
 			}
 		} catch (InvalidBeanParamException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 
 		return ret;
@@ -94,11 +101,11 @@ public class LoggedMenuGController {
 		}
 		try {
 			if (RoomController.joinRoom(new RoomBean(roomCode))) {
-				System.out.println("room joined successfully!");
+				ret.setOutLogTxt("room joined successfully!");
 				ret = new RoomMemberMenuState();
 			}
 		} catch (InvalidBeanParamException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 	}
@@ -117,7 +124,7 @@ public class LoggedMenuGController {
 	}
 
 	public static List<Room> getJoinedRooms() {
-		return RoomController.getJoinedRooms().stream().map(bean -> bean.getRoom()).collect(Collectors.toList());
+		return RoomController.getJoinedRooms().stream().map(bean -> bean.getRoom()).toList();
 	}
 
 	public static CliViewState abbandonRoom(Room chosen) {
@@ -148,19 +155,19 @@ public class LoggedMenuGController {
 				ret.setOutLogTxt("password updated succesfully!");
 			}
 		} catch (InvalidBeanParamException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 
 	}
 
-    public static CliViewState processDeleteRequest(boolean answer) {
+	public static CliViewState processDeleteRequest(boolean answer) {
 		CliViewState ret = new OptionsMenuState();
-		if(answer){
+		if (answer) {
 			OptionsController.deleteAccount();
 			ret = new UnloggedMenuState();
 			ret.setOutLogTxt("account deleted succesfully!");
 		}
 		return ret;
-    }
+	}
 }

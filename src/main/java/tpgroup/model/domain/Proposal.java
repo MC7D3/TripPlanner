@@ -28,11 +28,11 @@ public class Proposal {
 	}
 
 	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, User creator) {
-		this(proposalType, null, event, Optional.empty(), creator, 0, LocalDateTime.now());
+		this(proposalType, nodeName, event, Optional.empty(), creator, 0, LocalDateTime.now());
 	}
 
 	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, Event updatedEvent, User creator) {
-		this(proposalType, null, event, Optional.of(updatedEvent), creator, 0, LocalDateTime.now());
+		this(proposalType, nodeName, event, Optional.of(updatedEvent), creator, 0, LocalDateTime.now());
 	}
 
 	public EventsNode getNodeName() {
@@ -98,10 +98,6 @@ public class Proposal {
 		this.creator = creator;
 	}
 
-	public void setNodeName(EventsNode nodeName) {
-		this.nodeName = nodeName;
-	}
-
 	public boolean accept(){
 		switch(this.proposalType){
 			case ADD:
@@ -116,6 +112,7 @@ public class Proposal {
 				}
 				nodeName.getEvents().remove(event);
 				nodeName.getEvents().add(updateEvent.get());
+				break;
 			default:
 				break;
 		}

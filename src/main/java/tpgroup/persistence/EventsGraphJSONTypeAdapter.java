@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.UUID;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -21,7 +23,6 @@ import tpgroup.model.domain.Tag;
 import tpgroup.model.exception.MalformedJSONException;
 import tpgroup.model.exception.NodeConnectionException;
 
-//TODO
 public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 
 	@Override
@@ -46,7 +47,7 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 
 	private void serializeNode(JsonWriter out, EventsNode node) throws IOException {
 		out.beginObject();
-		out.name("name").value(node.getName());
+		out.name("name").value(node.getId().toString());
 		out.name("events");
 		out.beginArray();
 		for (Event event : node.getEvents()) {
@@ -71,8 +72,8 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 
 	private void serializeEdge(JsonWriter out, EventsNode from, EventsNode to) throws IOException {
 		out.beginObject();
-		out.name("from").value(from.getName());
-		out.name("to").value(to.getName());
+		out.name("from").value(from.getId().toString());
+		out.name("to").value(to.getId().toString());
 		out.endObject();
 	}
 
@@ -88,7 +89,7 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 					in.beginArray();
 					while (in.hasNext()) {
 						EventsNode node = deserializeNode(in, graph);
-						nodeMap.put(node.getName(), node);
+						nodeMap.put(node.getId().toString(), node);
 					}
 					in.endArray();
 					break;
@@ -132,8 +133,7 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 		}
 		in.endObject();
 
-		EventsNode node = new EventsNode(graph, name);
-		events.forEach(node::addEvent);
+		EventsNode node = new EventsNode(UUID.fromString(name), new TreeSet<>(events), graph);
 		return node;
 	}
 
@@ -155,17 +155,10 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 			switch (in.nextName()) {
 				case "poi":
 					in.beginObject();
-					while (in.hasNext()) {
-						switch (in.nextName()) {
-							case "name":
-								poiName = in.nextString();
-								break;
-							// case "location":
-							// 	poiLocation = in.nextString();
-							// 	break;
-							default:
-								throw new MalformedJSONException();
-						}
+					if(in.nextName() == "name") {
+						poiName = in.nextString();
+					}else{
+						throw new MalformedJSONException();
 					}
 					in.endObject();
 					break;

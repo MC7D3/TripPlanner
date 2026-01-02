@@ -13,32 +13,37 @@ import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.PropertyNotFoundException;
+import tpgroup.persistence.CacheDecorator;
+import tpgroup.persistence.CascadeDecorator;
 import tpgroup.persistence.DAO;
+import tpgroup.persistence.cascade.UserToProposalCascadeDemo;
 import tpgroup.persistence.cascade.UserToRoomCascade;
 import tpgroup.persistence.database.PointOfInterestDAODB;
 import tpgroup.persistence.database.RoomDAODB;
 import tpgroup.persistence.database.UserDAODB;
 
-public class DBDAOFactory extends DAOFactory{
+public class DBDAOFactory extends DAOFactory {
 	private static Map<Class<?>, DAO<?>> daos = new HashMap<>();
 
-	static{
+	static {
 		Connection conn;
 		try {
-			System.out.println("im here");
 			ConfigReader reader = new ConfigReader("configuration.properties");
 			Class.forName(reader.readJdbcDriver());
-			conn = DriverManager.getConnection(reader.readJdbcUrl(), reader.readJdbcUsername(), reader.readJdbcPassword());
+			conn = DriverManager.getConnection(reader.readJdbcUrl(), reader.readJdbcUsername(),
+					reader.readJdbcPassword());
 
 			UserDAODB userDao = new UserDAODB(conn);
 			PointOfInterestDAODB poiDao = new PointOfInterestDAODB(conn);
 			RoomDAODB roomDao = new RoomDAODB(conn);
 
-			userDao.setCascadePolicy(new UserToRoomCascade(roomDao));
+			CascadeDecorator<User> usrDaoDemoCascade = new CascadeDecorator<>(userDao)
+					.addCascadePolicy(new UserToRoomCascade(roomDao))
+					.addCascadePolicy(new UserToProposalCascadeDemo(roomDao));
 
-			daos.put(User.class, userDao);
-			daos.put(PointOfInterest.class, poiDao);
-			daos.put(Room.class, roomDao);
+			daos.put(User.class, new CacheDecorator<>(usrDaoDemoCascade));
+			daos.put(Room.class, new CacheDecorator<>(roomDao));
+			daos.put(PointOfInterest.class, new CacheDecorator<>(poiDao));
 		} catch (ClassNotFoundException | IOException | SQLException | PropertyNotFoundException e) {
 			throw new IllegalStateException(e);
 		}
@@ -49,5 +54,5 @@ public class DBDAOFactory extends DAOFactory{
 	public <T> DAO<T> getDAO(Class<T> of) {
 		return (DAO<T>) Optional.ofNullable(daos.get(of)).orElseThrow();
 	}
-	
+
 }

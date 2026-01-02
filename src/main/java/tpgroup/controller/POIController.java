@@ -1,7 +1,6 @@
 package tpgroup.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import tpgroup.model.POIFilterBean;
 import tpgroup.model.Session;
@@ -24,12 +23,6 @@ public class POIController {
 
 	private static List<PointOfInterest> getPOIFiltered(List<Tag> tags){
 		return getPOIFiltered().stream().filter(poi -> poi.getTags().containsAll(tags)).toList();
-	}
-
-	private static List<PointOfInterest> getCountryPOI(){
-		String destCountry = Session.getInstance().getEnteredRoom().getTrip().getCountry();
-		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
-		return poiDao.getFiltered(poi -> poi.getCountry().equals(destCountry));
 	}
 
 	private static List<PointOfInterest> getPOIFiltered(){
@@ -63,13 +56,13 @@ public class POIController {
 
     public static List<String> getAllCountries() {
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
-		return poiDao.getAll().stream().map(poi -> poi.getCountry()).distinct().collect(Collectors.toList());
+		return poiDao.getAll().stream().map(poi -> poi.getCountry()).distinct().toList();
     }
 
     public static List<String> getAllCities(String fromCountry) {
 		if(!isValidCountry(fromCountry))
 			throw new IllegalArgumentException();
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
-		return poiDao.getAll().stream().map(poi -> poi.getCountry()).distinct().collect(Collectors.toList());
+		return poiDao.getAll().stream().map(poi -> poi.getCountry()).distinct().toList();
     }
 }

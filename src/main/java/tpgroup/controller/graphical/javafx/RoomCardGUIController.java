@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

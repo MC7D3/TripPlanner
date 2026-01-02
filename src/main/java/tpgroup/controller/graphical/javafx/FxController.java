@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import java.io.IOException;
 

@@ -30,7 +30,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public PointOfInterest get(PointOfInterest poi) throws RecordNotFoundException {
-       final String query = "SELECT * FROM pointofinterest_tbl WHERE name = ? AND latitude = ? AND longitude = ?";
+       final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND latitude = ? AND longitude = ?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         
@@ -56,8 +56,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public List<PointOfInterest> getAll() {
-        final String query = "SELECT * FROM pointofinterest_tbl";
-        Statement stmt = null;
+        final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";        Statement stmt = null;
         ResultSet rs = null;
         List<PointOfInterest> pois = new ArrayList<>();
         
@@ -79,20 +78,19 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public void save(PointOfInterest poi) {
-        final String query = "UPDATE pointofinterest_tbl SET description = ?, country = ?, city = ?, rating = ?, tags = ? "
-                           + "WHERE name = ? AND latitude = ? AND longitude = ?";
+        final String query = "UPDATE poi_tbl SET description = ?, country = ?, city = ?, rating = ?, tags = ? WHERE name = ? AND latitude = ? AND longitude = ?";
         PreparedStatement stmt = null;
         
         try {
             stmt = connection.prepareStatement(query);
             stmt.setString(1, poi.getDescription());
             stmt.setString(2, poi.getCountry());
-            stmt.setString(2, poi.getCity());
-            stmt.setString(3, poi.getRating().name());
-            stmt.setString(4, gson.toJson(poi.getTags()));
-            stmt.setString(5, poi.getName());
-            stmt.setDouble(6, poi.getCoordinates().getLatitude());
-            stmt.setDouble(6, poi.getCoordinates().getLongitude());
+            stmt.setString(3, poi.getCity());
+            stmt.setString(4, poi.getRating().name());
+            stmt.setString(5, gson.toJson(poi.getTags()));
+            stmt.setString(6, poi.getName());
+            stmt.setDouble(7, poi.getCoordinates().getLatitude());
+            stmt.setDouble(8, poi.getCoordinates().getLongitude());
             
             if (stmt.executeUpdate() == 0) {
                 add(poi);

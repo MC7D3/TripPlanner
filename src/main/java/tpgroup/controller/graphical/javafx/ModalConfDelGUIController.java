@@ -1,11 +1,11 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import tpgroup.controller.OptionsController;
 
-public class modalConfDelGUIController extends FxController{
+public class ModalConfDelGUIController extends FxController{
 
 	@FXML
 	private Button proceedbBtn;

@@ -6,7 +6,6 @@ import java.util.List;
 import tpgroup.model.BranchBean;
 import tpgroup.model.Event;
 import tpgroup.model.EventBean;
-import tpgroup.model.EventsNode;
 import tpgroup.model.IntervalBean;
 import tpgroup.model.POIBean;
 import tpgroup.model.ProposalBean;
@@ -27,17 +26,17 @@ public class TripController {
 		super();
 	}
 
-	public static List<Proposal> getAllProposals() {
-		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream().toList();
+	public static List<ProposalBean> getAllProposals() {
+		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream().map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
-	public static List<Proposal> getLoggedUserProposals() {
+	public static List<ProposalBean> getLoggedUserProposals() {
 		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream()
-				.filter(proposal -> proposal.getCreator().equals(Session.getInstance().getLogged())).toList();
+				.filter(proposal -> proposal.getCreator().equals(Session.getInstance().getLogged())).map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
-	public static List<EventsNode> getBranches() {
-		return Session.getInstance().getEnteredRoom().getTrip().getAllBranches();
+	public static List<BranchBean> getBranches() {
+		return Session.getInstance().getEnteredRoom().getTrip().getAllBranches().stream().map(eventsNode -> new BranchBean(eventsNode)).toList();
 	}
 
 	public static boolean acceptProposal(ProposalBean proposal) {
@@ -117,13 +116,13 @@ public class TripController {
 		saveChanges();
 	}
 
-	public static List<EventsNode> getConnectedBranches(BranchBean branchBean) {
-		return Session.getInstance().getEnteredRoom().getTrip().getConnectedBranches(branchBean.getEventsNode());
+	public static List<BranchBean> getConnectedBranches(BranchBean branchBean) {
+		return Session.getInstance().getEnteredRoom().getTrip().getConnectedBranches(branchBean.getEventsNode()).stream().map(eventsNode -> new BranchBean(eventsNode)).toList();
 	}
 
-	public static List<EventsNode> getDeletionCandidates(BranchBean of) {
+	public static List<BranchBean> getDeletionCandidates(BranchBean of) {
 		return new ArrayList<>(getConnectedBranches(of)).stream()
-				.filter(branch -> Session.getInstance().getEnteredRoom().getTrip().connCount(branch) == 0).toList();
+				.filter(branch -> Session.getInstance().getEnteredRoom().getTrip().connCount(branch.getEventsNode()) == 0).toList();
 	}
 
 	private static void saveChanges() {

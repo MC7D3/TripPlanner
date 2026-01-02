@@ -1,6 +1,5 @@
 package tpgroup.view.cli;
 
-import tpgroup.controller.TripController;
 import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.EventsNode;
 import tpgroup.model.exception.FormFieldIOException;
@@ -16,7 +15,7 @@ public class CreateBranchFormState extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			EventsNode parent = FormFieldFactory.getInstance().newSelectItem("select the branch parent", TripController.getBranches()).get();
+			EventsNode parent = FormFieldFactory.getInstance().newSelectItem("select the branch parent", RoomGController.getBranches()).get();
 			CliViewState next = RoomGController.createBranch(parent);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {

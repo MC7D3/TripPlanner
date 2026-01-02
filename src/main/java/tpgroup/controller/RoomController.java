@@ -1,7 +1,6 @@
 package tpgroup.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import tpgroup.model.RoomBean;
 import tpgroup.model.Session;
@@ -39,7 +38,7 @@ public class RoomController {
 	public static List<RoomBean> getJoinedRooms() {
 		return DAOFactory.getInstance().getDAO(Room.class)
 				.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()))
-				.stream().map(item -> new RoomBean(item)).collect(Collectors.toList());
+				.stream().map(item -> new RoomBean(item)).toList();
 	}
 
 	public static boolean abbandonRoom(RoomBean toAbbandonBean) {

@@ -3,7 +3,6 @@ package tpgroup.persistence.filesystem;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.google.gson.GsonBuilder;
 
@@ -55,7 +54,7 @@ public class RoomDAOFile extends FileDAO<Room> {
 
 	@Override
 	public List<Room> getFiltered(Predicate<Room> filter) {
-		return readAll().stream().filter(filter).collect(Collectors.toList());
+		return readAll().stream().filter(filter).toList();
 	}
 
 	@Override

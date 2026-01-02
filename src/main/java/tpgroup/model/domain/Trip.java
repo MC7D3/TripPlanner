@@ -18,6 +18,7 @@ public class Trip {
 	public Trip(String country, String mainCity, Set<Proposal> proposals, EventsGraph tripGraph) {
 		this.proposals = proposals;
 		this.country = country;
+		this.mainCity = mainCity;
 		this.tripGraph = tripGraph;
 	}
 

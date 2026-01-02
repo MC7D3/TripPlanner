@@ -1,7 +1,7 @@
 package tpgroup.controller.graphical.cli;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tpgroup.controller.POIController;
 import tpgroup.controller.RoomController;
@@ -36,6 +36,11 @@ import tpgroup.view.cli.RoomMemberMenuState;
 import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class RoomGController {
+	private static final String PROPOSAL_SUCCESS = "proposal inserted succesfully!";
+	private static final String PROPOSAL_INVALID = "proposal invalid or malformed";
+	private static final String ERROR_PROMPT = "ERROR: ";
+
+	private RoomGController() {}
 
 	public static CliViewState process(String choice) {
 		switch (choice) {
@@ -74,21 +79,21 @@ public class RoomGController {
 	}
 
 	public static List<EventsNode> getBranches() {
-		return TripController.getBranches();
+		return TripController.getBranches().stream().map(bean -> bean.getEventsNode()).toList();
 	}
 
 	public static List<Proposal> getLoggedUserProposals() {
-		return TripController.getLoggedUserProposals();
+		return TripController.getLoggedUserProposals().stream().map(bean -> bean.getProposal()).toList();
 	}
 
 	public static List<Proposal> getProposalsSortedByLike() {
-		List<Proposal> proposal = new ArrayList<>(TripController.getAllProposals());
+		List<Proposal> proposal = TripController.getAllProposals().stream().map(bean -> bean.getProposal()).collect(Collectors.toList());
 		proposal.sort((p1, p2) -> Integer.compare(p2.getLikes(), p1.getLikes()));
 		return proposal;
 	}
 
 	public static List<EventsNode> getDeletionCandidates(EventsNode forNode) {
-		return TripController.getDeletionCandidates(new BranchBean(forNode));
+		return TripController.getDeletionCandidates(new BranchBean(forNode)).stream().map(bean -> bean.getEventsNode()).toList();
 
 	}
 
@@ -107,17 +112,17 @@ public class RoomGController {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 		try {
 			if (poi == null) {
-				ret.setOutLogTxt("ERROR: invalid poi filter values provided");
+				ret.setOutLogTxt(ERROR_PROMPT + "invalid poi filter values provided");
 				return ret;
 			}
 			if (TripController.createAddProposal(new BranchBean(chosenBranch), new POIBean(poi),
 					new IntervalBean(startTimeTxt, endTimeTxt))) {
-				ret.setOutLogTxt("proposal inserted succesfully!");
+				ret.setOutLogTxt(PROPOSAL_SUCCESS);
 			} else {
-				ret.setOutLogTxt("proposal invalid or malformed");
+				ret.setOutLogTxt(PROPOSAL_INVALID);
 			}
 		} catch (InvalidBeanParamException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 	}
@@ -125,9 +130,9 @@ public class RoomGController {
 	public static CliViewState createRemoveProposal(EventsNode chosenBranch, Event chosenEvent) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 		if (TripController.createRemoveProposal(new BranchBean(chosenBranch), new EventBean(chosenEvent))) {
-			ret.setOutLogTxt("proposal inserted succesfully!");
+			ret.setOutLogTxt(PROPOSAL_SUCCESS);
 		} else {
-			ret.setOutLogTxt("proposal invalid or malformed");
+			ret.setOutLogTxt(PROPOSAL_INVALID);
 		}
 		return ret;
 	}
@@ -148,12 +153,12 @@ public class RoomGController {
 		try {
 			if (TripController.createUpdateProposal(new BranchBean(chosenNode), chosenEvent,
 					new IntervalBean(startTimeTxt, endTimeTxt))) {
-				ret.setOutLogTxt("proposal inserted succesfully!");
+				ret.setOutLogTxt(PROPOSAL_SUCCESS);
 			} else {
-				ret.setOutLogTxt("proposal invalid or malformed");
+				ret.setOutLogTxt(PROPOSAL_INVALID);
 			}
 		} catch (InvalidBeanParamException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 	}
@@ -181,7 +186,7 @@ public class RoomGController {
 			TripController.createBranch(new BranchBean(parent));
 			ret.setOutLogTxt("branch %s created succesfully!");
 		} catch (NodeConflictException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 	}
@@ -192,7 +197,7 @@ public class RoomGController {
 			TripController.connectBranches(new BranchBean(parent), new BranchBean(child));
 			ret.setOutLogTxt("branches connected succesfully");
 		} catch (BranchConnectionException e) {
-			ret.setOutLogTxt("ERROR: " + e.getMessage());
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 	}

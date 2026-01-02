@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -25,6 +24,9 @@ public class RoomDAODB implements DAO<Room> {
 	private Gson gson = new Gson();
 	private ProposalDAODB proposalDAO;
 
+	private static final String EMAIL_VAR = "email";
+	private static final String PWD_VAR = "password";
+
 	public RoomDAODB(Connection connection) {
 		this.connection = connection;
 		this.proposalDAO = new ProposalDAODB(connection);
@@ -32,31 +34,31 @@ public class RoomDAODB implements DAO<Room> {
 
 	@Override
 	public boolean add(Room room) {
-		try {
-			Boolean res = false;
+		String sql = """
+				INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph)
+				VALUES (?, ?, ?, ?, ?, ?)
+				""";
+		Boolean res = false;
+		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
 			connection.setAutoCommit(false);
 
-			String sql = """
-					INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph)
-					VALUES (?, ?, ?, ?, ?, ?)
-					""";
+			stmt.setString(1, room.getCode());
+			stmt.setString(2, room.getName());
+			stmt.setString(3, room.getAdmin().getEmail());
+			stmt.setString(4, room.getTrip().getCountry());
+			stmt.setString(5, room.getTrip().getMainCity());
+			stmt.setString(6, serializeTripGraph(room.getTrip().getTripGraph()));
 
-			try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-				stmt.setString(1, room.getCode());
-				stmt.setString(2, room.getName());
-				stmt.setString(3, room.getAdmin().getEmail());
-				stmt.setString(4, room.getTrip().getCountry());
-				stmt.setString(5, room.getTrip().getMainCity());
-				stmt.setString(6, serializeTripGraph(room.getTrip().getTripGraph()));
+			res = stmt.executeUpdate() > 0;
 
-				res = stmt.executeUpdate() > 0;
-			}catch(SQLException e){
+			if(!res){
 				return res;
 			}
 
 			saveRoomMembers(room);
 
-			res = res && proposalDAO.addRoomProposals(room); //handle return value
+			res = res && proposalDAO.addRoomProposals(room); // handle return value
 
 			connection.commit();
 
@@ -65,119 +67,114 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.rollback();
 			} catch (SQLException rollbackEx) {
-				// Log rollback error
+				//no handling required
 			}
-			throw new RuntimeException("Error saving room: " + e.getMessage(), e);
+			throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
+				throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
 			}
 		}
 	}
 
 	@Override
-    public Room get(Room room) {
+	public Room get(Room room) {
 		String code = room.getCode();
-		if(code == null){
-			return null; 
+		if (code == null) {
+			return null;
 		}
-        String sql = """
-            SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph,
-                   u.email, u.password
-            FROM room_tbl r
-            LEFT JOIN user_tbl u ON r.admin_fk = u.email
-            WHERE r.code = ?
-            """;
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, code);
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    User admin = new User(
-                        rs.getString("email"),
-                        rs.getString("password")
-                    );
+		String sql = """
+				SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph,
+				       u.email, u.password
+				FROM room_tbl r
+				LEFT JOIN user_tbl u ON r.admin_fk = u.email
+				WHERE r.code = ?
+				""";
 
-					if(admin.getEmail() == null || admin.getPassword() == null){
+		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+			stmt.setString(1, code);
+
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					User admin = new User(
+							rs.getString(EMAIL_VAR),
+							rs.getString(PWD_VAR));
+
+					if (admin.getEmail() == null || admin.getPassword() == null) {
 						throw new IllegalStateException(String.format("illegal state: room %s has no admin", code));
 					}
-                    
-                    String tripGraphJson = rs.getString("trip_graph");
+
+					String tripGraphJson = rs.getString("trip_graph");
 					EventsGraph tripGraph = deserializeTripGraph(tripGraphJson);
 
-					Set<Proposal> proposals = proposalDAO.getTripProposals(code);
-                    
-                    Trip trip = new Trip(
-                        rs.getString("trip_country"),
-                        rs.getString("trip_main_city"),
-						proposals,
-						tripGraph
-                    );
+					Set<Proposal> proposals = proposalDAO.getTripProposals(code, tripGraph);
+
+					Trip trip = new Trip(
+							rs.getString("trip_country"),
+							rs.getString("trip_main_city"),
+							proposals,
+							tripGraph);
 
 					Set<User> members = findRoomMembers(code);
-                    
-                    Room fullRoom = new Room(code, admin, members, trip); 
-                    return fullRoom;
-                }
-                return null;
-            }
-            
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding room: " + e.getMessage(), e);
-        }
-    }
+
+					return new Room(code, admin, members, trip);
+				}
+				return null;
+			}
+
+		} catch (SQLException e) {
+			throw new IllegalStateException("Error finding room: " + e.getMessage(), e);
+		}
+	}
 
 	@Override
 	public List<Room> getAll() {
-        String sql = """
-            SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph,
-                   u.email, u.password
-            FROM room_tbl r
-            LEFT JOIN user_tbl u ON r.admin_fk = u.email
-            """;
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+		String sql = """
+				SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph,
+				       u.email, u.password
+				FROM room_tbl r
+				LEFT JOIN user_tbl u ON r.admin_fk = u.email
+				""";
+
+		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
 			List<Room> rooms = new ArrayList<>();
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
 					String code = rs.getString("code");
 
+					User admin = new User(
+							rs.getString(EMAIL_VAR),
+							rs.getString(PWD_VAR));
 
-                    User admin = new User(
-                        rs.getString("email"),
-                        rs.getString("password")
-                    );
-
-					if(admin.getEmail() == null || admin.getPassword() == null){
+					if (admin.getEmail() == null || admin.getPassword() == null) {
 						throw new IllegalStateException(String.format("illegal state: room %s has no admin", code));
 					}
-                    
-                    String tripGraphJson = rs.getString("trip_graph");
+
+					String tripGraphJson = rs.getString("trip_graph");
 					EventsGraph tripGraph = deserializeTripGraph(tripGraphJson);
 
-					Set<Proposal> proposals = proposalDAO.getTripProposals(code);
-                    
-                    Trip trip = new Trip(
-                        rs.getString("trip_country"),
-                        rs.getString("trip_main_city"),
-						proposals,
-						tripGraph
-                    );
+					Set<Proposal> proposals = proposalDAO.getTripProposals(code, tripGraph);
+
+					Trip trip = new Trip(
+							rs.getString("trip_country"),
+							rs.getString("trip_main_city"),
+							proposals,
+							tripGraph);
 
 					Set<User> members = findRoomMembers(code);
-                    
-                    rooms.add(new Room(rs.getString("code"), admin, members, trip));
-                }
-                return rooms;
-            }
-            
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding room: " + e.getMessage(), e);
-        }
+
+					rooms.add(new Room(rs.getString("code"), admin, members, trip));
+				}
+				return rooms;
+			}
+
+		} catch (SQLException e) {
+			throw new IllegalStateException("Error finding room: " + e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -209,12 +206,16 @@ public class RoomDAODB implements DAO<Room> {
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
-			} catch (SQLException rollbackEx) {}
-			throw new RuntimeException("Error deleting room: " + e.getMessage(), e);
+			} catch (SQLException rollbackEx) {
+				//no handling needed
+			}
+			throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
-			} catch (SQLException e) {}
+			} catch (SQLException e) {
+				throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
+			}
 		}
 	}
 
@@ -254,18 +255,22 @@ public class RoomDAODB implements DAO<Room> {
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
-			} catch (SQLException rollbackEx) {}
-			throw new RuntimeException("Error updating room: " + e.getMessage(), e);
+			} catch (SQLException rollbackEx) {
+				//no handling needed
+			}
+			throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
-			} catch (SQLException e) {}
+			} catch (SQLException e) {
+				throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
+			}
 		}
 	}
 
 	@Override
 	public List<Room> getFiltered(Predicate<Room> filter) {
-		return getAll().stream().filter(filter).collect(Collectors.toList());
+		return getAll().stream().filter(filter).toList();
 	}
 
 	private void saveRoomMembers(Room room) throws SQLException {
@@ -304,23 +309,23 @@ public class RoomDAODB implements DAO<Room> {
 			try (ResultSet rs = stmt.executeQuery()) {
 				while (rs.next()) {
 					members.add(new User(
-							rs.getString("email"),
-							rs.getString("password")));
+							rs.getString(EMAIL_VAR),
+							rs.getString(PWD_VAR)));
 				}
 			}
 
 		} catch (SQLException e) {
-			throw new RuntimeException("Error finding room members: " + e.getMessage(), e);
+			throw new IllegalStateException("Error finding room members: " + e.getMessage(), e);
 		}
 
 		return members;
 	}
 
-	private String serializeTripGraph(EventsGraph tripGraph){
+	private String serializeTripGraph(EventsGraph tripGraph) {
 		return gson.toJson(tripGraph);
 	}
 
-	private EventsGraph deserializeTripGraph(String tripGraphJSON){
+	private EventsGraph deserializeTripGraph(String tripGraphJSON) {
 		return gson.fromJson(tripGraphJSON, EventsGraph.class);
 	}
 }

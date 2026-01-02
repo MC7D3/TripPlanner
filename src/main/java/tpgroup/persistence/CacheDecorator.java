@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import tpgroup.model.exception.RecordNotFoundException;
 
 public class CacheDecorator<T> implements DAO<T> {
-	private class CachedElement{
+	private class CachedElement {
 		private final T elem;
 		private int ttl;
 
@@ -21,7 +21,7 @@ public class CacheDecorator<T> implements DAO<T> {
 		public T getElem() {
 			T ret = this.elem;
 			ttl--;
-			if(ttl == 0){
+			if (ttl == 0) {
 				notifyDeath(this);
 			}
 			return ret;
@@ -35,6 +35,9 @@ public class CacheDecorator<T> implements DAO<T> {
 			this.ttl = 5;
 		}
 
+		private void notifyDeath(CachedElement elem) {
+			CacheDecorator.this.cache.remove(elem);
+		}
 	}
 
 	private final DAO<T> decorated;
@@ -119,8 +122,5 @@ public class CacheDecorator<T> implements DAO<T> {
 		decorated.save(obj);
 		cache.remove(obj);
 	}
-	
-	private void notifyDeath(CachedElement elem){
-		cache.remove(elem);
-	}
+
 }

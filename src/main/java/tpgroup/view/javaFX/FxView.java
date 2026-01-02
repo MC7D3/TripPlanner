@@ -1,4 +1,4 @@
-package tpgroup.view.javafx;
+package tpgroup.view.javaFX;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

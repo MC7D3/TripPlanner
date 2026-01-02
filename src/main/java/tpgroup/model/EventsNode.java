@@ -6,14 +6,21 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.UUID;
 
 public class EventsNode implements Comparable<EventsNode> {
+	private final UUID id;
 	private TreeSet<Event> events;
 	private EventsGraph graph;
 
-	public EventsNode(EventsGraph graph) {
-		this.events = new TreeSet<>();
+	public EventsNode(UUID id, TreeSet<Event> events, EventsGraph graph){
+		this.id = id;
+		this.events = events;
 		this.graph = graph;
+	}
+
+	public EventsNode(EventsGraph graph) {
+		this(UUID.randomUUID(), new TreeSet<>(), graph);
 	}
 
 	public boolean addEvent(Event event) {
@@ -60,6 +67,10 @@ public class EventsNode implements Comparable<EventsNode> {
 		return events;
 	}
 
+	public UUID getId(){
+		return id;
+	}
+
 	public void setEvents(SortedSet<Event> events) {
 		this.events = new TreeSet<>(events);
 	}
@@ -95,7 +106,7 @@ public class EventsNode implements Comparable<EventsNode> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(events, graph);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -110,7 +121,7 @@ public class EventsNode implements Comparable<EventsNode> {
 			return false;
 		}
 		EventsNode other = (EventsNode) obj;
-		return Objects.equals(events, other.events) && Objects.equals(graph, other.graph);
+		return Objects.equals(id, other.id);
 	}
 
 	@Override

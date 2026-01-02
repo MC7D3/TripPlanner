@@ -2,7 +2,6 @@ package tpgroup.persistence.filesystem;
 
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.google.gson.GsonBuilder;
 
@@ -22,7 +21,7 @@ public class PointOfInterestDAOFile extends FileDAO<PointOfInterest>{
 
 	@Override
 	public List<PointOfInterest> getFiltered(Predicate<PointOfInterest> filter) {
-		return readAll().stream().filter(filter).collect(Collectors.toList());
+		return readAll().stream().filter(filter).toList();
 	}
 
 	@Override

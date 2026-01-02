@@ -5,6 +5,10 @@ import tpgroup.view.cli.RegistrationFormState;
 import tpgroup.view.cli.stateMachine.CliViewState;
 
 public class UnloggedGController {
+
+	private UnloggedGController() {
+	}
+
 	public static CliViewState process(String choice){
 		switch(choice){
 			case "login": return new LoginFormState();

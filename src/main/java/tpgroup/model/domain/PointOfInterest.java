@@ -7,7 +7,7 @@ public class PointOfInterest {
 	String name;
 	String description;
 	String city;
-	String Country;
+	String country;
 	Coordinates coordinates;
 	Rating rating;
 	List<Tag> tags;
@@ -17,7 +17,7 @@ public class PointOfInterest {
 		this.name = name;
 		this.description = description;
 		this.city = city;
-		Country = country;
+		this.country = country;
 		this.coordinates = coordinates;
 		this.rating = rating;
 		this.tags = tags;
@@ -48,11 +48,11 @@ public class PointOfInterest {
 	}
 
 	public String getCountry() {
-		return Country;
+		return country;
 	}
 
 	public void setCountry(String country) {
-		Country = country;
+		this.country = country;
 	}
 
 	public Coordinates getCoordinates() {
@@ -102,7 +102,7 @@ public class PointOfInterest {
 	@Override
 	public String toString() {
 		return name + ", " + description + "(" + city + ", "
-				+ Country + "), rating= " + rating + " - tags=" + tags;
+				+ country + "), rating= " + rating + " - tags=" + tags;
 	}
 
 }

@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.AuthController;
 import tpgroup.controller.RoomController;
+import tpgroup.model.RoomBean;
 import tpgroup.model.domain.Room;
 
 public class LoggedMenuGUIController extends FxController {
@@ -44,7 +45,7 @@ public class LoggedMenuGUIController extends FxController {
 	}
 
 	public void handleRoomExit(RoomCardGUIController ctrl){
-		RoomController.abbandonRoom(ctrl.getRoom());
+		RoomController.abbandonRoom(new RoomBean(ctrl.getRoom()));
 		buildUI();
 	}
 	
@@ -56,7 +57,7 @@ public class LoggedMenuGUIController extends FxController {
 	private void buildUI(){
 		try {
 			grid.getChildren().clear();
-			List<Room> rooms = RoomController.getJoinedRooms();
+			List<Room> rooms = RoomController.getJoinedRooms().stream().map(bean -> bean.getRoom()).toList();
 			int xLocation = 0;
 			int yLocation = 0;
 			for(Room room : rooms){

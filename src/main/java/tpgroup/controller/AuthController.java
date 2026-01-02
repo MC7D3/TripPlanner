@@ -15,7 +15,7 @@ public class AuthController {
 		super();
 	}
 
-	public static Boolean validateCredentials(EmailBean email, PwdBean password) {
+	public static boolean validateCredentials(EmailBean email, PwdBean password) {
 		try {
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 			User fullCred = userDao.get(new User(email.getEmail(), null));

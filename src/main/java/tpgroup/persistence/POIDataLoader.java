@@ -10,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 
 import tpgroup.model.ConfigReader;
 import tpgroup.model.domain.PointOfInterest;
-import tpgroup.model.exception.InvalidPersistenceTypeException;
 import tpgroup.model.exception.PropertyNotFoundException;
 import tpgroup.persistence.factory.DAOFactory;
 
@@ -22,9 +21,12 @@ import tpgroup.persistence.factory.DAOFactory;
  */
 public class POIDataLoader {
 
-	public static void load(String dataPath) throws IOException, InvalidPersistenceTypeException {
+	private POIDataLoader(){
+	}
+
+	public static void load(String dataPath) throws IOException {
 		ConfigReader reader = new ConfigReader("configuration.properties");
-		Boolean reloadPOI;
+		boolean reloadPOI;
 		try {
 			reloadPOI = reader.readReloadPOI();
 		} catch (PropertyNotFoundException e) {
@@ -36,11 +38,11 @@ public class POIDataLoader {
 		}
 
 		Gson gson = new Gson();
-		try(FileReader POIreader = new FileReader("pois.json")){
+		try(FileReader PoiReader = new FileReader(dataPath)){
 
 			Type listType = new TypeToken<List<PointOfInterest>>(){}.getType();
 
-			List<PointOfInterest> parsedPois = gson.fromJson(POIreader, listType);
+			List<PointOfInterest> parsedPois = gson.fromJson(PoiReader, listType);
 
 			DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 			for (PointOfInterest poi : parsedPois) {

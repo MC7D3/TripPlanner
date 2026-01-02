@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -39,8 +39,7 @@ public class OptionsGUIController extends FxController {
 	private void setParentOutTxt(String text){
 		Stage modalStage = (Stage) newPwdTxt.getScene().getWindow();
 		Object parentCtrl = ((Stage) modalStage.getOwner()).getScene().getRoot().getUserData();
-		if(parentCtrl instanceof LoggedMenuGUIController){
-			LoggedMenuGUIController loggedMenuCtrl = (LoggedMenuGUIController) parentCtrl;
+		if(parentCtrl instanceof LoggedMenuGUIController loggedMenuCtrl){
 			loggedMenuCtrl.setOutLogTxt(text);
 		}
 		

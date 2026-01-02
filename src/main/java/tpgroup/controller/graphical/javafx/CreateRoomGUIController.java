@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
 
 public class CreateRoomGUIController extends FxController {
-	private static final Integer generationAttempts = 3;
+	private static final Integer ATTEMPTS = 3;
 
 	@FXML
 	private TextField roomName;
@@ -29,7 +29,7 @@ public class CreateRoomGUIController extends FxController {
 
 	@FXML
 	public void createRoom(){
-		for(int attempt = 0; attempt < generationAttempts; attempt++){
+		for(int attempt = 0; attempt < ATTEMPTS; attempt++){
 			try{
 				RoomController.createRoom(new RoomBean(roomName.getText(), countryCmBox.getEditor().getText(), cityCmBox.getEditor().getText()));
 				outLogTxt.setText("room created successfully!");

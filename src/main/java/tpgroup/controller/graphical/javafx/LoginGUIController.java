@@ -1,4 +1,4 @@
-package tpgroup.controller.graphical.javaFX;
+package tpgroup.controller.graphical.javafx;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,7 +15,7 @@ import tpgroup.model.EmailBean;
 import tpgroup.model.PwdBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
-public class RegistrationGUIController extends FxController {
+public class LoginGUIController extends FxController {
 
 	@FXML
 	private TextField emailTxt;
@@ -24,34 +24,33 @@ public class RegistrationGUIController extends FxController {
 	private PasswordField pwdTxt;
 
 	@FXML
-	private PasswordField confPwdTxt;
-
-	@FXML
 	private Text outLogTxt;
 
 	@FXML
-	private Button registerBtn;
+	private Button loginBtn;
 
 	@FXML
-	public void onRegistration() {
+	public void onLogin() {
 		try {
-			EmailBean email = new EmailBean(emailTxt.getText());
-			PwdBean pwd = new PwdBean(pwdTxt.getText(), confPwdTxt.getText());
-
-			if (AuthController.executeRegistration(email, pwd)) {
+			String email = emailTxt.getText();
+			String pwd = pwdTxt.getText();
+			if (email.isEmpty() || pwd.isEmpty()) {
+				outLogTxt.setText("all the fields are required");
+				return;
+			}
+			if (AuthController.validateCredentials(new EmailBean(email), new PwdBean(pwd))) {
 				redirect("loggedMenu.fxml", (Stage) outLogTxt.getScene().getWindow());
 				return;
-			} else {
-				outLogTxt.setText("the account already exists");
 			}
+			outLogTxt.setText("invalid email or password provided");
 		} catch (InvalidBeanParamException e) {
-			outLogTxt.setText(e.getMessage());
+			outLogTxt.setText("malformed email or password");
 		}
 	}
 
 	@FXML
-	public void redirectLogin() {
-		redirect("login.fxml", (Stage) outLogTxt.getScene().getWindow());
+	public void redirectRegistration() {
+		redirect("registration.fxml", (Stage) outLogTxt.getScene().getWindow());
 	}
 
 	@FXML
@@ -64,7 +63,7 @@ public class RegistrationGUIController extends FxController {
 			Scene curScene = outLogTxt.getScene();
 			curScene.setOnKeyPressed(event -> {
 				if (event.getCode() == KeyCode.ENTER) {
-					registerBtn.fire();
+					loginBtn.fire();
 					event.consume();
 				}
 			});

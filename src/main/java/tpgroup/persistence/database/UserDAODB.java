@@ -9,16 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.model.exception.SQLConnInterruptedException;
-import tpgroup.persistence.Cascade;
 import tpgroup.persistence.DAO;
 
 public class UserDAODB implements DAO<User> {
 	Connection conn;
-	private Cascade<User, Room> cascadePolicy;
 
 	public UserDAODB(Connection conn) {
 		this.conn = conn;
@@ -26,7 +23,7 @@ public class UserDAODB implements DAO<User> {
 
 	@Override
 	public User get(User user) throws RecordNotFoundException {
-		final String query = "SELECT * FROM user_tbl WHERE email = ?";
+		final String query = "SELECT email, password FROM user_tbl WHERE email = ?";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);
 			stmt.setString(1, user.getEmail());
@@ -53,9 +50,7 @@ public class UserDAODB implements DAO<User> {
 			if (stmt.executeUpdate() == 0) {
 				add(user);
 			}
-			;
 
-			cascadePolicy.propagateUpdate(user);
 		} catch (SQLException e) {
 			throw new SQLConnInterruptedException(e);
 		}
@@ -63,7 +58,7 @@ public class UserDAODB implements DAO<User> {
 
 	@Override
 	public List<User> getAll() {
-		final String query = "SELECT * FROM user_tbl";
+		final String query = "SELECT email, password FROM user_tbl";
 		List<User> users = new ArrayList<>();
 
 		try {
@@ -105,7 +100,6 @@ public class UserDAODB implements DAO<User> {
 			throw new SQLConnInterruptedException(e);
 		}
 
-		cascadePolicy.propagateAdd(user);
 		return ret;
 	}
 
@@ -121,13 +115,9 @@ public class UserDAODB implements DAO<User> {
 				throw new RecordNotFoundException();
 			}
 
-			cascadePolicy.propagateUpdate(user);
 		} catch (SQLException e) {
 			throw new SQLConnInterruptedException(e);
 		}
 	}
 
-	public void setCascadePolicy(Cascade<User, Room> cascadePolicy) {
-		this.cascadePolicy = cascadePolicy;
-	}
 }
