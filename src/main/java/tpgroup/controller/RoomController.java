@@ -21,9 +21,11 @@ public class RoomController {
 	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException{
 		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getCountry(),
 				newRoom.getCity());
-		if(!(POIController.isValidCountry(room.getTrip().getCountry()) || POIController.isValidCity(room.getTrip().getMainCity()))){
-		}else{
+		if(!POIController.isValidCountry(room.getTrip().getCountry())){
 			throw new InvalidBeanParamException("country");
+		}
+		if(!POIController.isValidCity(room.getTrip().getMainCity())){
+			throw new InvalidBeanParamException("city");
 		}
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		if (!roomDao.add(room))

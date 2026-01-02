@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public class EventsNode implements Comparable<EventsNode> {
 	private final UUID id;
-	private TreeSet<Event> events;
+	private NavigableSet<Event> events;
 	private EventsGraph graph;
 
-	public EventsNode(UUID id, TreeSet<Event> events, EventsGraph graph){
+	public EventsNode(UUID id, NavigableSet<Event> events, EventsGraph graph){
 		this.id = id;
 		this.events = events;
 		this.graph = graph;
