@@ -1,21 +1,16 @@
 package tpgroup.controller.graphical.cli;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import tpgroup.controller.POIController;
 import tpgroup.controller.RoomController;
 import tpgroup.controller.TripController;
-import tpgroup.model.BranchBean;
-import tpgroup.model.Event;
-import tpgroup.model.EventBean;
-import tpgroup.model.EventsNode;
-import tpgroup.model.IntervalBean;
-import tpgroup.model.POIBean;
-import tpgroup.model.POIFilterBean;
-import tpgroup.model.ProposalBean;
-import tpgroup.model.domain.PointOfInterest;
-import tpgroup.model.domain.Proposal;
+import tpgroup.model.bean.BranchBean;
+import tpgroup.model.bean.EventBean;
+import tpgroup.model.bean.IntervalBean;
+import tpgroup.model.bean.POIBean;
+import tpgroup.model.bean.POIFilterBean;
+import tpgroup.model.bean.ProposalBean;
 import tpgroup.model.exception.BranchConnectionException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.NodeConflictException;
@@ -78,26 +73,26 @@ public class RoomGController {
 		}
 	}
 
-	public static List<EventsNode> getBranches() {
-		return TripController.getBranches().stream().map(bean -> bean.getEventsNode()).toList();
+	public static List<BranchBean> getBranches() {
+		return TripController.getBranches();
 	}
 
-	public static List<Proposal> getLoggedUserProposals() {
-		return TripController.getLoggedUserProposals().stream().map(bean -> bean.getProposal()).toList();
+	public static List<ProposalBean> getLoggedUserProposals() {
+		return TripController.getLoggedUserProposals();
 	}
 
-	public static List<Proposal> getProposalsSortedByLike() {
-		List<Proposal> proposal = TripController.getAllProposals().stream().map(bean -> bean.getProposal()).collect(Collectors.toList());
+	public static List<ProposalBean> getProposalsSortedByLike() {
+		List<ProposalBean> proposal = TripController.getAllProposals();
 		proposal.sort((p1, p2) -> Integer.compare(p2.getLikes(), p1.getLikes()));
 		return proposal;
 	}
 
-	public static List<EventsNode> getDeletionCandidates(EventsNode forNode) {
-		return TripController.getDeletionCandidates(new BranchBean(forNode)).stream().map(bean -> bean.getEventsNode()).toList();
+	public static List<BranchBean> getDeletionCandidates(BranchBean forNode) {
+		return TripController.getDeletionCandidates(forNode);
 
 	}
 
-	public static List<PointOfInterest> getFilteredPOIs(String minRatingTxt, String maxRatingTxt,
+	public static List<POIBean> getFilteredPOIs(String minRatingTxt, String maxRatingTxt,
 			List<String> chosenTags) {
 		try {
 			return POIController.getPOIFiltered(new POIFilterBean(minRatingTxt, maxRatingTxt, chosenTags));
@@ -107,15 +102,15 @@ public class RoomGController {
 
 	}
 
-	public static CliViewState createAddProposal(PointOfInterest poi,
-			EventsNode chosenBranch, String startTimeTxt, String endTimeTxt) {
+	public static CliViewState createAddProposal(POIBean poi,
+			BranchBean chosenBranch, String startTimeTxt, String endTimeTxt) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 		try {
 			if (poi == null) {
 				ret.setOutLogTxt(ERROR_PROMPT + "invalid poi filter values provided");
 				return ret;
 			}
-			if (TripController.createAddProposal(new BranchBean(chosenBranch), new POIBean(poi),
+			if (TripController.createAddProposal(chosenBranch, poi,
 					new IntervalBean(startTimeTxt, endTimeTxt))) {
 				ret.setOutLogTxt(PROPOSAL_SUCCESS);
 			} else {
@@ -127,9 +122,9 @@ public class RoomGController {
 		return ret;
 	}
 
-	public static CliViewState createRemoveProposal(EventsNode chosenBranch, Event chosenEvent) {
+	public static CliViewState createRemoveProposal(BranchBean chosenBranch, EventBean chosenEvent) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
-		if (TripController.createRemoveProposal(new BranchBean(chosenBranch), new EventBean(chosenEvent))) {
+		if (TripController.createRemoveProposal(chosenBranch, chosenEvent)) {
 			ret.setOutLogTxt(PROPOSAL_SUCCESS);
 		} else {
 			ret.setOutLogTxt(PROPOSAL_INVALID);
@@ -137,9 +132,9 @@ public class RoomGController {
 		return ret;
 	}
 
-	public static CliViewState likeProposal(Proposal proposal) {
+	public static CliViewState likeProposal(ProposalBean proposal) {
 		if (proposal != null) {
-			TripController.likeProposal(new ProposalBean(proposal));
+			TripController.likeProposal(proposal);
 			CliViewState ret = new ListAndLikeProposalsState();
 			ret.setOutLogTxt("proposal liked!");
 			return ret;
@@ -147,11 +142,11 @@ public class RoomGController {
 		return RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 	}
 
-	public static CliViewState createUpdateProposal(EventsNode chosenNode, Event chosenEvent,
+	public static CliViewState createUpdateProposal(BranchBean chosenNode, EventBean chosenEvent,
 			String startTimeTxt, String endTimeTxt) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 		try {
-			if (TripController.createUpdateProposal(new BranchBean(chosenNode), chosenEvent,
+			if (TripController.createUpdateProposal(chosenNode, chosenEvent,
 					new IntervalBean(startTimeTxt, endTimeTxt))) {
 				ret.setOutLogTxt(PROPOSAL_SUCCESS);
 			} else {
@@ -163,16 +158,16 @@ public class RoomGController {
 		return ret;
 	}
 
-	public static CliViewState removeProposal(Proposal proposal) {
+	public static CliViewState removeProposal(ProposalBean proposal) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
-		TripController.removeProposal(new ProposalBean(proposal));
+		TripController.removeProposal(proposal);
 		ret.setOutLogTxt("proposal removed");
 		return ret;
 	}
 
-	public static CliViewState acceptProposal(Proposal accepted) {
+	public static CliViewState acceptProposal(ProposalBean accepted) {
 		CliViewState ret = new RoomAdminMenuState();
-		if (TripController.acceptProposal(new ProposalBean(accepted))) {
+		if (TripController.acceptProposal(accepted)) {
 			ret.setOutLogTxt("proposal accepted!");
 		} else {
 			ret.setOutLogTxt("failed to accept proposal");
@@ -180,10 +175,10 @@ public class RoomGController {
 		return new RoomAdminMenuState();
 	}
 
-	public static CliViewState createBranch(EventsNode parent) {
+	public static CliViewState createBranch(BranchBean parent) {
 		CliViewState ret = new RoomAdminMenuState();
 		try {
-			TripController.createBranch(new BranchBean(parent));
+			TripController.createBranch(parent);
 			ret.setOutLogTxt("branch %s created succesfully!");
 		} catch (NodeConflictException e) {
 			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
@@ -191,10 +186,10 @@ public class RoomGController {
 		return ret;
 	}
 
-	public static CliViewState connectBranches(EventsNode parent, EventsNode child) {
+	public static CliViewState connectBranches(BranchBean parent, BranchBean child) {
 		CliViewState ret = new RoomAdminMenuState();
 		try {
-			TripController.connectBranches(new BranchBean(parent), new BranchBean(child));
+			TripController.connectBranches(parent, child);
 			ret.setOutLogTxt("branches connected succesfully");
 		} catch (BranchConnectionException e) {
 			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
@@ -202,17 +197,17 @@ public class RoomGController {
 		return ret;
 	}
 
-	public static CliViewState disconnectBranches(EventsNode parent, EventsNode child) {
+	public static CliViewState disconnectBranches(BranchBean parent, BranchBean child) {
 		CliViewState ret = new RoomAdminMenuState();
-		TripController.disconnectBranches(new BranchBean(parent), new BranchBean(child));
+		TripController.disconnectBranches(parent, child);
 		ret.setOutLogTxt("branches disconnected succesfully");
 		return ret;
 	}
 
-	public static CliViewState deleteBranch(EventsNode chosenBranch, boolean deleteConf) {
+	public static CliViewState deleteBranch(BranchBean chosenBranch, boolean deleteConf) {
 		CliViewState ret = new RoomAdminMenuState();
 		if (deleteConf) {
-			TripController.removeBranch(new BranchBean(chosenBranch));
+			TripController.removeBranch(chosenBranch);
 			ret.setOutLogTxt("branch deleted succesfully");
 		}
 		return ret;

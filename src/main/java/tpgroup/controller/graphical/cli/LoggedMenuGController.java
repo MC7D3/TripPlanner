@@ -5,10 +5,9 @@ import java.util.List;
 import tpgroup.controller.OptionsController;
 import tpgroup.controller.POIController;
 import tpgroup.controller.RoomController;
-import tpgroup.model.PwdBean;
-import tpgroup.model.RoomBean;
 import tpgroup.model.Session;
-import tpgroup.model.domain.Room;
+import tpgroup.model.bean.RoomBean;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
 import tpgroup.view.cli.AbbandonRoomFormState;
@@ -110,11 +109,11 @@ public class LoggedMenuGController {
 		return ret;
 	}
 
-	public static CliViewState enterRoom(Room chosen) {
+	public static CliViewState enterRoom(RoomBean chosen) {
 		if (chosen == null) {
 			return new LoggedMenuState();
 		}
-		RoomController.enterRoom(new RoomBean(chosen));
+		RoomController.enterRoom(chosen);
 		if (RoomController.amIAdmin()) {
 			return new RoomAdminMenuState();
 		} else {
@@ -123,15 +122,15 @@ public class LoggedMenuGController {
 
 	}
 
-	public static List<Room> getJoinedRooms() {
-		return RoomController.getJoinedRooms().stream().map(bean -> bean.getRoom()).toList();
+	public static List<RoomBean> getJoinedRooms() {
+		return RoomController.getJoinedRooms();
 	}
 
-	public static CliViewState abbandonRoom(Room chosen) {
+	public static CliViewState abbandonRoom(RoomBean chosen) {
 		if (chosen == null) {
 			return new LoggedMenuState();
 		}
-		RoomController.abbandonRoom(new RoomBean(chosen));
+		RoomController.abbandonRoom(chosen);
 		return new LoggedMenuState();
 	}
 
@@ -150,8 +149,7 @@ public class LoggedMenuGController {
 		CliViewState ret = new OptionsMenuState();
 		try {
 			if (!password.isEmpty() && !confPwd.isEmpty()) {
-				PwdBean passwordBean = new PwdBean(password, confPwd);
-				OptionsController.updatePassword(passwordBean);
+				OptionsController.updatePassword(new UserBean(null, password, confPwd));
 				ret.setOutLogTxt("password updated succesfully!");
 			}
 		} catch (InvalidBeanParamException e) {

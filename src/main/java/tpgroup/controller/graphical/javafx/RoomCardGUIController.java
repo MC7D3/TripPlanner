@@ -3,11 +3,11 @@ package tpgroup.controller.graphical.javafx;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
-import tpgroup.model.domain.Room;
+import tpgroup.model.bean.RoomBean;
 
 public class RoomCardGUIController {
 
-	private Room room;
+	private RoomBean room;
 
     @FXML
     private Text roomNameTxt;
@@ -27,11 +27,11 @@ public class RoomCardGUIController {
         return abbandonRoomBtn;
     }
 
-	public Room getRoom() {
+	public RoomBean getRoom() {
 		return room;
 	}
 
-	public void setRoom(Room room) {
+	public void setRoom(RoomBean room) {
 		this.room = room;
 		setCardData(room.getName(), room.getMembers().size());
 	}

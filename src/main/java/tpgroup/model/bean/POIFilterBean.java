@@ -1,4 +1,4 @@
-package tpgroup.model;
+package tpgroup.model.bean;
 
 import java.util.List;
 

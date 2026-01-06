@@ -2,6 +2,8 @@ package tpgroup.model.domain;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 
 import tpgroup.model.EventsGraph;
@@ -61,6 +63,15 @@ public class Trip {
 		return proposals.remove(proposal);
 	}
 
+	public boolean likeProposal(Proposal proposal) {
+		try {
+			proposals.stream().filter(p -> p.equals(proposal)).findFirst().get().like();
+			return true;
+		} catch (NoSuchElementException e) {
+			return false;
+		}
+	}
+
 	public int proposalSize() {
 		return proposals.size();
 	}
@@ -112,6 +123,27 @@ public class Trip {
 	public void resetTrip() {
 		this.tripGraph = new EventsGraph();
 		this.proposals = new HashSet<Proposal>();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(country, mainCity, tripGraph, proposals);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Trip other = (Trip) obj;
+		return Objects.equals(country, other.country) && Objects.equals(mainCity, other.mainCity)
+				&& Objects.equals(tripGraph, other.tripGraph) && Objects.equals(proposals, other.proposals);
 	}
 
 }

@@ -2,8 +2,9 @@ package tpgroup.controller;
 
 import java.util.List;
 
-import tpgroup.model.POIFilterBean;
 import tpgroup.model.Session;
+import tpgroup.model.bean.POIBean;
+import tpgroup.model.bean.POIFilterBean;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Rating;
 import tpgroup.model.domain.Tag;
@@ -21,26 +22,26 @@ public class POIController {
 		return poiDao.getAll();
 	}
 
-	private static List<PointOfInterest> getPOIFiltered(List<Tag> tags){
+	private static List<POIBean> getPOIFiltered(List<Tag> tags){
 		return getPOIFiltered().stream().filter(poi -> poi.getTags().containsAll(tags)).toList();
 	}
 
-	private static List<PointOfInterest> getPOIFiltered(){
+	private static List<POIBean> getPOIFiltered(){
 		String destCountry = Session.getInstance().getEnteredRoom().getTrip().getCountry();
 		String destCity = Session.getInstance().getEnteredRoom().getTrip().getMainCity();
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
-		return poiDao.getFiltered(poi -> poi.getCountry().equals(destCountry) && poi.getCity().equals(destCity));
+		return poiDao.getFiltered(poi -> poi.getCountry().equals(destCountry) && poi.getCity().equals(destCity)).stream().map(poi -> new POIBean(poi)).toList();
 	}
 
-	private static List<PointOfInterest> getPOIFiltered(Rating minRating, List<Tag> tags){
+	private static List<POIBean> getPOIFiltered(Rating minRating, List<Tag> tags){
 		return getPOIFiltered(tags).stream().filter(poi -> poi.getRating().ordinal() >= minRating.ordinal()).toList();
 	}
 
-	private static List<PointOfInterest> getPOIFiltered(Rating minRating, Rating maxRating, List<Tag> tags){
+	private static List<POIBean> getPOIFiltered(Rating minRating, Rating maxRating, List<Tag> tags){
 		return getPOIFiltered(minRating, tags).stream().filter(poi -> poi.getRating().ordinal() < maxRating.ordinal()).toList();
 	}
 
-	public static List<PointOfInterest> getPOIFiltered(POIFilterBean filters){
+	public static List<POIBean> getPOIFiltered(POIFilterBean filters){
 		return getPOIFiltered(filters.getMinRating(), filters.getMaxRating(), filters.getChosenTags());
 	}
 	

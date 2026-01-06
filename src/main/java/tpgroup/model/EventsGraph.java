@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,10 +16,9 @@ import tpgroup.model.exception.NodeConnectionException;
 public class EventsGraph {
 	private final EventsNode root;
 	private final Map<EventsNode, Set<EventsNode>> connectionsMapping;
-	private final TreeSet<EventsNode> nodes;
+	private final NavigableSet<EventsNode> nodes;
 
 	public EventsGraph() {
-		super();
 		this.root = new EventsNode(this);
 		this.connectionsMapping = new HashMap<>();
 		this.nodes = new TreeSet<>();
@@ -102,6 +102,14 @@ public class EventsGraph {
 
 	public int connCount(EventsNode node) {
 		return connectionsMapping.get(node).size();
+	}
+
+	public EventsNode getRoot(){
+		return root;
+	}
+
+	public Map<EventsNode, Set<EventsNode>> getConnectionsMapping(){
+		return connectionsMapping;
 	}
 
 	public boolean checkNodesConflicts(EventsNode toCheck, LocalDateTime newStart, LocalDateTime newEnd) {

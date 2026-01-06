@@ -1,7 +1,7 @@
 package tpgroup.controller;
 
-import tpgroup.model.PwdBean;
 import tpgroup.model.Session;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
@@ -13,7 +13,7 @@ public class OptionsController {
 		super();
 	}
 
-	public static void updatePassword(PwdBean newPassword) {
+	public static void updatePassword(UserBean newPassword) {
 		System.out.println(newPassword.getPassword());
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		User updatedCred = new User(Session.getInstance().getLogged().getEmail(),

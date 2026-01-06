@@ -3,8 +3,8 @@ package tpgroup.view.cli;
 import java.util.List;
 
 import tpgroup.controller.graphical.cli.RoomGController;
-import tpgroup.model.EventsNode;
-import tpgroup.model.domain.PointOfInterest;
+import tpgroup.model.bean.BranchBean;
+import tpgroup.model.bean.POIBean;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
@@ -18,7 +18,7 @@ public class ProposeAddForm extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			EventsNode chosenBranch= FormFieldFactory.getInstance().newSelectItem( "select the branch where u want to propose the new event:", RoomGController.getBranches()).get();
+			BranchBean chosenBranch= FormFieldFactory.getInstance().newSelectItem( "select the branch where u want to propose the new event:", RoomGController.getBranches()).get();
 			System.out.println("filter poi search:");
 			System.out.println("insert values only if u want to specify that filter, else keep empty");
 			String minRatingTxt = FormFieldFactory.getInstance()
@@ -27,7 +27,7 @@ public class ProposeAddForm extends CliViewState {
 					.newDefault("max rating filter (one/two/three/four/five stars):", str -> str).get();
 			List<String> chosenTags = FormFieldFactory.getInstance()
 					.newMultiItem("select tags filters (fun/families/food/culture/gastronomy):", str -> str).get();
-			PointOfInterest poi = FormFieldFactory.getInstance()
+			POIBean poi = FormFieldFactory.getInstance()
 					.newSelectItem("select the point of interest:", RoomGController.getFilteredPOIs(minRatingTxt, maxRatingTxt, chosenTags), true).get();
 			System.out.println("NOTE: u can keep the start time empty, that way the event will put after the last one in the node");
 			String startTimeTxt = FormFieldFactory.getInstance()

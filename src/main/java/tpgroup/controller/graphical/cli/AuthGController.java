@@ -1,8 +1,7 @@
 package tpgroup.controller.graphical.cli;
 
 import tpgroup.controller.AuthController;
-import tpgroup.model.EmailBean;
-import tpgroup.model.PwdBean;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.view.cli.LoggedMenuState;
 import tpgroup.view.cli.LoginFormState;
@@ -22,7 +21,7 @@ public class AuthGController {
 
 		CliViewState ret = new LoginFormState();
 		try {
-			boolean result = AuthController.validateCredentials(new EmailBean(email), new PwdBean(password));
+			boolean result = AuthController.validateCredentials(new UserBean(email, password));
 			if (result) {
 				ret.setOutLogTxt("login Succesful");
 				ret = new LoggedMenuState();
@@ -39,7 +38,7 @@ public class AuthGController {
 			return new UnloggedMenuState();
 		}
 		try {
-			boolean result = AuthController.executeRegistration(new EmailBean(email), new PwdBean(password, confPassword));
+			boolean result = AuthController.executeRegistration(new UserBean(email, password, confPassword));
 			if(result) {
 				ret.setOutLogTxt("registration Succesful");
 				ret = new LoggedMenuState();

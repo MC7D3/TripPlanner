@@ -11,8 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.AuthController;
-import tpgroup.model.EmailBean;
-import tpgroup.model.PwdBean;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class RegistrationGUIController extends FxController {
@@ -35,10 +34,7 @@ public class RegistrationGUIController extends FxController {
 	@FXML
 	public void onRegistration() {
 		try {
-			EmailBean email = new EmailBean(emailTxt.getText());
-			PwdBean pwd = new PwdBean(pwdTxt.getText(), confPwdTxt.getText());
-
-			if (AuthController.executeRegistration(email, pwd)) {
+			if (AuthController.executeRegistration(new UserBean(emailTxt.getText(), pwdTxt.getText(), confPwdTxt.getText()))) {
 				redirect("loggedMenu.fxml", (Stage) outLogTxt.getScene().getWindow());
 			} else {
 				outLogTxt.setText("the account already exists");

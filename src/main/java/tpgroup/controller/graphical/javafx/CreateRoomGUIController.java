@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import tpgroup.controller.POIController;
 import tpgroup.controller.RoomController;
-import tpgroup.model.RoomBean;
+import tpgroup.model.bean.RoomBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RoomGenConflictException;
 

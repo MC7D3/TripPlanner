@@ -3,8 +3,8 @@ package tpgroup.view.cli;
 import java.util.ArrayList;
 
 import tpgroup.controller.graphical.cli.RoomGController;
-import tpgroup.model.Event;
-import tpgroup.model.EventsNode;
+import tpgroup.model.bean.BranchBean;
+import tpgroup.model.bean.EventBean;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
@@ -18,9 +18,9 @@ public class ProposeUpdateForm extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			EventsNode chosenNode = FormFieldFactory.getInstance().newSelectItem(
+			BranchBean chosenNode = FormFieldFactory.getInstance().newSelectItem(
 					"select the branch:", RoomGController.getBranches()).get();
-			Event chosenEvent = FormFieldFactory.getInstance()
+			EventBean chosenEvent = FormFieldFactory.getInstance()
 					.newSelectItem("select the event you want to update:",
 							new ArrayList<>(chosenNode.getEvents()))
 					.get();

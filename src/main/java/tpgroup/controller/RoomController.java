@@ -2,8 +2,8 @@ package tpgroup.controller;
 
 import java.util.List;
 
-import tpgroup.model.RoomBean;
 import tpgroup.model.Session;
+import tpgroup.model.bean.RoomBean;
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.InvalidBeanParamException;
@@ -18,13 +18,13 @@ public class RoomController {
 		super();
 	}
 
-	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException{
-		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getCountry(),
-				newRoom.getCity());
-		if(!POIController.isValidCountry(room.getTrip().getCountry())){
+	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException {
+		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getTrip().getCountry(),
+				newRoom.getTrip().getMainCity());
+		if (!POIController.isValidCountry(room.getTrip().getCountry())) {
 			throw new InvalidBeanParamException("country");
 		}
-		if(!POIController.isValidCity(room.getTrip().getMainCity())){
+		if (!POIController.isValidCity(room.getTrip().getMainCity())) {
 			throw new InvalidBeanParamException("city");
 		}
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
@@ -49,10 +49,10 @@ public class RoomController {
 	}
 
 	public static boolean abbandonRoom(RoomBean toAbbandonBean) {
-		User user = Session.getInstance().getLogged();
-		Room toAbbandon = toAbbandonBean.getRoom();
-		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		try {
+			User user = Session.getInstance().getLogged();
+			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+			Room toAbbandon = roomDao.get(new Room(toAbbandonBean.getName()));
 			toAbbandon.getMembers().remove(user);
 			if (user.equals(toAbbandon.getAdmin()) && toAbbandon.getMembers().size() > 1) {
 				toAbbandon.setAdmin(toAbbandon.getMembers().stream().findAny().get());
@@ -67,8 +67,15 @@ public class RoomController {
 		return true;
 	}
 
-	public static void enterRoom(RoomBean room) {
-		Session.getInstance().setEnteredRoom(room.getRoom());
+	public static boolean enterRoom(RoomBean room) {
+		try {
+			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+			Room entered = roomDao.get(new Room(room.getName()));
+			Session.getInstance().setEnteredRoom(entered);
+		} catch (RecordNotFoundException e) {
+			return false;
+		}
+		return true;
 	}
 
 	public static boolean amIAdmin() {
@@ -77,18 +84,15 @@ public class RoomController {
 
 	// inteso per la prima volta che entri, volte successive usi la card
 	public static boolean joinRoom(RoomBean roomCode) {
-		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-		List<Room> matches = roomDao.getFiltered(room -> room.getCode().equals(roomCode.getCode()));
-		if (matches.isEmpty()) {
+		try {
+			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+			Room joined = roomDao.get(new Room(roomCode.getName()));
+			joined.add(Session.getInstance().getLogged());
+			Session.getInstance().setEnteredRoom(joined);
+			roomDao.save(joined);
+		} catch (RecordNotFoundException e) {
 			return false;
 		}
-		if (matches.size() > 1) {
-			throw new IllegalStateException();
-		}
-		Room chosen = matches.get(0);
-		chosen.add(Session.getInstance().getLogged());
-		Session.getInstance().setEnteredRoom(chosen);
-		roomDao.save(chosen);
 		return true;
 	}
 

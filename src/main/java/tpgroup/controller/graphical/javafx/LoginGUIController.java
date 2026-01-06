@@ -11,8 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.AuthController;
-import tpgroup.model.EmailBean;
-import tpgroup.model.PwdBean;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class LoginGUIController extends FxController {
@@ -38,7 +37,7 @@ public class LoginGUIController extends FxController {
 				outLogTxt.setText("all the fields are required");
 				return;
 			}
-			if (AuthController.validateCredentials(new EmailBean(email), new PwdBean(pwd))) {
+			if (AuthController.validateCredentials(new UserBean(email, pwd))) {
 				redirect("loggedMenu.fxml", (Stage) outLogTxt.getScene().getWindow());
 				return;
 			}

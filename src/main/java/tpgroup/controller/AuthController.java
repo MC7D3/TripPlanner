@@ -2,10 +2,10 @@ package tpgroup.controller;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import tpgroup.model.EmailBean;
-import tpgroup.model.PwdBean;
 import tpgroup.model.Session;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.domain.User;
+import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
 import tpgroup.persistence.factory.DAOFactory;
@@ -15,11 +15,11 @@ public class AuthController {
 		super();
 	}
 
-	public static boolean validateCredentials(EmailBean email, PwdBean password) {
+	public static boolean validateCredentials(UserBean user) {
 		try {
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-			User fullCred = userDao.get(new User(email.getEmail(), null));
-			boolean res = BCrypt.checkpw(password.getPassword(), fullCred.getPassword());
+			User fullCred = userDao.get(new User(user.getEmail(), null));
+			boolean res = BCrypt.checkpw(user.getPassword(), fullCred.getPassword());
 			if (res) {
 				Session.getInstance().setLogged(fullCred);
 			}
@@ -29,9 +29,13 @@ public class AuthController {
 		}
 	}
 
-	public static boolean executeRegistration(EmailBean email, PwdBean password) {
+	public static boolean executeRegistration(UserBean user) throws InvalidBeanParamException{
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-		User newUser = new User(email.getEmail(), password.getPassword());
+		String encPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+		if(!BCrypt.checkpw(user.getConfPassword(), encPassword)){
+			throw new InvalidBeanParamException("confPassword", "the passwords do not match");
+		}
+		User newUser = new User(user.getEmail(), user.getPassword());
 		boolean res = userDao.add(newUser);
 		if(res){
 			Session.getInstance().setLogged(newUser);

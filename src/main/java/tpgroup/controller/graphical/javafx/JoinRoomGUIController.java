@@ -6,7 +6,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.RoomController;
-import tpgroup.model.RoomBean;
+import tpgroup.model.bean.RoomBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class JoinRoomGUIController extends FxController{

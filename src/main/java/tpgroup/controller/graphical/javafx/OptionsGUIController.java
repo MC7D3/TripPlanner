@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.OptionsController;
-import tpgroup.model.PwdBean;
+import tpgroup.model.bean.UserBean;
 import tpgroup.model.exception.InvalidBeanParamException;
 
 public class OptionsGUIController extends FxController {
@@ -25,7 +25,7 @@ public class OptionsGUIController extends FxController {
 			String password = newPwdTxt.getText();
 			String confPwd = confNewPwdTxt.getText();
 			if(!password.isEmpty() && !confPwd.isEmpty()){
-				PwdBean passwordBean = new PwdBean(password, confPwd);
+				UserBean passwordBean = new UserBean(null, password, confPwd);
 				OptionsController.updatePassword(passwordBean);
 				((Stage) newPwdTxt.getScene().getWindow()).close();
 				setParentOutTxt("Password Updated Succesfully!");

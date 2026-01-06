@@ -1,7 +1,7 @@
 package tpgroup.view.cli;
 
 import tpgroup.controller.graphical.cli.RoomGController;
-import tpgroup.model.EventsNode;
+import tpgroup.model.bean.BranchBean;
 import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
@@ -15,7 +15,7 @@ public class DeleteBranchFromState extends CliViewState{
 	@Override
 	public void present() {
 		try {
-			EventsNode chosenBranch = FormFieldFactory.getInstance().newSelectItem("select the branch u want to delete", RoomGController.getBranches(), true).get();
+			BranchBean chosenBranch = FormFieldFactory.getInstance().newSelectItem("select the branch u want to delete", RoomGController.getBranches(), true).get();
 			boolean deleteConf = FormFieldFactory.getInstance().newConfField("are u sure u want to proceed this operation cannot be undone").get();
 			CliViewState next = RoomGController.deleteBranch(chosenBranch, deleteConf);
 			this.machine.setState(next);
