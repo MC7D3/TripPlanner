@@ -56,7 +56,14 @@ public class Trip {
 	}
 
 	public boolean acceptProposal(Proposal proposal){
-		return proposal.accept();
+		if(!proposals.contains(proposal)){
+			return false;
+		}
+		boolean res = proposal.accept();
+		if(res){
+			proposals.remove(proposal);
+		}
+		return res;
 	}
 
 	public boolean removeProposal(Proposal proposal) {
@@ -96,7 +103,7 @@ public class Trip {
 		tripGraph.disconnect(parentNode, childNode);
 	}
 
-	public void removeNode(EventsNode toRemove) {
+	public void removeNode(EventsNode toRemove) throws NodeConflictException{
 		tripGraph.removeNode(toRemove);
 	}
 

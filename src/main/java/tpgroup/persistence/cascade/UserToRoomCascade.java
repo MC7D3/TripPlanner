@@ -32,12 +32,10 @@ public class UserToRoomCascade extends Cascade<User, Room> {
 
 	@Override
 	public boolean propagateUpdate(User toUpdate) {
-		for (Room room : getTo().getAll()) {
-			if (room.isMember(toUpdate)) {
-				room.remove(toUpdate);
-				room.add(toUpdate);
-				getTo().save(room);
-			}
+		for(Room room : getTo().getFiltered(room -> room.isMember(toUpdate))){
+			room.remove(toUpdate);
+			room.add(toUpdate);
+			getTo().save(room);
 		}
 		return true;
 	}

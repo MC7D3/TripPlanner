@@ -64,6 +64,6 @@ public class POIController {
 		if(!isValidCountry(fromCountry))
 			throw new IllegalArgumentException();
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
-		return poiDao.getAll().stream().map(poi -> poi.getCountry()).distinct().toList();
+		return poiDao.getAll().stream().map(poi -> poi.getCity()).distinct().toList();
     }
 }

@@ -28,7 +28,7 @@ public abstract class FileDAO<T> implements DAO<T> {
 		this.collectionType = new TypeToken<List<T>>() {}.getType();
 		if(!file.exists()){
 			try(Writer wr = new FileWriter(file)){
-				wr.write("");
+				wr.write("[]");
 			}catch(IOException e){
 				throw new InvalidPathException();
 			}

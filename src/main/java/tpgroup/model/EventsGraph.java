@@ -112,14 +112,18 @@ public class EventsGraph {
 		return connectionsMapping;
 	}
 
-	public boolean checkNodesConflicts(EventsNode toCheck, LocalDateTime newStart, LocalDateTime newEnd) {
-		for (EventsNode child : connectionsMapping.get(toCheck)) {
-			if (child.getEventsStart().isBefore(newEnd)) {
+	public boolean checkFatherNodesConflicts(EventsNode toCheck, LocalDateTime newStart) {
+		for (EventsNode father : findFathers(toCheck)) {
+			if (father.getEventsEnd().isAfter(newStart)) {
 				return false;
 			}
 		}
-		for (EventsNode father : findFathers(toCheck)) {
-			if (father.getEventsEnd().isAfter(newStart)) {
+		return true;
+	}
+
+	public boolean checkChildNodesConflicts(EventsNode toCheck, LocalDateTime newEnd){
+		for (EventsNode child : connectionsMapping.get(toCheck)) {
+			if (child.getEventsStart().isBefore(newEnd)) {
 				return false;
 			}
 		}
@@ -140,15 +144,23 @@ public class EventsGraph {
 		return ret;
 	}
 
-	public void removeNode(EventsNode toRemove) {
+	public void removeNode(EventsNode toRemove) throws NodeConflictException{
 		List<EventsNode> fathers = findFathers(toRemove);
+		if(fathers.isEmpty())
+			throw new NodeConflictException();
 		for (EventsNode father : fathers) {
-			connectionsMapping.get(father).addAll(connectionsMapping.get(toRemove));
+			Set<EventsNode> connections = connectionsMapping.get(father);
+			connections.remove(toRemove);
+			connections.addAll(connectionsMapping.get(toRemove));
 		}
+		nodes.remove(toRemove);
+		connectionsMapping.remove(toRemove);
 	}
 
 	public void notifySplit(EventsNode eventsNode, EventsNode newNode) {
-		connectionsMapping.put(newNode, connectionsMapping.get(eventsNode));
+		connectionsMapping.put(newNode, new HashSet<>(connectionsMapping.get(eventsNode)));
+		connectionsMapping.put(eventsNode, new HashSet<>());
+		nodes.add(newNode);
 		connect(eventsNode, newNode);
 	}
 

@@ -1,0 +1,1130 @@
+[
+  {
+    "name": "Colosseum",
+    "description": "Ancient amphitheater and iconic symbol of Imperial Rome. Famous for gladiator contests and public spectacles. One of the New Seven Wonders of the World.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8902,
+      "longitude": 12.4922
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "Vatican Museums",
+    "description": "World-renowned art collection including the Sistine Chapel. Home to masterpieces by Michelangelo, Raphael, and Bernini. Contains over 70,000 works of art.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9029,
+      "longitude": 12.4534
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Pantheon",
+    "description": "Best-preserved Roman building with magnificent dome architecture. Former Roman temple now serving as a church. Features the famous oculus opening.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8986,
+      "longitude": 12.4769
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Trevi Fountain",
+    "description": "Baroque fountain famous for coin-throwing tradition. Stunning nighttime illumination creates romantic atmosphere. Designed by Italian architect Nicola Salvi.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9009,
+      "longitude": 12.4833
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "ROMANTIC", "FUN"]
+  },
+  {
+    "name": "Roman Forum",
+    "description": "Ancient ruins of the center of Roman public life. Archaeological site with temples, basilicas, and government buildings. Walking through history.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8925,
+      "longitude": 12.4853
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Spanish Steps",
+    "description": "Famous stairway with 135 steps connecting Piazza di Spagna to Trinità dei Monti. Popular meeting place and shopping area. Beautiful azaleas in spring.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9059,
+      "longitude": 12.4823
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN", "ROMANTIC"]
+  },
+  {
+    "name": "Piazza Navona",
+    "description": "Baroque square built on ancient Roman stadium. Features three magnificent fountains including Bernini's Fountain of Four Rivers. Street artists and cafes.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8992,
+      "longitude": 12.4731
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "Castel Sant'Angelo",
+    "description": "Towering cylindrical building originally built as mausoleum for Emperor Hadrian. Papal fortress with panoramic city views. Rich museum collection.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9031,
+      "longitude": 12.4663
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Trastevere",
+    "description": "Charming neighborhood with narrow cobblestone streets and authentic Roman atmosphere. Excellent restaurants and vibrant nightlife. Medieval churches and local markets.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8896,
+      "longitude": 12.4689
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FOOD", "GASTRONOMY", "ROMANTIC"]
+  },
+  {
+    "name": "Villa Borghese",
+    "description": "Large public park with museums, gardens, and recreational activities. Houses Borghese Gallery with Bernini sculptures. Perfect for families and picnics.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9146,
+      "longitude": 12.4926
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "Campo de' Fiori",
+    "description": "Lively square with morning market selling fresh produce and flowers. Transforms into nightlife hotspot with bars and restaurants. Historic statue of Giordano Bruno.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8955,
+      "longitude": 12.4720
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FOOD", "FUN"]
+  },
+  {
+    "name": "Palatine Hill",
+    "description": "Archaeological site with ruins of imperial palaces. Legendary birthplace of Rome with stunning views over the Forum. Beautiful gardens and museum.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8888,
+      "longitude": 12.4877
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Capitoline Museums",
+    "description": "World's oldest public museums with incredible ancient Roman sculptures. Houses the original Marcus Aurelius statue. Designed by Michelangelo.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8930,
+      "longitude": 12.4828
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Baths of Caracalla",
+    "description": "Ancient Roman public baths remarkably well-preserved. Engineering marvel with sophisticated heating system. Hosts summer opera performances.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8783,
+      "longitude": 12.4922
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Piazza del Popolo",
+    "description": "Grand square with twin churches and Egyptian obelisk. Gateway to Rome from the north. Climb Pincio Hill for panoramic views.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9109,
+      "longitude": 12.4761
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Testaccio Market",
+    "description": "Authentic food market beloved by locals. Fresh ingredients and traditional Roman street food. Great place to experience local culinary culture.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8742,
+      "longitude": 12.4783
+    },
+    "rating": "THREESTAR",
+    "tags": ["FOOD", "GASTRONOMY", "CULTURE"]
+  },
+  {
+    "name": "Aventine Hill",
+    "description": "Peaceful residential area with beautiful gardens and churches. Famous keyhole view of St. Peter's Dome. Orange garden with romantic sunset views.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8813,
+      "longitude": 12.4828
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "ROMANTIC", "FUN"]
+  },
+  {
+    "name": "Largo di Torre Argentina",
+    "description": "Archaeological site with four Roman temples. Famous cat sanctuary with hundreds of stray cats. Historical significance as Julius Caesar's assassination site.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8962,
+      "longitude": 12.4772
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Janiculum Hill",
+    "description": "Highest hill in Rome with spectacular panoramic views. Daily cannon firing at noon. Monument to Giuseppe Garibaldi and beautiful pine trees.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8919,
+      "longitude": 12.4581
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN", "ROMANTIC"]
+  },
+  {
+    "name": "Ostia Antica",
+    "description": "Ancient Roman port city with well-preserved ruins. Less crowded alternative to Pompeii. Beautiful mosaics and ancient theater still in use.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.7599,
+      "longitude": 12.2943
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Mercati di Traiano",
+    "description": "Ancient Roman shopping complex considered the world's first mall. Interactive museum with multimedia displays. Archaeological wonder with original Roman architecture.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8955,
+      "longitude": 12.4877
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Palazzo Altemps",
+    "description": "Renaissance palace housing incredible ancient Roman sculptures. Part of National Roman Museum. Beautiful frescoed rooms and peaceful courtyard.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9004,
+      "longitude": 12.4726
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Crypta Balbi",
+    "description": "Archaeological museum showing medieval Rome's transformation. Underground excavations reveal layers of history. Part of National Roman Museum complex.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8951,
+      "longitude": 12.4766
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE"]
+  },
+  {
+    "name": "Palazzo Massimo",
+    "description": "Museum with extraordinary ancient Roman frescoes and mosaics. Houses the Boxer at Rest sculpture. Beautiful garden frescoes from Villa di Livia.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9010,
+      "longitude": 12.4972
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Centrale Montemartini",
+    "description": "Unique museum displaying ancient sculptures in former power plant. Striking contrast between classical art and industrial architecture. Off-the-beaten-path cultural gem.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8694,
+      "longitude": 12.4819
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE"]
+  },
+  {
+    "name": "Galleria Borghese",
+    "description": "Intimate museum with Bernini sculptures and Caravaggio paintings. Requires advance booking. Located in beautiful Villa Borghese park.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9142,
+      "longitude": 12.4922
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Maria in Trastevere",
+    "description": "Beautiful medieval church with golden mosaics. One of Rome's oldest churches. Charming piazza perfect for evening aperitivo.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8891,
+      "longitude": 12.4689
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "ROMANTIC"]
+  },
+  {
+    "name": "Appian Way",
+    "description": "Ancient Roman road lined with ruins and catacombs. Perfect for cycling or walking. Rich archaeological heritage and peaceful countryside atmosphere.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8583,
+      "longitude": 12.5183
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Catacombs of San Callisto",
+    "description": "Underground burial chambers with early Christian frescoes. Historical significance for early Christianity. Guided tours reveal fascinating history.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8567,
+      "longitude": 12.5122
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Isola Tiberina",
+    "description": "Charming island in the Tiber River with ancient hospital and churches. Connected by ancient bridges. Peaceful retreat from city bustle.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8906,
+      "longitude": 12.4775
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "ROMANTIC"]
+  },
+  {
+    "name": "Circus Maximus",
+    "description": "Ancient Roman chariot racing stadium, now a large park. Historical site where 250,000 spectators once gathered. Great for jogging and events.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8854,
+      "longitude": 12.4856
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "San Giovanni in Laterano",
+    "description": "The Pope's cathedral and mother church of all Catholic churches worldwide. Magnificent baroque interior with stunning mosaics. Contains the Holy Stairs climbed by Jesus.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8859,
+      "longitude": 12.5045
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Maria Maggiore",
+    "description": "Papal basilica with the world's largest Marian icon. Beautiful 5th-century mosaics and coffered ceiling with New World gold. Legend says it was built where snow fell in August.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8976,
+      "longitude": 12.4981
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Domus Aurea",
+    "description": "Nero's opulent golden palace with virtual reality tours. Underground archaeological wonder with original Roman frescoes. Revolutionary multimedia experience brings ancient Rome to life.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8933,
+      "longitude": 12.4972
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Quartiere Coppedè",
+    "description": "Fairy-tale neighborhood with Art Nouveau architecture and whimsical buildings. Hidden gem with ornate facades and magical atmosphere. Perfect for Instagram photos.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9194,
+      "longitude": 12.5094
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN", "ROMANTIC"]
+  },
+  {
+    "name": "Bocca della Verità",
+    "description": "Ancient marble mask famous from Roman Holiday movie. Legend says it bites the hands of liars. Located in beautiful Santa Maria in Cosmedin church.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8881,
+      "longitude": 12.4818
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "EUR District",
+    "description": "Fascist-era architectural complex with monumental buildings and wide boulevards. Modern Rome with museums, shopping, and distinctive rationalist architecture. Less touristy but historically significant.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8343,
+      "longitude": 12.4663
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Palazzo dei Congressi",
+    "description": "Iconic EUR building known as the Square Colosseum. Stark white travertine facade with repetitive arches. Symbol of Mussolini's architectural vision.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8377,
+      "longitude": 12.4677
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE"]
+  },
+  {
+    "name": "Villa Adriana",
+    "description": "Emperor Hadrian's vast villa complex in nearby Tivoli. UNESCO World Heritage site with pools, libraries, and theaters. Architectural masterpiece showcasing Roman engineering.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9403,
+      "longitude": 12.7764
+    },
+    "rating": "FIVESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Villa d'Este",
+    "description": "Renaissance villa in Tivoli with spectacular fountains and gardens. Terraced landscape with water features and grottos. Perfect example of Italian Renaissance garden design.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9623,
+      "longitude": 12.7969
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN", "ROMANTIC"]
+  },
+  {
+    "name": "Castel Gandolfo",
+    "description": "Papal summer residence overlooking Lake Albano. Charming hilltop town with papal gardens and astronomical observatory. Beautiful lake views and peaceful atmosphere.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.7436,
+      "longitude": 12.6489
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "ROMANTIC", "FUN"]
+  },
+  {
+    "name": "Frascati",
+    "description": "Historic town in Alban Hills famous for white wine. Beautiful villas and vineyards with panoramic views of Rome. Traditional porchetta and local wine tastings.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8075,
+      "longitude": 12.6816
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FOOD", "GASTRONOMY"]
+  },
+  {
+    "name": "Ponte Sant'Angelo",
+    "description": "Ancient bridge adorned with Bernini's angel sculptures. Connects city center to Castel Sant'Angelo. Stunning sunset views and romantic evening strolls.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9017,
+      "longitude": 12.4664
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "ROMANTIC", "FUN"]
+  },
+  {
+    "name": "Piazza Venezia",
+    "description": "Grand square dominated by the massive Vittoriano monument. Central hub connecting major Roman sites. Busy traffic circle with historical significance.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8955,
+      "longitude": 12.4823
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Altare della Patria",
+    "description": "Monumental building honoring Victor Emmanuel II. Nicknamed the 'Wedding Cake' for its white marble layers. Panoramic elevator to the top with city views.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8958,
+      "longitude": 12.4830
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "San Clemente",
+    "description": "Unique three-level church revealing 2000 years of history. Underground Mithraic temple and medieval frescoes. Archaeological marvel in layers beneath modern Rome.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8886,
+      "longitude": 12.4977
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Prassede",
+    "description": "Small church with Byzantine mosaics rivaling those in Istanbul. Hidden gem with Chapel of St. Zeno covered in gold mosaics. Medieval artistic masterpiece.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8965,
+      "longitude": 12.4986
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Terme di Diocleziano",
+    "description": "Ancient Roman baths converted into museum and church. Massive ruins showcase Roman bathing culture. Part of National Roman Museum with incredible sculptures.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9011,
+      "longitude": 12.4977
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Porta Portese Market",
+    "description": "Rome's largest flea market held every Sunday morning. Treasure hunt for antiques, vintage items, and local crafts. Authentic Roman market experience.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8736,
+      "longitude": 12.4708
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Garbatella",
+    "description": "Charming early 20th-century neighborhood with garden city architecture. Authentic Roman community with local markets and trattorias. Off-the-beaten-path residential area.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8622,
+      "longitude": 12.4808
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FOOD"]
+  },
+  {
+    "name": "Pigneto",
+    "description": "Hip neighborhood with street art, craft beer bars, and independent restaurants. Former working-class area now trendy with young Romans. Vibrant nightlife scene.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8889,
+      "longitude": 12.5319
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FOOD", "FUN"]
+  },
+  {
+    "name": "Monti",
+    "description": "Bohemian neighborhood with vintage shops, wine bars, and artisan boutiques. Medieval streets with modern Roman lifestyle. Perfect for evening aperitivo.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8944,
+      "longitude": 12.4922
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FOOD", "FUN", "ROMANTIC"]
+  },
+  {
+    "name": "San Lorenzo",
+    "description": "University district with student bars, pizzerias, and alternative culture. Bohemian atmosphere with street art and live music venues. Authentic Roman nightlife.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9000,
+      "longitude": 12.5167
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FOOD", "FUN"]
+  },
+  {
+    "name": "Ostiense",
+    "description": "Former industrial area transformed into cultural district. Contemporary art galleries, clubs, and creative spaces. Rome's alternative culture hub.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8583,
+      "longitude": 12.4847
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Flaminio",
+    "description": "Modern district with contemporary architecture and cultural venues. MAXXI museum and Auditorium Parco della Musica. Rome's modern face.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9278,
+      "longitude": 12.4725
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "MAXXI",
+    "description": "National Museum of 21st Century Arts with cutting-edge architecture by Zaha Hadid. Contemporary art exhibitions and innovative design. Rome's modern cultural beacon.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9331,
+      "longitude": 12.4708
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Auditorium Parco della Musica",
+    "description": "World-class concert hall complex designed by Renzo Piano. Three distinctive beetle-shaped halls hosting international performances. Rome's premier music venue.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9297,
+      "longitude": 12.4786
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Stadio Olimpico",
+    "description": "Rome's main stadium hosting AS Roma and SS Lazio football matches. Historic venue for 1960 Olympics and 1990 World Cup. Electric atmosphere during Rome derby.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9342,
+      "longitude": 12.4547
+    },
+    "rating": "FOURSTAR",
+    "tags": ["FUN", "CULTURE"]
+  },
+  {
+    "name": "Foro Italico",
+    "description": "Sports complex built during fascist era with monumental architecture. Includes tennis courts, swimming pools, and marble statues. Hosts Italian Open tennis tournament.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9361,
+      "longitude": 12.4528
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Ponte Milvio",
+    "description": "Ancient bridge where couples attach love locks. Romantic tradition with thousands of padlocks. Beautiful views of Tiber River and northern Rome.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9394,
+      "longitude": 12.4661
+    },
+    "rating": "THREESTAR",
+    "tags": ["ROMANTIC", "FUN", "CULTURE"]
+  },
+  {
+    "name": "Villa Giulia",
+    "description": "Etruscan museum housed in beautiful Renaissance villa. Extensive collection of pre-Roman artifacts. Peaceful gardens and archaeological treasures.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9169,
+      "longitude": 12.4775
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Palazzo Altemps",
+    "description": "Renaissance palace with incredible ancient Roman sculpture collection. Beautiful frescoed rooms and peaceful internal courtyard. Part of National Roman Museum.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9004,
+      "longitude": 12.4726
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Cripta Neroniana",
+    "description": "Underground tunnel connecting Palatine Hill to Domus Aurea. Recently opened archaeological site with original Roman frescoes. Limited access guided tours.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8903,
+      "longitude": 12.4906
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Maria sopra Minerva",
+    "description": "Rome's only Gothic church with Michelangelo's Risen Christ sculpture. Beautiful star-studded ceiling and Renaissance art. Elephant obelisk in front piazza.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8986,
+      "longitude": 12.4775
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Il Gesù",
+    "description": "Mother church of the Jesuits with spectacular baroque interior. Stunning ceiling frescoes and St. Ignatius tomb. Important Counter-Reformation architecture.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8964,
+      "longitude": 12.4797
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Sant'Ignazio",
+    "description": "Jesuit church with incredible trompe-l'oeil ceiling creating illusion of dome. Masterpiece of baroque art and optical illusion. Andrea Pozzo's artistic genius.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8989,
+      "longitude": 12.4797
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "San Luigi dei Francesi",
+    "description": "French national church containing three Caravaggio paintings. Stunning baroque interior with masterpieces by the revolutionary artist. Art lover's pilgrimage site.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8992,
+      "longitude": 12.4750
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Maria del Popolo",
+    "description": "Renaissance church with Caravaggio's Conversion of St. Paul and Crucifixion of St. Peter. Bernini's Chigi Chapel and Pinturicchio frescoes.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9106,
+      "longitude": 12.4764
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Sant'Agostino",
+    "description": "Renaissance church housing Caravaggio's Madonna of Loreto. Sansovino's Madonna del Parto and beautiful Renaissance architecture. Hidden artistic treasures.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9017,
+      "longitude": 12.4756
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "San Carlo alle Quattro Fontane",
+    "description": "Borromini's masterpiece of baroque architecture with undulating walls. Tiny church showing genius of space manipulation. Architectural innovation at its finest.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9028,
+      "longitude": 12.4889
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Sant'Ivo alla Sapienza",
+    "description": "Borromini's architectural masterpiece with innovative spiral lantern. Complex geometry and revolutionary baroque design. Hidden courtyard gem.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8986,
+      "longitude": 12.4756
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Maria della Vittoria",
+    "description": "Baroque church famous for Bernini's Ecstasy of St. Teresa sculpture. Cornaro Chapel considered masterpiece of baroque art. Dramatic lighting and emotional expression.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9067,
+      "longitude": 12.4944
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "San Pietro in Vincoli",
+    "description": "Church housing Michelangelo's Moses sculpture. Chains that bound St. Peter displayed in reliquary. Renaissance art in intimate setting.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8931,
+      "longitude": 12.4947
+    },
+    "rating": "FOURSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Santa Sabina",
+    "description": "Early Christian basilica on Aventine Hill with original wooden doors. Peaceful Dominican monastery with orange garden. Stunning views over Rome.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8822,
+      "longitude": 12.4814
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "ROMANTIC"]
+  },
+  {
+    "name": "Giardino degli Aranci",
+    "description": "Orange garden on Aventine Hill with romantic sunset views. Peaceful park with panoramic vista of St. Peter's dome. Perfect for romantic walks.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8819,
+      "longitude": 12.4803
+    },
+    "rating": "FOURSTAR",
+    "tags": ["ROMANTIC", "FUN", "CULTURE"]
+  },
+  {
+    "name": "Keyhole of Malta",
+    "description": "Famous keyhole view perfectly framing St. Peter's Basilica. Magical optical illusion through garden hedge. Most photographed keyhole in the world.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8817,
+      "longitude": 12.4819
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN", "ROMANTIC"]
+  },
+  {
+    "name": "Protestant Cemetery",
+    "description": "Peaceful cemetery where Keats and Shelley are buried. Beautiful cypress trees and romantic atmosphere. Literary pilgrimage site.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8767,
+      "longitude": 12.4797
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "ROMANTIC"]
+  },
+  {
+    "name": "Pyramid of Cestius",
+    "description": "Ancient Roman pyramid built as tomb for magistrate Gaius Cestius. Unusual Egyptian-inspired monument in Rome. Adjacent to Protestant Cemetery.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8758,
+      "longitude": 12.4803
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Monte Testaccio",
+    "description": "Artificial hill made from ancient Roman pottery shards. Archaeological wonder built from discarded amphora. Unique testament to Roman commerce.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8736,
+      "longitude": 12.4764
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Centrale Montemartini",
+    "description": "Ancient Roman sculptures displayed in former power plant. Striking juxtaposition of classical art and industrial machinery. Unique museum experience.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8694,
+      "longitude": 12.4819
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "MACRO",
+    "description": "Contemporary art museum in former Peroni brewery. Cutting-edge exhibitions and innovative installations. Rome's modern art scene.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9172,
+      "longitude": 12.5225
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Palazzo Braschi",
+    "description": "Neoclassical palace housing Rome's history museum. Beautiful architecture and historical artifacts. Papal family's grand residence.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8964,
+      "longitude": 12.4719
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Palazzo Quirinale",
+    "description": "Official residence of Italian President. Former papal palace with stunning gardens and state rooms. Limited public access but magnificent architecture.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.8997,
+      "longitude": 12.4864
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Palazzo di Giustizia",
+    "description": "Imposing courthouse known as 'Il Palazzaccio' for its massive size. Eclectic architecture with bronze quadriga on top. Symbol of Italian justice system.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9108,
+      "longitude": 12.4647
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE"]
+  },
+  {
+    "name": "Galleria Nazionale d'Arte Moderna",
+    "description": "Italy's premier modern art museum with 19th and 20th century works. Beautiful villa setting with contemporary Italian art. Overlooking Villa Borghese.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9158,
+      "longitude": 12.4847
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Etruscan Museum",
+    "description": "Villa Giulia houses world's finest Etruscan collection. Pre-Roman civilization artifacts and beautiful Renaissance villa. Archaeological treasures and peaceful gardens.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9169,
+      "longitude": 12.4775
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Bioparco",
+    "description": "Rome's zoo located in Villa Borghese with over 1,000 animals. Family-friendly attraction with conservation focus. Educational programs and children's areas.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9119,
+      "longitude": 12.4925
+    },
+    "rating": "THREESTAR",
+    "tags": ["FORFAMILIES", "FUN"]
+  },
+  {
+    "name": "Explora Children's Museum",
+    "description": "Interactive museum designed for children under 12. Hands-on exhibits about science, environment, and society. Perfect family activity with educational fun.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9250,
+      "longitude": 12.4753
+    },
+    "rating": "FOURSTAR",
+    "tags": ["FORFAMILIES", "FUN"]
+  },
+  {
+    "name": "Villa Torlonia",
+    "description": "Neoclassical villa with beautiful parks and museums. Former Mussolini residence with art nouveau Casino delle Civette. Peaceful alternative to Villa Borghese.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9144,
+      "longitude": 12.5161
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "Casino delle Civette",
+    "description": "Art nouveau fairy-tale house with owl-themed decorations. Stained glass windows and whimsical architecture. Hidden gem in Villa Torlonia.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9150,
+      "longitude": 12.5169
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN", "FORFAMILIES"]
+  },
+  {
+    "name": "Quartiere Salario",
+    "description": "Residential area with Villa Ada park and trendy restaurants. Mix of early 20th century and modern architecture. Less touristy with authentic Roman life.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9278,
+      "longitude": 12.5108
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Villa Ada",
+    "description": "Large public park with walking trails, lakes, and sports facilities. Former royal residence with beautiful nature. Popular for jogging and outdoor activities.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9322,
+      "longitude": 12.5053
+    },
+    "rating": "THREESTAR",
+    "tags": ["FUN", "FORFAMILIES", "CULTURE"]
+  },
+  {
+    "name": "Catacombe di Priscilla",
+    "description": "Underground burial complex known as 'Queen of Catacombs'. Early Christian frescoes including oldest known image of Virgin Mary. Fascinating historical site.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9281,
+      "longitude": 12.5108
+    },
+    "rating": "THREESTAR",
+    "tags": ["CULTURE", "FUN"]
+  },
+  {
+    "name": "Quartiere Trieste",
+    "description": "Elegant early 20th century neighborhood with Liberty style buildings. Upscale residential area with beautiful architecture. Less touristy with authentic charm.",
+    "city": "Rome",
+    "country": "Italy",
+    "coordinates": {
+      "latitude": 41.9258,
+      "longitude": 12.5158
+    },
+    "rating": "TWOSTAR",
+    "tags": ["CULTURE", "FUN"]
+  }
+]

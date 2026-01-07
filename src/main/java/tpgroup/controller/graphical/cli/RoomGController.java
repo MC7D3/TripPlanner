@@ -206,9 +206,13 @@ public class RoomGController {
 
 	public static CliViewState deleteBranch(BranchBean chosenBranch, boolean deleteConf) {
 		CliViewState ret = new RoomAdminMenuState();
-		if (deleteConf) {
-			TripController.removeBranch(chosenBranch);
-			ret.setOutLogTxt("branch deleted succesfully");
+		try {
+			if (deleteConf) {
+				TripController.removeBranch(chosenBranch);
+				ret.setOutLogTxt("branch deleted succesfully");
+			}
+		} catch (NodeConflictException e) {
+			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
 		return ret;
 	}

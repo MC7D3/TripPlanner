@@ -8,6 +8,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
+import tpgroup.model.exception.NodeConflictException;
+
 public class EventsNode implements Comparable<EventsNode> {
 	private final UUID id;
 	private NavigableSet<Event> events;
@@ -36,11 +38,11 @@ public class EventsNode implements Comparable<EventsNode> {
 		}
 
 		if (event.compareTo(events.first()) < 0) {
-			graph.checkNodesConflicts(this, event.getStart(), getEventsEnd());
+			graph.checkFatherNodesConflicts(this, event.getStart());
 		}
 
 		if (event.compareTo(events.last()) > 0) {
-			graph.checkNodesConflicts(this, getEventsStart(), event.getEnd());
+			graph.checkChildNodesConflicts(this, getEventsStart());
 		}
 
 		events.add(event);
@@ -83,7 +85,7 @@ public class EventsNode implements Comparable<EventsNode> {
 		this.graph = graph;
 	}
 
-	public boolean mergeWith(EventsNode other) {
+	public boolean mergeWith(EventsNode other) throws NodeConflictException{
 		if (!graph.areConnected(this, other) && graph.connCount(this) != 1) {
 			return false;
 		}
@@ -96,7 +98,8 @@ public class EventsNode implements Comparable<EventsNode> {
 		if (!this.events.contains(pivot)) {
 			return false;
 		}
-		NavigableSet<Event> toNewNode = this.events.tailSet(pivot, false);
+		NavigableSet<Event> toNewNode = new TreeSet<>(this.events.tailSet(pivot, false));
+		this.events.removeAll(toNewNode);
 		EventsNode newNode = new EventsNode(graph);
 		newNode.events.addAll(toNewNode);
 		graph.notifySplit(this, newNode);

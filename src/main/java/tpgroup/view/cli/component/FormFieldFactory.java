@@ -45,6 +45,10 @@ public class FormFieldFactory {
 		return new MultipleItemsFormFieldComp<>(prompt, conversion);
 	}
 
+	public <T> FormFieldComp<List<T>> newMultiItem(Function<String, T> conversion){
+		return new MultipleItemsFormFieldComp<>(conversion);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> FormFieldComp<T> getRegistered(String key){
 		return (FormFieldComp<T>) registry.get(key);

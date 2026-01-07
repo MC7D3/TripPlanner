@@ -5,6 +5,8 @@ import java.io.IOException;
 import tpgroup.model.ConfigReader;
 import tpgroup.model.exception.InvalidPersistenceTypeException;
 import tpgroup.model.exception.InvalidViewTypeException;
+import tpgroup.model.exception.PropertyNotFoundException;
+import tpgroup.persistence.POIDataLoader;
 import tpgroup.persistence.factory.DAOFactory;
 import tpgroup.view.ViewElement;
 import tpgroup.view.ViewFactory;
@@ -16,11 +18,14 @@ public class App {
 			ConfigReader confRd = new ConfigReader("configuration.properties");
 			DAOFactory.initDAOFactory(confRd.readPersistenceType());
 			ViewElement view = ViewFactory.getInstance().getView(confRd.readViewType());
-			do{
+			boolean reloadPOI = confRd.readReloadPOI();
+			POIDataLoader.load("rome_poi_data.json", reloadPOI);
+			do {
 				view.show();
-			}while(true);
+			} while (true);
 
-		}catch(IOException | InvalidPersistenceTypeException | InvalidViewTypeException e){
+		} catch (IOException | InvalidPersistenceTypeException | InvalidViewTypeException
+				| PropertyNotFoundException e) {
 			System.err.println(e.toString());
 			System.exit(-1);
 		}

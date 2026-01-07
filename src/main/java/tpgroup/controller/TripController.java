@@ -134,7 +134,7 @@ public class TripController {
 		saveChanges();
 	}
 
-	public static void removeBranch(BranchBean toDeleteBean) {
+	public static void removeBranch(BranchBean toDeleteBean) throws NodeConflictException {
 		Session.getInstance().getEnteredRoom().getTrip().removeNode(extractNode(toDeleteBean));
 		saveChanges();
 	}

@@ -20,6 +20,12 @@ public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 		this.conversion = conversion;
 	}
 
+	public MultipleItemsFormFieldComp(Function<String, T> conversion) {
+		super();
+		this.prompt = "";
+		this.conversion = conversion;
+	}
+
 	@Override
 	public List<T> get() throws FormFieldIOException{
 		List<T> items = new ArrayList<>();

@@ -15,7 +15,8 @@ public class Proposal {
 	private ProposalType proposalType;
 	private int likes;
 
-	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, Optional<Event> updateEvent, User creator,
+	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, Optional<Event> updateEvent,
+			User creator,
 			int likes, LocalDateTime creationTime) {
 		super();
 		this.proposalType = proposalType;
@@ -98,21 +99,20 @@ public class Proposal {
 		this.creator = creator;
 	}
 
-	public boolean accept(){
-		switch(this.proposalType){
+	public boolean accept() {
+		switch (this.proposalType) {
 			case ADD:
-				nodeName.getEvents().add(event);
-				return true;
+				return nodeName.getEvents().add(event);
 			case REMOVE:
-				nodeName.getEvents().remove(event);
-				break;
+				return nodeName.getEvents().remove(event);
 			case UPDATE:
-				if(updateEvent.isEmpty()){
-					return false;
+				if (updateEvent.isEmpty()) {
+					break;
 				}
-				nodeName.getEvents().remove(event);
-				nodeName.getEvents().add(updateEvent.get());
-				break;
+				if (!nodeName.getEvents().remove(event)) {
+					break;
+				}
+				return nodeName.getEvents().add(updateEvent.get());
 			default:
 				break;
 		}

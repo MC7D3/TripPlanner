@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -126,7 +127,7 @@ public class ProposalDAODB {
 
 				ProposalType proposalType = ProposalType.valueOf(rs.getString("proposal_type"));
 				int likes = rs.getInt("likes");
-				UUID id = UUID.fromString(rs.getString("node_name"));
+				UUID id = UUID.fromString(rs.getString("node_id"));
 				EventsNode node = graph.getAllNodes().stream().filter(n -> n.getId().equals(id)).findFirst().get();
 
 				proposals.add(new Proposal(proposalType, node, event, Optional.ofNullable(updateEvent), creator,
@@ -153,40 +154,55 @@ public class ProposalDAODB {
 
 		Set<Proposal> proposals = room.getTrip().getProposals();
 
-		for (Proposal proposal : proposals) {
+		try {
+			connection.setAutoCommit(false);
 			try (PreparedStatement stmt = connection.prepareStatement(query)) {
-				stmt.setString(1, proposal.getCreator().getEmail());
-				stmt.setString(2, room.getCode());
-				stmt.setTimestamp(3, Timestamp.valueOf(proposal.getCreationTime()));
-				stmt.setDouble(4, proposal.getEvent().getInfo().getCoordinates().getLatitude());
-				stmt.setDouble(5, proposal.getEvent().getInfo().getCoordinates().getLongitude());
-				stmt.setTimestamp(6, Timestamp.valueOf(proposal.getEvent().getStart()));
-				stmt.setTimestamp(7, Timestamp.valueOf(proposal.getEvent().getEnd()));
-				Double lat2 = proposal.getUpdateEvent().map(event -> event.getInfo().getCoordinates().getLatitude())
-						.orElse(null);
-				if (lat2 == null) {
-					stmt.setNull(8, Types.DOUBLE);
-				} else {
-					stmt.setDouble(8, lat2);
-				}
-				Double lon2 = proposal.getUpdateEvent()
-						.map(event -> event.getInfo().getCoordinates().getLongitude()).orElse(null);
-				if (lon2 == null) {
-					stmt.setNull(9, Types.DOUBLE);
-				} else {
-					stmt.setDouble(9, lon2);
-				}
-				stmt.setTimestamp(10,
-						proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
-				stmt.setTimestamp(11,
-						proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
-				stmt.setString(12, proposal.getProposalType().name());
-				stmt.setInt(13, proposal.getLikes());
-				stmt.setString(14, proposal.getNodeName().getId().toString());
+				for (Proposal proposal : proposals) {
+					stmt.setString(1, proposal.getCreator().getEmail());
+					stmt.setString(2, room.getCode());
+					stmt.setTimestamp(3, Timestamp.valueOf(proposal.getCreationTime()));
+					stmt.setDouble(4, proposal.getEvent().getInfo().getCoordinates().getLatitude());
+					stmt.setDouble(5, proposal.getEvent().getInfo().getCoordinates().getLongitude());
+					stmt.setTimestamp(6, Timestamp.valueOf(proposal.getEvent().getStart()));
+					stmt.setTimestamp(7, Timestamp.valueOf(proposal.getEvent().getEnd()));
+					Double lat2 = proposal.getUpdateEvent().map(event -> event.getInfo().getCoordinates().getLatitude())
+							.orElse(null);
+					if (lat2 == null) {
+						stmt.setNull(8, Types.DOUBLE);
+					} else {
+						stmt.setDouble(8, lat2);
+					}
+					Double lon2 = proposal.getUpdateEvent()
+							.map(event -> event.getInfo().getCoordinates().getLongitude()).orElse(null);
+					if (lon2 == null) {
+						stmt.setNull(9, Types.DOUBLE);
+					} else {
+						stmt.setDouble(9, lon2);
+					}
+					stmt.setTimestamp(10,
+							proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
+					stmt.setTimestamp(11,
+							proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
+					stmt.setString(12, proposal.getProposalType().name());
+					stmt.setInt(13, proposal.getLikes());
+					stmt.setString(14, proposal.getNodeName().getId().toString());
 
-				count += stmt.executeUpdate();
+					stmt.addBatch();
+				}
+				count = Arrays.stream(stmt.executeBatch()).sum();
+			}
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException rollbackEx) {
+				//no action needed
+			}
+			throw new IllegalStateException("Error saving proposals: " + e.getMessage(), e);
+		} finally {
+			try {
+				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				throw new IllegalStateException("Error while saving the proposals: " + e.getMessage(), e);
+				//no action needed
 			}
 		}
 		return count;

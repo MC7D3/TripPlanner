@@ -67,12 +67,10 @@ public class CacheDecorator<T> implements DAO<T> {
 		List<T> items = new ArrayList<>();
 		for (CachedElement item : cache) {
 			if (filter.test(item.getElem())) {
-				items.add(item.getElem());
 				item.resetTtl();
+				items.add(item.getElem());
 			} else {
-				if (item.getTtl() == 0) {
-					cache.remove(item);
-				}
+				item.getElem();
 			}
 		}
 		List<T> notCached = decorated.getFiltered(item -> !cache.contains(item) && filter.test(item));

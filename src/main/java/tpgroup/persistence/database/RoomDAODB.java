@@ -69,11 +69,12 @@ public class RoomDAODB implements DAO<Room> {
 				// no handling required
 			}
 			throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
-		}
-		try {
-			connection.setAutoCommit(true);
-		} catch (Exception e) {
-			throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
+		}finally{
+			try {
+				connection.setAutoCommit(true);
+			} catch (Exception e) {
+				throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
+			}
 		}
 		return res;
 	}
@@ -188,7 +189,7 @@ public class RoomDAODB implements DAO<Room> {
 				stmt.executeUpdate();
 			}
 
-			String deleteProposalsSql = "DELETE FROM proposals_tbl WHERE trip_fk = ?";
+			String deleteProposalsSql = "DELETE FROM proposal_tbl WHERE trip_fk = ?";
 			try (PreparedStatement stmt = connection.prepareStatement(deleteProposalsSql)) {
 				stmt.setString(1, code);
 				stmt.executeUpdate();
@@ -209,11 +210,12 @@ public class RoomDAODB implements DAO<Room> {
 				// no handling needed
 			}
 			throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
-		}
-		try {
-			connection.setAutoCommit(true);
-		} catch (Exception e) {
-			throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
+		}finally{
+			try {
+				connection.setAutoCommit(true);
+			} catch (Exception e) {
+				throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
+			}
 		}
 	}
 
@@ -257,11 +259,12 @@ public class RoomDAODB implements DAO<Room> {
 				// no handling needed
 			}
 			throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
-		}
-		try {
-			connection.setAutoCommit(true);
-		} catch (Exception e) {
-			throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
+		}finally{
+			try {
+				connection.setAutoCommit(true);
+			} catch (Exception e) {
+				throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
+			}
 		}
 	}
 

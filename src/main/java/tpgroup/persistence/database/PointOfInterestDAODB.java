@@ -30,7 +30,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public PointOfInterest get(PointOfInterest poi) throws RecordNotFoundException {
-       final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND latitude = ? AND longitude = ?";
+       final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         
