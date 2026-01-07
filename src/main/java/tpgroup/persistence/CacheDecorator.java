@@ -38,6 +38,7 @@ public class CacheDecorator<T> implements DAO<T> {
 		private void notifyDeath(CachedElement elem) {
 			CacheDecorator.this.cache.remove(elem);
 		}
+
 	}
 
 	private final DAO<T> decorated;
@@ -51,15 +52,14 @@ public class CacheDecorator<T> implements DAO<T> {
 
 	@Override
 	public List<T> getAll() {
-		List<T> items = new ArrayList<>();
-		for (CachedElement item : cache) {
-			items.add(item.getElem());
-			item.resetTtl();
+		List<T> all = decorated.getAll();
+		for(CachedElement cached : cache){
+			if(all.contains(cached.getElem())){
+				cached.resetTtl();
+			}
 		}
-		List<T> notCached = decorated.getFiltered(item -> !cache.contains(item));
-		cache.addAll(notCached.stream().map(item -> new CachedElement(item)).toList());
-		items.addAll(notCached);
-		return items;
+		cache.addAll(all.stream().map(item -> new CachedElement(item)).toList());
+		return all;
 	}
 
 	@Override
@@ -111,7 +111,6 @@ public class CacheDecorator<T> implements DAO<T> {
 	public boolean add(T obj) {
 		boolean res = decorated.add(obj);
 		if (res) {
-			cache.remove(obj);
 			cache.add(new CachedElement(obj));
 		}
 		return res;
@@ -119,7 +118,7 @@ public class CacheDecorator<T> implements DAO<T> {
 
 	@Override
 	public void delete(T obj) throws RecordNotFoundException {
-		decorated.save(obj);
+		decorated.delete(obj);
 		cache.remove(obj);
 	}
 

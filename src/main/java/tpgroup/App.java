@@ -16,7 +16,6 @@ public class App {
 			ConfigReader confRd = new ConfigReader("configuration.properties");
 			DAOFactory.initDAOFactory(confRd.readPersistenceType());
 			ViewElement view = ViewFactory.getInstance().getView(confRd.readViewType());
-
 			do{
 				view.show();
 			}while(true);

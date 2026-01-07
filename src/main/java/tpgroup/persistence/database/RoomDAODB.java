@@ -118,7 +118,7 @@ public class RoomDAODB implements DAO<Room> {
 
 					Set<User> members = findRoomMembers(code);
 
-					return new Room(code, admin, members, trip);
+					return new Room(code, rs.getString("name"), admin, members, trip);
 				}
 				return null;
 			}
@@ -166,7 +166,7 @@ public class RoomDAODB implements DAO<Room> {
 
 					Set<User> members = findRoomMembers(code);
 
-					rooms.add(new Room(rs.getString("code"), admin, members, trip));
+					rooms.add(new Room(rs.getString("code"), rs.getString("name"), admin, members, trip));
 				}
 				return rooms;
 			}

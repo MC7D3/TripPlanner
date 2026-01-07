@@ -1,5 +1,7 @@
 package tpgroup.controller;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import tpgroup.model.Session;
 import tpgroup.model.bean.UserBean;
 import tpgroup.model.domain.User;
@@ -14,10 +16,9 @@ public class OptionsController {
 	}
 
 	public static void updatePassword(UserBean newPassword) {
-		System.out.println(newPassword.getPassword());
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
-		User updatedCred = new User(Session.getInstance().getLogged().getEmail(),
-				newPassword.getPassword());
+		String encPassword = BCrypt.hashpw(newPassword.getPassword(), BCrypt.gensalt());
+		User updatedCred = new User(Session.getInstance().getLogged().getEmail(), encPassword);
 		userDao.save(updatedCred);
 		Session.getInstance().setLogged(updatedCred);
 	}

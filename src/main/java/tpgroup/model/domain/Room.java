@@ -20,21 +20,16 @@ public class Room {
 		this.trip = trip;
 	}
 
-	public Room(String name, User admin, Set<User> members, Trip trip) {
+	public Room(String name, User admin, String country, String mainCity) {
 		Random rand = new SecureRandom();
 		this.code = String.format("%s-%d", name.toLowerCase().replaceAll("[^a-z0-9]","-"), rand.nextInt(99999) + 1); 
 		this.name = name;
 		this.admin = admin;
 
 		this.members = new HashSet<>();
-		this.members.addAll(members);
 		this.members.add(admin);
 
-		this.trip = trip;
-	}
-
-	public Room(String name, User admin, Set<User> members, String country, String mainCity) {
-		this(name, admin, members, new Trip(country, mainCity));
+		this.trip = new Trip(country, mainCity);
 	}
 
 	public Room(String code){
@@ -43,10 +38,6 @@ public class Room {
 		this.admin = null;
 		this.members = null;
 		this.trip = null;
-	}
-
-	public Room(String name, User admin, String country, String mainCity) {
-		this(name, admin, new HashSet<User>(), country, mainCity);
 	}
 
 	public String getCode() {

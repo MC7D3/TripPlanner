@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import tpgroup.model.Event;
 
-public class EventBean implements Comparable<Event>{
+public class EventBean implements Comparable<Event> {
 	private final POIBean info;
 	private final LocalDateTime start;
 	private final LocalDateTime end;
@@ -54,4 +54,8 @@ public class EventBean implements Comparable<Event>{
 		return this.start.compareTo(arg0.getStart());
 	}
 
+	@Override
+	public String toString() {
+		return "EventBean{info=" + info + ", start=" + start + ", end=" + end + "}";
+	}
 }

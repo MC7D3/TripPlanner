@@ -149,7 +149,7 @@ public class LoggedMenuGController {
 		CliViewState ret = new OptionsMenuState();
 		try {
 			if (!password.isEmpty() && !confPwd.isEmpty()) {
-				OptionsController.updatePassword(new UserBean(null, password, confPwd));
+				OptionsController.updatePassword(new UserBean("updatepwd@invalidprovider.com", password, confPwd));
 				ret.setOutLogTxt("password updated succesfully!");
 			}
 		} catch (InvalidBeanParamException e) {

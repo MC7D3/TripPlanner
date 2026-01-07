@@ -76,5 +76,10 @@ public class POIBean {
 		return Objects.equals(coordinates, other.coordinates);
 	}
 
-	
+	@Override
+	public String toString() {
+		return "POIBean{name=" + name + ", description=" + description + ", city=" + city + ", country=" + country
+				+ ", coordinates=" + coordinates + ", rating=" + rating + ", tags=" + tags + "}";
+	}
+
 }

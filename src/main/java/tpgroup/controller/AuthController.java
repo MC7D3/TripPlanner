@@ -35,7 +35,7 @@ public class AuthController {
 		if(!BCrypt.checkpw(user.getConfPassword(), encPassword)){
 			throw new InvalidBeanParamException("confPassword", "the passwords do not match");
 		}
-		User newUser = new User(user.getEmail(), user.getPassword());
+		User newUser = new User(user.getEmail(), encPassword);
 		boolean res = userDao.add(newUser);
 		if(res){
 			Session.getInstance().setLogged(newUser);

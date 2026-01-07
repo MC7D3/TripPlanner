@@ -9,7 +9,7 @@
 
 <VBox style="-fx-max-width: 100; -fx-max-height: 100;" styleClass="form-container"
 	stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1"
-	xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.view.javafx.CreateRoomGUIController">
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.controller.graphical.javafx.createRoomGUIController">
 	<children>
 		<Text styleClass="heading" text="Room Creation form">
 		</Text>

@@ -7,7 +7,7 @@
 
 
 <VBox styleClass="form-container" stylesheets="@login_styles.css"
-	xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.view.javafx.JoinRoomGUIController">
+	xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.controller.graphical.javafx.JoinRoomGUIController">
 	<children>
 		<TextField fx:id="roomCodeTxt" promptText="Room's code" styleClass="input-field"
 			onKeyPressed="#onFocus" />

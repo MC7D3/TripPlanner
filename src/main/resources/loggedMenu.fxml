@@ -17,7 +17,7 @@
 	style="-fx-min-width: 700; -fx-min-height: 700; -fx-max-height: 700; -fx-max-width: 700;"
 	styleClass="loginBackPane" stylesheets="@login_styles.css"
 	xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="tpgroup.view.javafx.LoggedMenuGUIController">
+	fx:controller="tpgroup.controller.graphical.javafx.LoggedMenuGUIController">
 	<bottom>
             <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
 		<HBox

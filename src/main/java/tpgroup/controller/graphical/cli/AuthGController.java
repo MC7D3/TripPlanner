@@ -23,8 +23,10 @@ public class AuthGController {
 		try {
 			boolean result = AuthController.validateCredentials(new UserBean(email, password));
 			if (result) {
-				ret.setOutLogTxt("login Succesful");
 				ret = new LoggedMenuState();
+				ret.setOutLogTxt("login Succesful");
+			}else{
+				ret.setOutLogTxt("wrong credentials");
 			}
 		} catch (InvalidBeanParamException e) {
 			ret.setOutLogTxt("ERROR: " + e.getMessage());
@@ -40,8 +42,8 @@ public class AuthGController {
 		try {
 			boolean result = AuthController.executeRegistration(new UserBean(email, password, confPassword));
 			if(result) {
-				ret.setOutLogTxt("registration Succesful");
 				ret = new LoggedMenuState();
+				ret.setOutLogTxt("registration Succesful");
 			}else{
 				ret.setOutLogTxt("ERROR: there is already an account binded to the inserted email");
 			}

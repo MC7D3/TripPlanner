@@ -12,7 +12,7 @@ public class CliView implements ViewElement{
 
 	@Override
 	public void show(){
-		state.present();
+		state.show();
 	}
 
 	public void setState(CliViewState state) {

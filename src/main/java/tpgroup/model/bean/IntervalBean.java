@@ -63,4 +63,9 @@ public class IntervalBean {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "IntervalBean{startTime=" + startTime + ", endTime=" + endTime + "}";
+	}
+
 }

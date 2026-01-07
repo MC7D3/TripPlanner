@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane style="-fx-min-height: 600; -fx-min-width: 600; -fx-max-height: 600; -fx-max-width: 600;" styleClass="loginBackPane" stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.view.javafx.RegistrationGUIController">
+<StackPane style="-fx-min-height: 600; -fx-min-width: 600; -fx-max-height: 600; -fx-max-width: 600;" styleClass="loginBackPane" stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.controller.graphical.javafx.RegistrationGUIController">
    <children>
       <VBox fx:id="regForm" style="-fx-max-height: 80; -fx-max-width: 80;" styleClass="form-container">
          <children>

@@ -63,4 +63,10 @@ public class TripBean {
 				&& Objects.equals(tripGraph, other.tripGraph) && Objects.equals(proposals, other.proposals);
 	}
 
+	@Override
+	public String toString() {
+		return "TripBean{country=" + country + ", mainCity=" + mainCity + ", tripGraph=" + tripGraph + ", proposals="
+				+ proposals + "}";
+	}
+
 }

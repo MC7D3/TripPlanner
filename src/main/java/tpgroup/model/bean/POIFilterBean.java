@@ -76,4 +76,9 @@ public class POIFilterBean {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "POIFilterBean{minRating=" + minRating + ", maxRating=" + maxRating + ", chosenTags=" + chosenTags + "}";
+	}
+
 }

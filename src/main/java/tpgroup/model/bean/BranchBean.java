@@ -51,4 +51,9 @@ public class BranchBean {
 		return Objects.equals(id, other.id);
 	}
 
+	@Override
+	public String toString() {
+		return "BranchBean{id=" + id + ", events=" + events + ", graph=" + graph + "}";
+	}
+
 }

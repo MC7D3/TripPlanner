@@ -105,7 +105,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public boolean add(PointOfInterest poi) {
-        final String query = "INSERT INTO pointofinterest_tbl (name, description, country, city, latitude, longitude, rating, tags) "
+        final String query = "INSERT INTO poi_tbl (name, description, country, city, latitude, longitude, rating, tags) "
                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = null;
         
@@ -133,7 +133,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public void delete(PointOfInterest poi) throws RecordNotFoundException {
-        final String query = "DELETE FROM pointofinterest_tbl WHERE name = ? AND latitude = ? AND longitude = ?";
+        final String query = "DELETE FROM poi_tbl WHERE name = ? AND latitude = ? AND longitude = ?";
         PreparedStatement stmt = null;
         
         try {

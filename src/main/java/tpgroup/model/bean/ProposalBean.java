@@ -76,4 +76,10 @@ public class ProposalBean {
 				&& Objects.equals(event, other.event);
 	}
 
+	@Override
+	public String toString() {
+		return "ProposalBean{creator=" + creator + ", creationTime=" + creationTime + ", node=" + node + ", event="
+				+ event + ", updateEvent=" + updateEvent + ", proposalType=" + proposalType + ", likes=" + likes + "}";
+	}
+
 }

@@ -13,7 +13,7 @@ public abstract class CliViewState {
 	}
 
 	public void show(){
-		if(!this.outLogTxt.isEmpty()){
+		if(this.outLogTxt != null && !this.outLogTxt.isEmpty()){
 			System.out.println(this.outLogTxt);
 			this.outLogTxt = "";
 		}

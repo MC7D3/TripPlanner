@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane style="-fx-min-width: 600; -fx-min-height: 600; -fx-max-height: 600; -fx-min-width: 600;" styleClass="loginBackPane" stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.view.javafx.LoginGUIController">
+<StackPane style="-fx-min-width: 600; -fx-min-height: 600; -fx-max-height: 600; -fx-min-width: 600;" styleClass="loginBackPane" stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tpgroup.controller.graphical.javafx.LoginGUIController">
    <children>
       <VBox fx:id="loginForm" style="-fx-max-height: 100; -fx-max-width: 100;" styleClass="form-container">
          <children>
@@ -33,7 +33,7 @@
             </Group>
             <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
             <Hyperlink style="-fx-underline: true;" text="Don't have an account? Register" onAction="#redirectRegistration"/>
-            <Button fx:id="loginBtn" mnemonicParsing="false" styleClass="button-primary" text="Login" onAction="#onLogin"/>
+            <Button mnemonicParsing="false" styleClass="button-primary" text="Login" onAction="#onLogin"/>
          </children>
       </VBox>
    </children>

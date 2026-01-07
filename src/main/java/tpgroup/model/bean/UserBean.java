@@ -10,9 +10,11 @@ public class UserBean {
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 	private static final String PWD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.])[A-Za-z\\d@$!%*?&.]{8,}$";
 
-	private final String email;
-	private final String password;
+	private String email;
+	private String password;
 	private String confPassword;
+
+	public UserBean(){}
 
 	public UserBean(String email, String password) throws InvalidBeanParamException{
 		if(!Pattern.matches(EMAIL_REGEX, email)){
@@ -67,6 +69,19 @@ public class UserBean {
 		}
 		UserBean other = (UserBean) obj;
 		return Objects.equals(email, other.email) && Objects.equals(password, other.password);
+	}
+
+	@Override
+	public String toString() {
+		return "UserBean{email=" + email + ", password=" + password + ", confPassword=" + confPassword + "}";
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setConfPassword(String confPassword) {
+		this.confPassword = confPassword;
 	}
 
 }

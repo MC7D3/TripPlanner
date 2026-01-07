@@ -60,4 +60,9 @@ public class EventsGraphBean {
 				&& Objects.equals(nodes, other.nodes);
 	}
 
+	@Override
+	public String toString() {
+		return "EventsGraphBean{root=" + root + ", connectionsMapping=" + connectionsMapping + ", nodes=" + nodes + "}";
+	}
+
 }
