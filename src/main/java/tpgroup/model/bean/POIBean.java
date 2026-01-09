@@ -78,8 +78,7 @@ public class POIBean {
 
 	@Override
 	public String toString() {
-		return "POIBean{name=" + name + ", description=" + description + ", city=" + city + ", country=" + country
-				+ ", coordinates=" + coordinates + ", rating=" + rating + ", tags=" + tags + "}";
+		return name + ":\n" + description + "\n(rating= " + rating + ", tags=" + tags + ")";
 	}
 
 }

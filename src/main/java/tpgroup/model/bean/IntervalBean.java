@@ -13,7 +13,7 @@ public class IntervalBean {
 
 	public IntervalBean(String startTimeTxt, String endTimeTxt) throws InvalidBeanParamException {
 		try {
-			this.startTime = startTimeTxt.isEmpty() ? null : LocalDateTime.parse(startTimeTxt, format);
+			this.startTime = LocalDateTime.parse(startTimeTxt, format);
 		} catch (DateTimeParseException e) {
 			throw new InvalidBeanParamException("startTimeTxt");
 		}

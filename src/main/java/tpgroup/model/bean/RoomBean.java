@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import tpgroup.model.Session;
 import tpgroup.model.domain.Room;
 import tpgroup.model.exception.InvalidBeanParamException;
 
@@ -89,8 +90,7 @@ public class RoomBean {
 
 	@Override
 	public String toString() {
-		return "RoomBean{code=" + code + ", name=" + name + ", admin=" + admin + ", members=" + members + ", trip="
-				+ trip + "}";
+		return name + " - " + members.size() + " members" + (Session.getInstance().getLogged().getEmail().equals(admin.getEmail())? " (Admin)" : "");
 	}
 	
 }

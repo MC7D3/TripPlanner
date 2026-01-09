@@ -29,6 +29,7 @@ public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 	@Override
 	public List<T> get() throws FormFieldIOException{
 		List<T> items = new ArrayList<>();
+		String input = "";
 		do{
 			try {
 				System.out.println(prompt);
@@ -36,7 +37,11 @@ public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 				if(prompt.isEmpty()){
 					break;
 				}
-				items.add(conversion.apply(in.readLine()));
+				input = in.readLine();
+				if(input.isEmpty()){
+					break;
+				}
+				items.add(conversion.apply(input));
 			} catch (IOException e) {
 				throw new FormFieldIOException();
 			}

@@ -30,6 +30,7 @@ public class RoomController {
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		if (!roomDao.add(room))
 			throw new RoomGenConflictException();
+		Session.getInstance().setEnteredRoom(room);
 	}
 
 	public static void deleteRoom() {
@@ -70,7 +71,7 @@ public class RoomController {
 	public static boolean enterRoom(RoomBean room) {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-			Room entered = roomDao.get(new Room(room.getName()));
+			Room entered = roomDao.get(new Room(room.getCode()));
 			Session.getInstance().setEnteredRoom(entered);
 		} catch (RecordNotFoundException e) {
 			return false;

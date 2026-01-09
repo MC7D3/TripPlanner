@@ -1,6 +1,7 @@
 package tpgroup.model.bean;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import tpgroup.model.Event;
@@ -56,6 +57,7 @@ public class EventBean implements Comparable<Event> {
 
 	@Override
 	public String toString() {
-		return "EventBean{info=" + info + ", start=" + start + ", end=" + end + "}";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+		return info + "\nbegin: " + formatter.format(start) + " , end: " + formatter.format(end);
 	}
 }

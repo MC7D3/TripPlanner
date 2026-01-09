@@ -3,6 +3,7 @@ package tpgroup.persistence;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -39,6 +40,41 @@ public class CacheDecorator<T> implements DAO<T> {
 			CacheDecorator.this.cache.remove(elem);
 		}
 
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getEnclosingInstance().hashCode();
+			result = prime * result + Objects.hash(elem);
+			return result;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			if (!(obj instanceof CacheDecorator<?>.CachedElement)){
+				return false;
+			}
+			CachedElement other = (CachedElement) obj;
+			if (!getEnclosingInstance().equals(other.getEnclosingInstance())) {
+				return false;
+			}
+			return Objects.equals(elem, other.elem);
+		}
+
+		private CacheDecorator<T> getEnclosingInstance() {
+			return CacheDecorator.this;
+		}
+
 	}
 
 	private final DAO<T> decorated;
@@ -53,8 +89,8 @@ public class CacheDecorator<T> implements DAO<T> {
 	@Override
 	public List<T> getAll() {
 		List<T> all = decorated.getAll();
-		for(CachedElement cached : cache){
-			if(all.contains(cached.getElem())){
+		for (CachedElement cached : cache) {
+			if (all.contains(cached.getElem())) {
 				cached.resetTtl();
 			}
 		}
@@ -73,7 +109,7 @@ public class CacheDecorator<T> implements DAO<T> {
 				item.getElem();
 			}
 		}
-		List<T> notCached = decorated.getFiltered(item -> !cache.contains(item) && filter.test(item));
+		List<T> notCached = decorated.getFiltered(item -> !cache.contains(new CachedElement(item)) && filter.test(item));
 		cache.addAll(notCached.stream().map(item -> new CachedElement(item)).toList());
 		items.addAll(notCached);
 		return items;
@@ -101,8 +137,9 @@ public class CacheDecorator<T> implements DAO<T> {
 	@Override
 	public void save(T obj) {
 		decorated.save(obj);
-		cache.remove(obj);
-		cache.add(new CachedElement(obj));
+		CachedElement toSave = new CachedElement(obj);
+		cache.remove(toSave);
+		cache.add(toSave);
 	}
 
 	@Override
@@ -117,7 +154,7 @@ public class CacheDecorator<T> implements DAO<T> {
 	@Override
 	public void delete(T obj) throws RecordNotFoundException {
 		decorated.delete(obj);
-		cache.remove(obj);
+		cache.remove(new CachedElement(obj));
 	}
 
 }

@@ -95,8 +95,13 @@ public class RoomGController {
 	public static List<POIBean> getFilteredPOIs(String minRatingTxt, String maxRatingTxt,
 			List<String> chosenTags) {
 		try {
-			return POIController.getPOIFiltered(new POIFilterBean(minRatingTxt, maxRatingTxt, chosenTags));
+			if(minRatingTxt.isEmpty() && maxRatingTxt.isEmpty() && chosenTags.isEmpty()){
+				return POIController.getAllPOI();
+			}
+			POIFilterBean filters = new POIFilterBean(minRatingTxt, maxRatingTxt, chosenTags);
+			return POIController.getPOIFiltered(filters);
 		} catch (InvalidBeanParamException e) {
+			System.out.println("ERROR: " + e);
 			return List.of();
 		}
 
@@ -106,6 +111,9 @@ public class RoomGController {
 			BranchBean chosenBranch, String startTimeTxt, String endTimeTxt) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 		try {
+			if(poi == null && chosenBranch == null && startTimeTxt.isEmpty() && endTimeTxt.isEmpty()){
+				return ret;
+			}
 			if (poi == null) {
 				ret.setOutLogTxt(ERROR_PROMPT + "invalid poi filter values provided");
 				return ret;
@@ -134,9 +142,12 @@ public class RoomGController {
 
 	public static CliViewState likeProposal(ProposalBean proposal) {
 		if (proposal != null) {
-			TripController.likeProposal(proposal);
 			CliViewState ret = new ListAndLikeProposalsState();
-			ret.setOutLogTxt("proposal liked!");
+			if(!TripController.likeProposal(proposal)){
+				ret.setOutLogTxt("proposal like removed");
+			}else{
+				ret.setOutLogTxt("proposal liked!");
+			}
 			return ret;
 		}
 		return RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();

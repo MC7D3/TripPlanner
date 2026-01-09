@@ -1,6 +1,7 @@
 package tpgroup.model.bean;
 
 import java.util.NavigableSet;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -11,12 +12,11 @@ import tpgroup.model.EventsNode;
 public class BranchBean {
 	private final UUID id;
 	private final NavigableSet<EventBean> events;
-	private final EventsGraphBean graph;
 
-	public BranchBean(EventsNode branch){
+	public BranchBean(EventsNode branch) {
 		this.id = branch.getId();
-		this.events = branch.getEvents().stream().map(event -> new EventBean(event)).collect(Collectors.toCollection(() -> new TreeSet<>()));
-		this.graph = new EventsGraphBean(branch.getGraph());
+		this.events = branch.getEvents().stream().map(event -> new EventBean(event))
+				.collect(Collectors.toCollection(() -> new TreeSet<>()));
 	}
 
 	public UUID getId() {
@@ -25,10 +25,6 @@ public class BranchBean {
 
 	public NavigableSet<EventBean> getEvents() {
 		return events;
-	}
-
-	public EventsGraphBean getGraph() {
-		return graph;
 	}
 
 	@Override
@@ -53,7 +49,11 @@ public class BranchBean {
 
 	@Override
 	public String toString() {
-		return "BranchBean{id=" + id + ", events=" + events + ", graph=" + graph + "}";
+		try {
+			return events + " - " + events.first().getStart() + " , " + events.getLast().getEnd();
+		} catch (NoSuchElementException e) {
+			return "[no events]";
+		}
 	}
 
 }

@@ -1,7 +1,10 @@
 package tpgroup.model.domain;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import tpgroup.model.Event;
 import tpgroup.model.EventsNode;
@@ -13,11 +16,11 @@ public class Proposal {
 	private Event event;
 	private Optional<Event> updateEvent;
 	private ProposalType proposalType;
-	private int likes;
+	private Set<User> likes;
 
 	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, Optional<Event> updateEvent,
 			User creator,
-			int likes, LocalDateTime creationTime) {
+			Set<User> likes, LocalDateTime creationTime) {
 		super();
 		this.proposalType = proposalType;
 		this.nodeName = nodeName;
@@ -29,11 +32,11 @@ public class Proposal {
 	}
 
 	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, User creator) {
-		this(proposalType, nodeName, event, Optional.empty(), creator, 0, LocalDateTime.now());
+		this(proposalType, nodeName, event, Optional.empty(), creator, new HashSet<>(), LocalDateTime.now());
 	}
 
 	public Proposal(ProposalType proposalType, EventsNode nodeName, Event event, Event updatedEvent, User creator) {
-		this(proposalType, nodeName, event, Optional.of(updatedEvent), creator, 0, LocalDateTime.now());
+		this(proposalType, nodeName, event, Optional.of(updatedEvent), creator, new HashSet<>(), LocalDateTime.now());
 	}
 
 	public EventsNode getNodeName() {
@@ -45,11 +48,18 @@ public class Proposal {
 	}
 
 	public int getLikes() {
-		return likes;
+		return likes.size();
 	}
 
-	public void like() {
-		this.likes++;
+	public boolean like(User user) {
+		System.out.println(likes);
+		boolean res = likes.add(user);
+		System.out.println(likes);
+		return res;
+	}
+
+	public boolean unlike(User user) {
+		return likes.remove(user);
 	}
 
 	public User getCreator() {
@@ -91,10 +101,6 @@ public class Proposal {
 		this.proposalType = proposalType;
 	}
 
-	public void setLikes(int likes) {
-		this.likes = likes;
-	}
-
 	public void setCreator(User creator) {
 		this.creator = creator;
 	}
@@ -118,5 +124,28 @@ public class Proposal {
 		}
 		return false;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(creator, creationTime, nodeName, event, updateEvent, proposalType);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Proposal other = (Proposal) obj;
+		return Objects.equals(creator, other.creator) && Objects.equals(creationTime, other.creationTime)
+				&& Objects.equals(nodeName, other.nodeName) && Objects.equals(event, other.event)
+				&& Objects.equals(updateEvent, other.updateEvent) && proposalType == other.proposalType;
+	}
+
 
 }

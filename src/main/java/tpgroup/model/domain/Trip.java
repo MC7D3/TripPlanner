@@ -70,10 +70,21 @@ public class Trip {
 		return proposals.remove(proposal);
 	}
 
-	public boolean likeProposal(Proposal proposal) {
+	public boolean likeProposal(User user, Proposal proposal) {
 		try {
-			proposals.stream().filter(p -> p.equals(proposal)).findFirst().get().like();
-			return true;
+			System.out.println(proposal);
+			System.out.println(proposals);
+			System.out.println(proposals.contains(proposal));
+			return proposals.stream().filter(p -> p.equals(proposal)).findFirst().get().like(user);
+		} catch (NoSuchElementException e) {
+			System.out.println(e);
+			return false;
+		}
+	}
+
+	public boolean unlikeProposal(User user, Proposal proposal) {
+		try{
+			return proposals.stream().filter(p -> p.equals(proposal)).findFirst().get().unlike(user);
 		} catch (NoSuchElementException e) {
 			return false;
 		}
@@ -152,5 +163,6 @@ public class Trip {
 		return Objects.equals(country, other.country) && Objects.equals(mainCity, other.mainCity)
 				&& Objects.equals(tripGraph, other.tripGraph) && Objects.equals(proposals, other.proposals);
 	}
+
 
 }

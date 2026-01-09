@@ -23,6 +23,7 @@ public class EventsGraph {
 		this.connectionsMapping = new HashMap<>();
 		this.nodes = new TreeSet<>();
 		connectionsMapping.put(this.root, new HashSet<>());
+		nodes.add(root);
 	}
 
 	public List<EventsNode> getConnectedNodes(EventsNode of){

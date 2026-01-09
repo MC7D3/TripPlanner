@@ -18,8 +18,8 @@ public class ListAndLikeProposalsState extends CliViewState{
 			ProposalBean chosen = null;
 			System.out.println("NOTE: if u want to go back, choose the no option value");
 			chosen = FormFieldFactory.getInstance().newSelectItem(RoomGController.getProposalsSortedByLike(), true).get();
-			RoomGController.likeProposal(chosen);
-			System.out.println("proposal liked!");
+			CliViewState next = RoomGController.likeProposal(chosen);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}

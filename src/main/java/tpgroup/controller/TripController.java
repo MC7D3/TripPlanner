@@ -64,7 +64,7 @@ public class TripController {
 
 	public static List<ProposalBean> getAllProposals() {
 		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream()
-				.map(proposal -> new ProposalBean(proposal)).toList();
+				.map(proposal -> new ProposalBean(proposal)).collect(Collectors.toList());
 	}
 
 	public static List<ProposalBean> getLoggedUserProposals() {
@@ -119,9 +119,16 @@ public class TripController {
 		return res;
 	}
 
-	public static void likeProposal(ProposalBean chosen) {
-		Session.getInstance().getEnteredRoom().getTrip().likeProposal(extractProposal(chosen));
+	public static boolean likeProposal(ProposalBean chosen) {
+		Proposal proposal = extractProposal(chosen);
+		boolean res = Session.getInstance().getEnteredRoom().getTrip().likeProposal(Session.getInstance().getLogged(),
+				proposal);
+		if (!res) {
+			Session.getInstance().getEnteredRoom().getTrip().unlikeProposal(Session.getInstance().getLogged(),
+					proposal);
+		}
 		saveChanges();
+		return res;
 	}
 
 	public static void removeProposal(ProposalBean proposalBean) {

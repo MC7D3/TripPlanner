@@ -16,13 +16,13 @@ public class ProposalBean {
 	private final ProposalType proposalType;
 	private final int likes;
 
-
 	public ProposalBean(Proposal proposal) {
 		this.creator = new UserBean(proposal.getCreator());
 		this.creationTime = proposal.getCreationTime();
 		this.node = new BranchBean(proposal.getNodeName());
 		this.event = new EventBean(proposal.getEvent());
-		this.updateEvent = Optional.of(proposal.getUpdateEvent().isPresent() ? new EventBean(proposal.getUpdateEvent().get()) : null);
+		this.updateEvent = Optional.ofNullable(
+				proposal.getUpdateEvent().isPresent() ? new EventBean(proposal.getUpdateEvent().get()) : null);
 		this.proposalType = proposal.getProposalType();
 		this.likes = proposal.getLikes();
 	}
@@ -78,8 +78,8 @@ public class ProposalBean {
 
 	@Override
 	public String toString() {
-		return "ProposalBean{creator=" + creator + ", creationTime=" + creationTime + ", node=" + node + ", event="
-				+ event + ", updateEvent=" + updateEvent + ", proposalType=" + proposalType + ", likes=" + likes + "}";
+		return proposalType + " (" + getLikes() + " likes): " + event + (proposalType.equals(ProposalType.UPDATE) ? "becomes: " + updateEvent : "")
+				+ "\n(createdBy: " + creator.getEmail() + ")\ninserted in: " + node;
 	}
 
 }

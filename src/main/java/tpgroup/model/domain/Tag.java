@@ -20,8 +20,9 @@ public enum Tag {
 	}
 
 	public static Tag getTagFromName(String name) throws EnumNotFoundException{
+		String normalized = name.toLowerCase().trim();
 		for(Tag tag : values()){
-			if(tag.humanReadableNames.contains(name))
+			if(tag.humanReadableNames.contains(normalized))
 				return tag;
 		}
 		throw new EnumNotFoundException("nome del tag incorretto");

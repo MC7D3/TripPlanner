@@ -17,9 +17,9 @@ public class POIController {
 		super();
 	}
 
-	public static List<PointOfInterest> getAllPOI(){
+	public static List<POIBean> getAllPOI(){
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
-		return poiDao.getAll();
+		return poiDao.getAll().stream().map(poi -> new POIBean(poi)).toList();
 	}
 
 	private static List<POIBean> getPOIFiltered(List<Tag> tags){
@@ -38,7 +38,7 @@ public class POIController {
 	}
 
 	private static List<POIBean> getPOIFiltered(Rating minRating, Rating maxRating, List<Tag> tags){
-		return getPOIFiltered(minRating, tags).stream().filter(poi -> poi.getRating().ordinal() < maxRating.ordinal()).toList();
+		return getPOIFiltered(minRating, tags).stream().filter(poi -> poi.getRating().ordinal() <= maxRating.ordinal()).toList();
 	}
 
 	public static List<POIBean> getPOIFiltered(POIFilterBean filters){

@@ -126,7 +126,9 @@ public class ProposalDAODB {
 				}
 
 				ProposalType proposalType = ProposalType.valueOf(rs.getString("proposal_type"));
-				int likes = rs.getInt("likes");
+				Gson gson = new Gson();
+				Set<User> likes = gson.fromJson(rs.getString("likes"), new TypeToken<Set<User>>(){}.getType());
+
 				UUID id = UUID.fromString(rs.getString("node_id"));
 				EventsNode node = graph.getAllNodes().stream().filter(n -> n.getId().equals(id)).findFirst().get();
 
