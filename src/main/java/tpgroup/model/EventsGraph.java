@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import tpgroup.model.exception.NodeConflictException;
 import tpgroup.model.exception.NodeConnectionException;
@@ -37,12 +38,19 @@ public class EventsGraph {
 		return newNode;
 	}
 
-	public List<EventsNode> getAllNodes() {
+	public List<EventsNode> getGraphNodes() {
 		return nodes.stream().toList();
 	}
 
 	public List<EventsNode> getStagingNodes() {
 		return stagingArea.stream().toList();
+	}
+
+	public List<EventsNode> getAllNodes() {
+		List<EventsNode> graphNodes = nodes.stream().collect(Collectors.toList());
+		graphNodes.addAll(getStagingNodes());
+		return graphNodes;
+
 	}
 
 	public void connect(EventsNode parent, EventsNode child) throws NodeConnectionException {
@@ -160,7 +168,8 @@ public class EventsGraph {
 
 	public void removeNode(EventsNode toRemove) throws NodeConflictException {
 		if(toRemove.equals(root)){
-			throw new NodeConflictException();
+			root.resetEvents();
+			return;
 		}
 		List<EventsNode> fathers = findFathers(toRemove);
 		if (fathers.isEmpty())

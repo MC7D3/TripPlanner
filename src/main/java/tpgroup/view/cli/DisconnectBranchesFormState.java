@@ -15,10 +15,11 @@ public class DisconnectBranchesFormState extends CliViewState {
 	@Override
 	public void present() {
 		try {
+			System.out.println("NOTE: to go back without performing the connection, select no choice on the second node selection");
 			BranchBean parent = FormFieldFactory.getInstance()
 					.newSelectItem("select select the first end of the connection to undo:", RoomGController.getBranches()).get();
 			BranchBean child = FormFieldFactory.getInstance().newSelectItem(
-					"select the second end:", RoomGController.getDeletionCandidates(parent)).get();
+					"select the second end:", RoomGController.getDeletionCandidates(parent), true).get();
 			CliViewState next = RoomGController.disconnectBranches(parent, child);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {

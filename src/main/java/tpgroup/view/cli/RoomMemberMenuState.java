@@ -16,7 +16,7 @@ public class RoomMemberMenuState extends CliViewState {
 		super();
 		menuOptions = new ArrayList<>();
 		Collections.addAll(menuOptions, "propose new Event", "propose event removal", "list other proposals",
-				"propose event update", "undo proposal", "go back");
+				"show trip status", "propose event update", "undo proposal", "go back");
 	}
 
 	@Override

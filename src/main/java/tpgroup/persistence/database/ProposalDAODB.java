@@ -130,7 +130,7 @@ public class ProposalDAODB {
 				Set<User> likes = gson.fromJson(rs.getString("likes"), new TypeToken<Set<User>>(){}.getType());
 
 				UUID id = UUID.fromString(rs.getString("node_id"));
-				EventsNode node = graph.getAllNodes().stream().filter(n -> n.getId().equals(id)).findFirst().get();
+				EventsNode node = graph.getGraphNodes().stream().filter(n -> n.getId().equals(id)).findFirst().get();
 
 				proposals.add(new Proposal(proposalType, node, event, Optional.ofNullable(updateEvent), creator,
 						likes, creationTime));

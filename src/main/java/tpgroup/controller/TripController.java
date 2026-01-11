@@ -2,12 +2,10 @@ package tpgroup.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NavigableSet;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import tpgroup.model.Event;
+import tpgroup.model.EventsGraph;
 import tpgroup.model.EventsNode;
 import tpgroup.model.Session;
 import tpgroup.model.bean.BranchBean;
@@ -16,6 +14,7 @@ import tpgroup.model.bean.IntervalBean;
 import tpgroup.model.bean.POIBean;
 import tpgroup.model.bean.ProposalBean;
 import tpgroup.model.bean.StagingBranchBean;
+import tpgroup.model.bean.TripBean;
 import tpgroup.model.bean.UserBean;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Proposal;
@@ -44,14 +43,10 @@ public class TripController {
 		return new Event(extractPOI(bean.getInfo()), bean.getStart(), bean.getEnd());
 	}
 
-	private static NavigableSet<Event> extractEvents(Set<EventBean> beans) {
-		return beans.stream().map(evBean -> extractEvent(evBean))
-				.collect(Collectors.toCollection(() -> new TreeSet<Event>()));
-	}
-
 	private static EventsNode extractNode(BranchBean bean) {
-		return new EventsNode(bean.getId(), extractEvents(bean.getEvents()),
-				Session.getInstance().getEnteredRoom().getTrip().getTripGraph());
+		EventsGraph graph = Session.getInstance().getEnteredRoom().getTrip().getTripGraph();
+		return graph.getAllNodes().stream().filter(node -> node.getId().equals(bean.getId())).findFirst()
+				.orElseThrow(() -> new IllegalStateException("node not found in graph"));
 	}
 
 	private static User extractUser(UserBean bean) {
@@ -59,8 +54,14 @@ public class TripController {
 	}
 
 	private static Proposal extractProposal(ProposalBean bean) {
-		return new Proposal(bean.getProposalType(), extractNode(bean.getNode()), extractEvent(bean.getEvent()),
-				extractUser(bean.getCreator()));
+		Trip trip = Session.getInstance().getEnteredRoom().getTrip();
+
+		return trip.getProposals().stream()
+				.filter(p -> p.getCreator().equals(extractUser(bean.getCreator())) &&
+						p.getCreationTime().equals(bean.getCreationTime()) &&
+						p.getEvent().equals(extractEvent(bean.getEvent())))
+				.findFirst()
+				.orElseThrow(() -> new IllegalStateException("Proposal not found in trip"));
 	}
 
 	public static List<ProposalBean> getAllProposals() {
@@ -77,9 +78,14 @@ public class TripController {
 	public static List<BranchBean> getBranches() {
 		List<BranchBean> allBranches = Session.getInstance().getEnteredRoom().getTrip().getAllBranches().stream()
 				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
-		List<StagingBranchBean> stagingBranches = Session.getInstance().getEnteredRoom().getTrip().getStagingBranches().stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
+		List<StagingBranchBean> stagingBranches = Session.getInstance().getEnteredRoom().getTrip().getStagingBranches()
+				.stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
 		allBranches.addAll(stagingBranches);
 		return allBranches;
+	}
+
+	public static TripBean getTrip(){
+		return new TripBean(Session.getInstance().getEnteredRoom().getTrip());
 	}
 
 	public static boolean acceptProposal(ProposalBean proposal) {
@@ -184,11 +190,11 @@ public class TripController {
 		roomDao.save(Session.getInstance().getEnteredRoom());
 	}
 
-	public static boolean splitBranch(BranchBean toSplitBean, EventBean pivotBean){
+	public static boolean splitBranch(BranchBean toSplitBean, EventBean pivotBean) {
 		EventsNode toSplit = extractNode(toSplitBean);
 		Event pivot = extractEvent(pivotBean);
 		boolean res = toSplit.split(pivot);
-		if(res){
+		if (res) {
 			saveChanges();
 		}
 		return res;

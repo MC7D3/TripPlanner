@@ -1,5 +1,6 @@
 package tpgroup.model.bean;
 
+import java.time.format.DateTimeFormatter;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -50,10 +51,15 @@ public class BranchBean implements Comparable<BranchBean>{
 	@Override
 	public String toString() {
 		try {
-			return events + " - " + events.first().getStart() + " , " + events.getLast().getEnd();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
+			return "branch " + id.toString().replace("-", "").substring(0, 6) + " - begin and end: " + formatter.format(events.first().getStart()) + " , " + formatter.format(events.getLast().getEnd());
 		} catch (NoSuchElementException e) {
 			return "[no events]";
 		}
+	}
+
+	public String fullToString(){
+		return toString() + "\n" + events;
 	}
 
 	@Override

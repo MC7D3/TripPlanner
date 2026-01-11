@@ -18,8 +18,8 @@ public class NewRoomFormState extends CliViewState{
 			FormFieldFactory ref = FormFieldFactory.getInstance();
 			System.out.println("NOTE: if you want to go back keep the field blank");
 			String name = ref.newDefault("room's name:", str -> str).get();
-			String country = ref.newSelectItem("trip country destination:", LoggedMenuGController.getAllCountries()).get();
-			String city = ref.newSelectItem("trip main city destination: ", LoggedMenuGController.getAllCities(country)).get();
+			String country = ref.newSelectItem("trip country destination:", LoggedMenuGController.getAllCountries(), true).get();
+			String city = ref.newSelectItem("trip main city destination: ", LoggedMenuGController.getAllCities(country), true).get();
 			CliViewState next = LoggedMenuGController.createNewRoom(name, country, city);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e){

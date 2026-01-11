@@ -1,6 +1,7 @@
 package tpgroup.view.cli;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import tpgroup.controller.graphical.cli.RoomGController;
 import tpgroup.model.bean.BranchBean;
@@ -17,10 +18,11 @@ public class ConnectBranchesFormState extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			BranchBean parent = FormFieldFactory.getInstance().newSelectItem("select from where u want the connection to start:", RoomGController.getBranches()).get();
-			List<BranchBean> childList = RoomGController.getBranches();
-			childList.remove(parent);
-			BranchBean child = FormFieldFactory.getInstance().newSelectItem("select where u want the connection to go:", childList).get();
+			List<BranchBean> validConnections = RoomGController.getBranches().stream().filter(branch -> branch.getEvents().size() > 0).collect(Collectors.toList());
+			System.out.println("NOTE: to go back without performing the connection, select no choice on the second node selection");
+			BranchBean parent = FormFieldFactory.getInstance().newSelectItem("select from where u want the connection to start:", validConnections).get();
+			validConnections.remove(parent);
+			BranchBean child = FormFieldFactory.getInstance().newSelectItem("select where u want the connection to go:", validConnections, true).get();
 			CliViewState next = RoomGController.connectBranches(parent, child);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {

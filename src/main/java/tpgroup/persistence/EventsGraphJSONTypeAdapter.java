@@ -30,13 +30,13 @@ public class EventsGraphJSONTypeAdapter extends TypeAdapter<EventsGraph> {
 		out.beginObject();
 		out.name("nodes");
 		out.beginArray();
-		for (EventsNode node : value.getAllNodes()) {
+		for (EventsNode node : value.getGraphNodes()) {
 			serializeNode(out, node);
 		}
 		out.endArray();
 		out.name("edges");
 		out.beginArray();
-		for (EventsNode parent : value.getAllNodes()) {
+		for (EventsNode parent : value.getGraphNodes()) {
 			for (EventsNode child : value.getConnectedNodes(parent)) {
 				serializeEdge(out, parent, child);
 			}

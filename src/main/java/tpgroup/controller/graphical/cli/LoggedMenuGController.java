@@ -65,7 +65,7 @@ public class LoggedMenuGController {
 
 	public static CliViewState createNewRoom(String name, String country, String city) {
 		CliViewState ret = new NewRoomFormState();
-		if (name.isEmpty() || country.isEmpty() || city.isEmpty()) {
+		if (name.isEmpty() || country == null || city == null) {
 			return new LoggedMenuState();
 		}
 		try {

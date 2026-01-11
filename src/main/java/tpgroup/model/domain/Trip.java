@@ -96,7 +96,7 @@ public class Trip {
 	}
 
 	public List<EventsNode> getAllBranches() {
-		return tripGraph.getAllNodes();
+		return tripGraph.getGraphNodes();
 	}
 
 	public List<EventsNode> getStagingBranches(){
@@ -164,6 +164,5 @@ public class Trip {
 		return Objects.equals(country, other.country) && Objects.equals(mainCity, other.mainCity)
 				&& Objects.equals(tripGraph, other.tripGraph) && Objects.equals(proposals, other.proposals);
 	}
-
 
 }

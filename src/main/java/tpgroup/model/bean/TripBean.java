@@ -1,5 +1,10 @@
 package tpgroup.model.bean;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,14 +17,14 @@ public class TripBean {
 	private final EventsGraphBean tripGraph;
 	private final Set<ProposalBean> proposals;
 
-	public TripBean(Trip trip){
+	public TripBean(Trip trip) {
 		this.country = trip.getCountry();
 		this.mainCity = trip.getMainCity();
 		this.tripGraph = new EventsGraphBean(trip.getTripGraph());
 		this.proposals = trip.getProposals().stream().map(prop -> new ProposalBean(prop)).collect(Collectors.toSet());
 	}
 
-	public TripBean(String country, String city){
+	public TripBean(String country, String city) {
 		this.country = country;
 		this.mainCity = city;
 		this.tripGraph = null;
@@ -65,8 +70,95 @@ public class TripBean {
 
 	@Override
 	public String toString() {
-		return "TripBean{country=" + country + ", mainCity=" + mainCity + ", tripGraph=" + tripGraph + ", proposals="
-				+ proposals + "}";
+		if (tripGraph == null) {
+			return String.format("Trip to %s, %s (not initialized)", mainCity, country);
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("═══════════════════════════════════════════════════════════════\n");
+		sb.append(String.format("  TRIP TO %s, %s\n", mainCity.toUpperCase(), country.toUpperCase()));
+		sb.append("═══════════════════════════════════════════════════════════════\n\n");
+
+		sb.append("📍 TRIP STRUCTURE:\n");
+		sb.append("───────────────────────────────────────────────────────────────\n");
+
+		Set<BranchBean> visited = new HashSet<>();
+		buildGraphTree(tripGraph.getRoot(), sb, "", true, visited);
+
+		List<BranchBean> stagingBranches = getStagingBranches();
+		if (!stagingBranches.isEmpty()) {
+			sb.append("\n🔧 STAGING AREA:\n");
+			sb.append("───────────────────────────────────────────────────────────────\n");
+			for (BranchBean branch : stagingBranches) {
+				buildNodeWithEvents(branch, sb, "   ", true);
+			}
+		}
+
+		sb.append("═══════════════════════════════════════════════════════════════\n");
+
+		return sb.toString();
 	}
 
+	private void buildGraphTree(BranchBean node, StringBuilder sb, String prefix,
+			boolean isLast, Set<BranchBean> visited) {
+		if (visited.contains(node)) {
+			sb.append(prefix).append(isLast ? "└── " : "├── ")
+					.append("⚠️  [Cycle detected]\n");
+			return;
+		}
+
+		visited.add(node);
+
+		buildNodeWithEvents(node, sb, prefix, isLast);
+
+		Set<BranchBean> children = tripGraph.getConnectionsMapping()
+				.getOrDefault(node, Collections.emptySet());
+
+		if (!children.isEmpty()) {
+			String childPrefix = prefix + (isLast ? "    " : "│   ");
+			List<BranchBean> childList = new ArrayList<>(children);
+
+			for (int i = 0; i < childList.size(); i++) {
+				boolean isLastChild = (i == childList.size() - 1);
+				buildGraphTree(childList.get(i), sb, childPrefix, isLastChild, visited);
+			}
+		}
+	}
+
+	private void buildNodeWithEvents(BranchBean node, StringBuilder sb,
+			String prefix, boolean isLast) {
+		String connector = isLast ? "└── " : "├── ";
+
+		sb.append(prefix).append(connector).append(node).append("\n");
+
+		if (!node.getEvents().isEmpty()) {
+			String eventPrefix = prefix + (isLast ? "    " : "│   ");
+			List<EventBean> eventList = new ArrayList<>(node.getEvents());
+
+			for (int i = 0; i < eventList.size(); i++) {
+				boolean isLastEvent = (i == eventList.size() - 1);
+				String eventConnector = isLastEvent ? "└─ " : "├─ ";
+				EventBean event = eventList.get(i);
+
+				sb.append(eventPrefix).append(eventConnector)
+						.append(String.format("%d. ", i + 1))
+						.append(event).append("\n");
+			}
+		}
+	}
+
+	private List<BranchBean> getStagingBranches() {
+		Set<BranchBean> connectedBranches = new HashSet<>();
+		connectedBranches.add(tripGraph.getRoot());
+
+		for (Map.Entry<BranchBean, Set<BranchBean>> entry : tripGraph.getConnectionsMapping().entrySet()) {
+			connectedBranches.add(entry.getKey());
+			connectedBranches.addAll(entry.getValue());
+		}
+
+		return tripGraph.getNodes().stream()
+				.filter(node -> !connectedBranches.contains(node))
+				.collect(Collectors.toList());
+	}
 }

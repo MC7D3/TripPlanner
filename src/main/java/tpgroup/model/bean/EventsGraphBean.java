@@ -17,7 +17,7 @@ public class EventsGraphBean {
 	public EventsGraphBean(EventsGraph graph) {
 		this.root = new BranchBean(graph.getRoot());
 		this.connectionsMapping = graph.getConnectionsMapping().entrySet().stream().collect(Collectors.toMap(b -> new BranchBean(b.getKey()), b -> new HashSet<>(b.getValue()).stream().map(event -> new BranchBean(event)).collect(Collectors.toSet())));
-		this.nodes = graph.getAllNodes().stream().map(node -> new BranchBean(node)).collect(Collectors.toCollection(() -> new HashSet<>()));
+		this.nodes = graph.getGraphNodes().stream().map(node -> new BranchBean(node)).collect(Collectors.toCollection(() -> new HashSet<>()));
 	}
 
 

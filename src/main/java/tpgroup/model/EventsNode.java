@@ -12,7 +12,7 @@ import tpgroup.model.exception.NodeConflictException;
 
 public class EventsNode {
 	private final UUID id;
-	private final NavigableSet<Event> events;
+	private NavigableSet<Event> events;
 	private final EventsGraph graph;
 
 	public EventsNode(UUID id, NavigableSet<Event> events, EventsGraph graph){
@@ -23,6 +23,10 @@ public class EventsNode {
 
 	public EventsNode(EventsGraph graph) {
 		this(UUID.randomUUID(), new TreeSet<>(), graph);
+	}
+
+	public void resetEvents(){
+		events = new TreeSet<>();
 	}
 
 	public boolean addEvent(Event event) {
@@ -90,7 +94,8 @@ public class EventsNode {
 		if (!this.events.contains(pivot)) {
 			return false;
 		}
-		NavigableSet<Event> toNewNode = new TreeSet<>(this.events.tailSet(pivot, false));
+		NavigableSet<Event> toNewNode = new TreeSet<>(this.events.tailSet(pivot, true));
+		System.out.println(toNewNode);
 		this.events.removeAll(toNewNode);
 		EventsNode newNode = new EventsNode(graph);
 		newNode.events.addAll(toNewNode);

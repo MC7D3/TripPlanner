@@ -15,7 +15,7 @@ public class StagingBranchBean extends BranchBean{
 		try {
 			return events + " - " + events.first().getStart() + " , " + events.getLast().getEnd() + " (Staging)";
 		} catch (NoSuchElementException e) {
-			return "[no events]";
+			return "[no events] (Staging)";
 		}
 	}
 	

@@ -15,6 +15,7 @@ public class DeleteBranchFromState extends CliViewState{
 	@Override
 	public void present() {
 		try {
+			System.out.println("NOTE: select any branch and then say no later if u want to go back");
 			BranchBean chosenBranch = FormFieldFactory.getInstance().newSelectItem("select the branch u want to delete", RoomGController.getBranches(), true).get();
 			boolean deleteConf = FormFieldFactory.getInstance().newConfField("are u sure u want to proceed this operation cannot be undone").get();
 			CliViewState next = RoomGController.deleteBranch(chosenBranch, deleteConf);

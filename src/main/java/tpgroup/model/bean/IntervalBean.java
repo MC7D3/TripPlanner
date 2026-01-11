@@ -22,6 +22,9 @@ public class IntervalBean {
 		} catch (DateTimeParseException e) {
 			throw new InvalidBeanParamException("startTimeTxt");
 		}
+		if(this.startTime.isAfter(this.endTime)){
+			throw new InvalidBeanParamException("end time is earlier than start time");
+		}
 	}
 
 	public LocalDateTime getStartTime() {

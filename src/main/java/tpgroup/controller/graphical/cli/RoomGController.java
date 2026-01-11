@@ -11,6 +11,7 @@ import tpgroup.model.bean.IntervalBean;
 import tpgroup.model.bean.POIBean;
 import tpgroup.model.bean.POIFilterBean;
 import tpgroup.model.bean.ProposalBean;
+import tpgroup.model.bean.TripBean;
 import tpgroup.model.exception.BranchConnectionException;
 import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.NodeConflictException;
@@ -28,6 +29,7 @@ import tpgroup.view.cli.RemoveProposalForm;
 import tpgroup.view.cli.RoomAdminMenuState;
 import tpgroup.view.cli.RoomMemberMenuState;
 import tpgroup.view.cli.SplitBranchMenuState;
+import tpgroup.view.cli.TripStatusState;
 import tpgroup.view.cli.statemachine.CliViewState;
 
 public class RoomGController {
@@ -45,6 +47,8 @@ public class RoomGController {
 				return new ProposeRemovalForm();
 			case "list other proposals":
 				return new ListAndLikeProposalsState();
+			case "show trip status":
+				return new TripStatusState();
 			case "propose event update":
 				return new ProposeUpdateForm();
 			case "undo proposal":
@@ -75,10 +79,14 @@ public class RoomGController {
 		}
 	}
 
+	public static TripBean getTrip(){
+		return TripController.getTrip();
+	}
+
 	public static List<BranchBean> getBranches() {
 		return TripController.getBranches();
 	}
-
+	
 	public static List<ProposalBean> getLoggedUserProposals() {
 		return TripController.getLoggedUserProposals();
 	}
@@ -204,6 +212,9 @@ public class RoomGController {
 
 	public static CliViewState connectBranches(BranchBean parent, BranchBean child) {
 		CliViewState ret = new RoomAdminMenuState();
+		if(child == null){
+			return ret;
+		}
 		try {
 			TripController.connectBranches(parent, child);
 			ret.setOutLogTxt("branches connected succesfully");
@@ -215,6 +226,9 @@ public class RoomGController {
 
 	public static CliViewState disconnectBranches(BranchBean parent, BranchBean child) {
 		CliViewState ret = new RoomAdminMenuState();
+		if(child == null){
+			return ret;
+		}
 		TripController.disconnectBranches(parent, child);
 		ret.setOutLogTxt("branches disconnected succesfully");
 		return ret;
@@ -254,5 +268,9 @@ public class RoomGController {
 			ret.setOutLogTxt("failed to split branch");
 		}
 		return ret;
+	}
+
+	public static CliViewState showTripStatus(){
+		return RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 	}
 }
