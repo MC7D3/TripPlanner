@@ -16,7 +16,6 @@ import tpgroup.model.exception.InvalidBeanParamException;
 import tpgroup.model.exception.NodeConflictException;
 import tpgroup.view.cli.AcceptProposalFormState;
 import tpgroup.view.cli.ConnectBranchesFormState;
-import tpgroup.view.cli.CreateBranchFormState;
 import tpgroup.view.cli.DeleteBranchFromState;
 import tpgroup.view.cli.DeleteRoomConfirmationState;
 import tpgroup.view.cli.DisconnectBranchesFormState;
@@ -28,6 +27,7 @@ import tpgroup.view.cli.ProposeUpdateForm;
 import tpgroup.view.cli.RemoveProposalForm;
 import tpgroup.view.cli.RoomAdminMenuState;
 import tpgroup.view.cli.RoomMemberMenuState;
+import tpgroup.view.cli.SplitBranchMenuState;
 import tpgroup.view.cli.statemachine.CliViewState;
 
 public class RoomGController {
@@ -59,7 +59,9 @@ public class RoomGController {
 			case "accept proposal":
 				return new AcceptProposalFormState();
 			case "create alternative branch":
-				return new CreateBranchFormState();
+				return RoomGController.createBranch();
+			case "split branch":
+				return new SplitBranchMenuState();
 			case "connect branches":
 				return new ConnectBranchesFormState();
 			case "disconnect branches":
@@ -132,6 +134,9 @@ public class RoomGController {
 
 	public static CliViewState createRemoveProposal(BranchBean chosenBranch, EventBean chosenEvent) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
+		if(chosenEvent == null) {
+			return ret;
+		}
 		if (TripController.createRemoveProposal(chosenBranch, chosenEvent)) {
 			ret.setOutLogTxt(PROPOSAL_SUCCESS);
 		} else {
@@ -183,14 +188,14 @@ public class RoomGController {
 		} else {
 			ret.setOutLogTxt("failed to accept proposal");
 		}
-		return new RoomAdminMenuState();
+		return ret;
 	}
 
-	public static CliViewState createBranch(BranchBean parent) {
+	public static CliViewState createBranch() {
 		CliViewState ret = new RoomAdminMenuState();
 		try {
-			TripController.createBranch(parent);
-			ret.setOutLogTxt("branch %s created succesfully!");
+			TripController.createBranch();
+			ret.setOutLogTxt("branch created succesfully!");
 		} catch (NodeConflictException e) {
 			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
 		}
@@ -234,6 +239,19 @@ public class RoomGController {
 			RoomController.deleteRoom();
 			ret = new LoggedMenuState();
 			ret.setOutLogTxt("room deleted successfully!");
+		}
+		return ret;
+	}
+
+	public static CliViewState splitBranch(BranchBean toSplit, EventBean pivot){
+		CliViewState ret = new RoomAdminMenuState();
+		if(toSplit == null || pivot == null){
+			return ret;
+		}
+		if(TripController.splitBranch(toSplit, pivot)){
+			ret.setOutLogTxt("branch splitted succesfully!");
+		}else{
+			ret.setOutLogTxt("failed to split branch");
 		}
 		return ret;
 	}

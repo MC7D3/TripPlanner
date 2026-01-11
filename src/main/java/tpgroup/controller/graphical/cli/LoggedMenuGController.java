@@ -74,6 +74,7 @@ public class LoggedMenuGController {
 			if(attemptCreation(newRoom, 3)){
 				ret = new RoomAdminMenuState();
 				ret.setOutLogTxt("room created successfully!");
+				created = true;
 			}
 			if (!created) {
 				ret.setOutLogTxt(ERROR_PROMPT + "too many rooms with this name are present, try another one");

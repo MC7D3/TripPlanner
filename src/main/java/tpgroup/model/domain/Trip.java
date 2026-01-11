@@ -72,9 +72,6 @@ public class Trip {
 
 	public boolean likeProposal(User user, Proposal proposal) {
 		try {
-			System.out.println(proposal);
-			System.out.println(proposals);
-			System.out.println(proposals.contains(proposal));
 			return proposals.stream().filter(p -> p.equals(proposal)).findFirst().get().like(user);
 		} catch (NoSuchElementException e) {
 			System.out.println(e);
@@ -89,7 +86,7 @@ public class Trip {
 			return false;
 		}
 	}
-
+	
 	public int proposalSize() {
 		return proposals.size();
 	}
@@ -102,8 +99,12 @@ public class Trip {
 		return tripGraph.getAllNodes();
 	}
 
-	public void createBranch(EventsNode parentNode) throws NodeConflictException {
-		tripGraph.createEmptyNode(parentNode);
+	public List<EventsNode> getStagingBranches(){
+		return tripGraph.getStagingNodes();
+	}
+
+	public void createBranch() throws NodeConflictException {
+		tripGraph.createEmptyNode();
 	}
 
 	public void connectBranches(EventsNode parentNode, EventsNode childNode) throws NodeConnectionException {

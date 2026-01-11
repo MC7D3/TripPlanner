@@ -11,8 +11,8 @@ public class RoomAdminMenuState extends RoomMemberMenuState {
 
 	public RoomAdminMenuState() {
 		super();
-		Collections.addAll(this.menuOptions, "accept proposals", "create alternative sequence", "split a sequence into two",
-					"connect sequences", "disconnect branches", "delete branches", "delete room");
+		Collections.addAll(this.menuOptions, "accept proposal", "create alternative branch", "split branch",
+					"connect branches", "disconnect branches", "delete branch", "delete room");
 	}
 
 	@Override

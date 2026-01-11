@@ -2,10 +2,8 @@ package tpgroup.model.bean;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import tpgroup.model.EventsGraph;
@@ -13,13 +11,13 @@ import tpgroup.model.EventsGraph;
 public class EventsGraphBean {
 	private final BranchBean root;
 	private final Map<BranchBean, Set<BranchBean>> connectionsMapping;
-	private final NavigableSet<BranchBean> nodes;
+	private final Set<BranchBean> nodes;
 
 
 	public EventsGraphBean(EventsGraph graph) {
 		this.root = new BranchBean(graph.getRoot());
 		this.connectionsMapping = graph.getConnectionsMapping().entrySet().stream().collect(Collectors.toMap(b -> new BranchBean(b.getKey()), b -> new HashSet<>(b.getValue()).stream().map(event -> new BranchBean(event)).collect(Collectors.toSet())));
-		this.nodes = graph.getAllNodes().stream().map(node -> new BranchBean(node)).collect(Collectors.toCollection(() -> new TreeSet<>()));
+		this.nodes = graph.getAllNodes().stream().map(node -> new BranchBean(node)).collect(Collectors.toCollection(() -> new HashSet<>()));
 	}
 
 
@@ -33,7 +31,7 @@ public class EventsGraphBean {
 	}
 
 
-	public NavigableSet<BranchBean> getNodes() {
+	public Set<BranchBean> getNodes() {
 		return nodes;
 	}
 

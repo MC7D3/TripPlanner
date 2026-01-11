@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 
 import tpgroup.model.domain.PointOfInterest;
 
-public class Event implements Comparable<Event>{
+public class Event implements Comparable<Event> {
 	private final PointOfInterest info;
-	private LocalDateTime start;
-	private LocalDateTime end;
+	private final LocalDateTime start;
+	private final LocalDateTime end;
 
 	public Event(PointOfInterest info, LocalDateTime start, LocalDateTime end) {
 		this.info = info;
@@ -15,9 +15,9 @@ public class Event implements Comparable<Event>{
 		this.end = end;
 	}
 
-	public boolean overlapsWith(Event event){
-        return this.start.isBefore(event.getEnd()) &&
-               event.getStart().isBefore(this.end);
+	public boolean overlapsWith(Event event) {
+		return this.start.isBefore(event.getEnd()) &&
+				event.getStart().isBefore(this.end);
 	}
 
 	public PointOfInterest getInfo() {
@@ -28,16 +28,8 @@ public class Event implements Comparable<Event>{
 		return start;
 	}
 
-	public void setStart(LocalDateTime start) {
-		this.start = start;
-	}
-
 	public LocalDateTime getEnd() {
 		return end;
-	}
-
-	public void setEnd(LocalDateTime end) {
-		this.end = end;
 	}
 
 	@Override
@@ -86,6 +78,5 @@ public class Event implements Comparable<Event>{
 	public String toString() {
 		return "Event [" + info + ", start=" + start + ", end=" + end + "]";
 	}
-
 
 }

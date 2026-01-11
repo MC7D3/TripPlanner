@@ -10,10 +10,10 @@ import java.util.UUID;
 
 import tpgroup.model.exception.NodeConflictException;
 
-public class EventsNode implements Comparable<EventsNode> {
+public class EventsNode {
 	private final UUID id;
-	private NavigableSet<Event> events;
-	private EventsGraph graph;
+	private final NavigableSet<Event> events;
+	private final EventsGraph graph;
 
 	public EventsNode(UUID id, NavigableSet<Event> events, EventsGraph graph){
 		this.id = id;
@@ -73,16 +73,8 @@ public class EventsNode implements Comparable<EventsNode> {
 		return id;
 	}
 
-	public void setEvents(SortedSet<Event> events) {
-		this.events = new TreeSet<>(events);
-	}
-
 	public EventsGraph getGraph() {
 		return graph;
-	}
-
-	public void setGraph(EventsGraph graph) {
-		this.graph = graph;
 	}
 
 	public boolean mergeWith(EventsNode other) throws NodeConflictException{
@@ -128,11 +120,8 @@ public class EventsNode implements Comparable<EventsNode> {
 	}
 
 	@Override
-	public int compareTo(EventsNode arg0) {
-		if (this.equals(arg0))
-			return 0;
-
-		return this.getEventsStart().compareTo(arg0.getEventsStart());
+	public String toString() {
+		return "EventsNode{id=" + id + ", events=" + events + "}";
 	}
 
 }

@@ -52,9 +52,7 @@ public class Proposal {
 	}
 
 	public boolean like(User user) {
-		System.out.println(likes);
 		boolean res = likes.add(user);
-		System.out.println(likes);
 		return res;
 	}
 
@@ -118,7 +116,7 @@ public class Proposal {
 				if (!nodeName.getEvents().remove(event)) {
 					break;
 				}
-				return nodeName.getEvents().add(updateEvent.get());
+				return nodeName.addEvent(updateEvent.get());
 			default:
 				break;
 		}
@@ -127,7 +125,7 @@ public class Proposal {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(creator, creationTime, nodeName, event, updateEvent, proposalType);
+		return Objects.hash(creator, nodeName, event, updateEvent, proposalType);
 	}
 
 	@Override
@@ -142,10 +140,9 @@ public class Proposal {
 			return false;
 		}
 		Proposal other = (Proposal) obj;
-		return Objects.equals(creator, other.creator) && Objects.equals(creationTime, other.creationTime)
+		return Objects.equals(creator, other.creator)
 				&& Objects.equals(nodeName, other.nodeName) && Objects.equals(event, other.event)
 				&& Objects.equals(updateEvent, other.updateEvent) && proposalType == other.proposalType;
 	}
-
 
 }

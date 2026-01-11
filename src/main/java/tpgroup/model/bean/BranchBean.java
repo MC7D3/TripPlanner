@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import tpgroup.model.EventsNode;
 
-public class BranchBean {
-	private final UUID id;
-	private final NavigableSet<EventBean> events;
+public class BranchBean implements Comparable<BranchBean>{
+	protected final UUID id;
+	protected final NavigableSet<EventBean> events;
 
 	public BranchBean(EventsNode branch) {
 		this.id = branch.getId();
@@ -54,6 +54,14 @@ public class BranchBean {
 		} catch (NoSuchElementException e) {
 			return "[no events]";
 		}
+	}
+
+	@Override
+	public int compareTo(BranchBean arg0) {
+		if (this.equals(arg0))
+			return 0;
+
+		return this.events.first().getStart().compareTo(arg0.events.first().getStart());
 	}
 
 }

@@ -15,6 +15,7 @@ import tpgroup.model.bean.EventBean;
 import tpgroup.model.bean.IntervalBean;
 import tpgroup.model.bean.POIBean;
 import tpgroup.model.bean.ProposalBean;
+import tpgroup.model.bean.StagingBranchBean;
 import tpgroup.model.bean.UserBean;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Proposal;
@@ -74,8 +75,11 @@ public class TripController {
 	}
 
 	public static List<BranchBean> getBranches() {
-		return Session.getInstance().getEnteredRoom().getTrip().getAllBranches().stream()
-				.map(eventsNode -> new BranchBean(eventsNode)).toList();
+		List<BranchBean> allBranches = Session.getInstance().getEnteredRoom().getTrip().getAllBranches().stream()
+				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
+		List<StagingBranchBean> stagingBranches = Session.getInstance().getEnteredRoom().getTrip().getStagingBranches().stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
+		allBranches.addAll(stagingBranches);
+		return allBranches;
 	}
 
 	public static boolean acceptProposal(ProposalBean proposal) {
@@ -136,8 +140,8 @@ public class TripController {
 		saveChanges();
 	}
 
-	public static void createBranch(BranchBean parentBean) throws NodeConflictException {
-		Session.getInstance().getEnteredRoom().getTrip().createBranch(extractNode(parentBean));
+	public static void createBranch() throws NodeConflictException {
+		Session.getInstance().getEnteredRoom().getTrip().createBranch();
 		saveChanges();
 	}
 
@@ -180,4 +184,13 @@ public class TripController {
 		roomDao.save(Session.getInstance().getEnteredRoom());
 	}
 
+	public static boolean splitBranch(BranchBean toSplitBean, EventBean pivotBean){
+		EventsNode toSplit = extractNode(toSplitBean);
+		Event pivot = extractEvent(pivotBean);
+		boolean res = toSplit.split(pivot);
+		if(res){
+			saveChanges();
+		}
+		return res;
+	}
 }

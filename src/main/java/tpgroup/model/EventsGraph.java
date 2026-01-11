@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import tpgroup.model.exception.NodeConflictException;
 import tpgroup.model.exception.NodeConnectionException;
@@ -16,28 +14,26 @@ import tpgroup.model.exception.NodeConnectionException;
 public class EventsGraph {
 	private final EventsNode root;
 	private final Map<EventsNode, Set<EventsNode>> connectionsMapping;
-	private final NavigableSet<EventsNode> nodes;
+	private final Set<EventsNode> nodes;
+	private final Set<EventsNode> stagingArea;
 
 	public EventsGraph() {
 		this.root = new EventsNode(this);
 		this.connectionsMapping = new HashMap<>();
-		this.nodes = new TreeSet<>();
+		this.nodes = new HashSet<>();
+		this.stagingArea = new HashSet<>();
 		connectionsMapping.put(this.root, new HashSet<>());
 		nodes.add(root);
 	}
 
-	public List<EventsNode> getConnectedNodes(EventsNode of){
+	public List<EventsNode> getConnectedNodes(EventsNode of) {
 		return connectionsMapping.get(of).stream().toList();
 	}
 
-	public EventsNode createEmptyNode(EventsNode parent) throws NodeConflictException {
-		if (parent == null)
-			parent = root;
+	public EventsNode createEmptyNode() throws NodeConflictException {
 		EventsNode newNode = new EventsNode(this);
-		if (!nodes.add(newNode))
+		if (!stagingArea.add(newNode))
 			throw new NodeConflictException();
-		connectionsMapping.put(newNode, new HashSet<>());
-		connect(parent, newNode);
 		return newNode;
 	}
 
@@ -45,18 +41,37 @@ public class EventsGraph {
 		return nodes.stream().toList();
 	}
 
+	public List<EventsNode> getStagingNodes() {
+		return stagingArea.stream().toList();
+	}
+
 	public void connect(EventsNode parent, EventsNode child) throws NodeConnectionException {
+		boolean stageChild = false;
 		if (parent == null)
 			parent = root;
-		if (!nodes.contains(parent) || !nodes.contains(child)) {
-			throw new NodeConnectionException("those nodes arent of the same graph");
+		if (!nodes.contains(parent)) {
+			throw new NodeConnectionException("invalid parent, it might be in the staging area");
+		}
+		if (!nodes.contains(child)) {
+			if (!stagingArea.contains(child)) {
+				throw new NodeConnectionException("invalid child node");
+			}else{
+				stageChild = true;
+			}
 		}
 		if (!canConnect(parent, child)) {
 			throw new NodeConnectionException("chronological conflict arised");
 		}
-		if (isCycle(child, parent)) {
+
+		if(stageChild){
+			nodes.add(child);
+			connectionsMapping.put(child, new HashSet<>());
+			stagingArea.remove(child);
+
+		}else if (isCycle(child, parent)) {
 			throw new NodeConnectionException("cannot create a cycle in the graph");
 		}
+
 		connectionsMapping.get(parent).add(child);
 	}
 
@@ -69,8 +84,9 @@ public class EventsGraph {
 		if (!getConnectedNodes(parent).contains(child)) {
 			throw new NodeConnectionException("the nodes arent connected");
 		}
-		if(this.findFathers(child).size() <= 1) {
-			throw new NodeConnectionException("cannot disconnect the nodes, the child would remain orphan, consider deletion instead");
+		if (this.findFathers(child).size() <= 1) {
+			throw new NodeConnectionException(
+					"cannot disconnect the nodes, the child would remain orphan, consider deletion instead");
 		}
 		connectionsMapping.get(parent).remove(child);
 	}
@@ -105,11 +121,11 @@ public class EventsGraph {
 		return connectionsMapping.get(node).size();
 	}
 
-	public EventsNode getRoot(){
+	public EventsNode getRoot() {
 		return root;
 	}
 
-	public Map<EventsNode, Set<EventsNode>> getConnectionsMapping(){
+	public Map<EventsNode, Set<EventsNode>> getConnectionsMapping() {
 		return connectionsMapping;
 	}
 
@@ -122,7 +138,7 @@ public class EventsGraph {
 		return true;
 	}
 
-	public boolean checkChildNodesConflicts(EventsNode toCheck, LocalDateTime newEnd){
+	public boolean checkChildNodesConflicts(EventsNode toCheck, LocalDateTime newEnd) {
 		for (EventsNode child : connectionsMapping.get(toCheck)) {
 			if (child.getEventsStart().isBefore(newEnd)) {
 				return false;
@@ -134,9 +150,6 @@ public class EventsGraph {
 	private List<EventsNode> findFathers(EventsNode node) {
 		List<EventsNode> ret = new ArrayList<>();
 		for (EventsNode fatherCandidate : nodes) {
-			if (fatherCandidate.equals(node)) {
-				break;
-			}
 			if (connectionsMapping.get(fatherCandidate).contains(node)) {
 				ret.add(fatherCandidate);
 			}
@@ -145,9 +158,12 @@ public class EventsGraph {
 		return ret;
 	}
 
-	public void removeNode(EventsNode toRemove) throws NodeConflictException{
+	public void removeNode(EventsNode toRemove) throws NodeConflictException {
+		if(toRemove.equals(root)){
+			throw new NodeConflictException();
+		}
 		List<EventsNode> fathers = findFathers(toRemove);
-		if(fathers.isEmpty())
+		if (fathers.isEmpty())
 			throw new NodeConflictException();
 		for (EventsNode father : fathers) {
 			Set<EventsNode> connections = connectionsMapping.get(father);
