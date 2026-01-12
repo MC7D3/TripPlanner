@@ -29,15 +29,15 @@ public class AuthController {
 		}
 	}
 
-	public static boolean executeRegistration(UserBean user) throws InvalidBeanParamException{
+	public static boolean executeRegistration(UserBean user) throws InvalidBeanParamException {
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		String encPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-		if(!BCrypt.checkpw(user.getConfPassword(), encPassword)){
+		if (!BCrypt.checkpw(user.getConfPassword(), encPassword)) {
 			throw new InvalidBeanParamException("confPassword", "the passwords do not match");
 		}
 		User newUser = new User(user.getEmail(), encPassword);
 		boolean res = userDao.add(newUser);
-		if(res){
+		if (res) {
 			Session.getInstance().setLogged(newUser);
 		}
 		return res;

@@ -61,7 +61,7 @@ public class CacheDecorator<T> implements DAO<T> {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
-			if (!(obj instanceof CacheDecorator<?>.CachedElement)){
+			if (!(obj instanceof CacheDecorator<?>.CachedElement)) {
 				return false;
 			}
 			CachedElement other = (CachedElement) obj;
@@ -109,7 +109,8 @@ public class CacheDecorator<T> implements DAO<T> {
 				item.getElem();
 			}
 		}
-		List<T> notCached = decorated.getFiltered(item -> !cache.contains(new CachedElement(item)) && filter.test(item));
+		List<T> notCached = decorated
+				.getFiltered(item -> !cache.contains(new CachedElement(item)) && filter.test(item));
 		cache.addAll(notCached.stream().map(item -> new CachedElement(item)).toList());
 		items.addAll(notCached);
 		return items;
