@@ -12,23 +12,24 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane
-	style="-fx-min-width: 700; -fx-min-height: 700; -fx-max-height: 700; -fx-max-width: 700;"
+	style="-fx-min-width: 800; -fx-min-height: 800; -fx-max-height: 800; -fx-max-width: 800;"
 	styleClass="loginBackPane" stylesheets="@login_styles.css"
 	xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="tpgroup.controller.graphical.javafx.LoggedMenuGUIController">
 	<bottom>
-            <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
 		<HBox
-			style="-fx-alignment: center; -fx-min-width: 700; -fx-max-width: 700; -fx-max-height: 100; -fx-min-height: 100;"
+			style="-fx-alignment: center; -fx-min-width: 800; -fx-max-width: 800; -fx-max-height: 100; -fx-min-height: 100;"
 			styleClass="form-container">
 			<children>
-				<button fx:id="refresh" styleclass="button-primary" text="join room"
-					onaction="#refreshUI" />
-				<button fx:id="joinroombtn" styleclass="button-primary" text="join room"
-					onaction="#joinroom" />
-				<Button fx:id="CreateRoomBtn" styleClass="button-primary" text="Create Room"
+				<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
+				<Button fx:id="refreshBtn" styleClass="button-primary" text="refresh"
+					onAction="#refreshUI" />
+				<Button fx:id="joinroomBtn" styleClass="button-primary" text="join room"
+					onAction="#joinRoom" />
+				<Button fx:id="createRoomBtn" styleClass="button-primary" text="Create Room"
 					onAction="#createRoom" />
 				<Button fx:id="optionsBtn" styleClass="button-primary" text="Options"
 					onAction="#options" />

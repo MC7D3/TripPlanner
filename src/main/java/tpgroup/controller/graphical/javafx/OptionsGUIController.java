@@ -2,6 +2,7 @@ package tpgroup.controller.graphical.javafx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.OptionsController;
@@ -25,10 +26,13 @@ public class OptionsGUIController extends FxController {
 			String password = newPwdTxt.getText();
 			String confPwd = confNewPwdTxt.getText();
 			if(!password.isEmpty() && !confPwd.isEmpty()){
-				UserBean passwordBean = new UserBean(null, password, confPwd);
+				UserBean passwordBean = new UserBean("updatepwd@invalidprovider.com", password, confPwd);
 				OptionsController.updatePassword(passwordBean);
-				((Stage) newPwdTxt.getScene().getWindow()).close();
-				setParentOutTxt("Password Updated Succesfully!");
+				Stage optionStage = (Stage) outLogTxt.getScene().getWindow();
+				Stage rootStage = (Stage) optionStage.getOwner();
+				optionStage.close();
+				redirect("login.fxml", rootStage);
+				//setParentOutTxt("Password Updated Succesfully!");
 			}
 		} catch (InvalidBeanParamException e) {
 			outLogTxt.setText(e.getMessage());
@@ -36,17 +40,13 @@ public class OptionsGUIController extends FxController {
 
 	}
 
-	private void setParentOutTxt(String text){
-		Stage modalStage = (Stage) newPwdTxt.getScene().getWindow();
-		Object parentCtrl = ((Stage) modalStage.getOwner()).getScene().getRoot().getUserData();
-		if(parentCtrl instanceof LoggedMenuGUIController loggedMenuCtrl){
-			loggedMenuCtrl.setOutLogTxt(text);
-		}
-		
-	}
-	
 	@FXML
 	public void deleteAccount(){
 		open("modalConfirmationDelete.fxml", (Stage) newPwdTxt.getScene().getWindow());
+	}
+
+	@FXML
+	public void onFocus(KeyEvent event){
+		outLogTxt.setText("");
 	}
 }

@@ -22,62 +22,81 @@ public class LoggedMenuGUIController extends FxController {
 	private Text outLogTxt;
 
 	@FXML
-	public void joinRoom(){
+	public void joinRoom() {
 		open("joinRoomModal.fxml", (Stage) grid.getScene().getWindow());
 		buildUI();
 	}
 
 	@FXML
-	public void createRoom(){
+	public void createRoom() {
 		open("createRoomForm.fxml", (Stage) grid.getScene().getWindow());
+		buildUI();
 	}
 
 	@FXML
-	public void options(){
+	public void options() {
 		open("options.fxml", (Stage) grid.getScene().getWindow());
 	}
 
 	@FXML
-	public void logout(){
+	public void logout() {
 		AuthController.logout();
 		redirect("login.fxml", (Stage) grid.getScene().getWindow());
 	}
 
-	public void handleRoomExit(RoomCardGUIController ctrl){
+	public void handleRoomExit(RoomCardGUIController ctrl) {
+		System.out.println(ctrl.getRoom());
 		RoomController.abbandonRoom(ctrl.getRoom());
 		buildUI();
 	}
-	
+
 	@FXML
-	public void initialize(){
+	public void initialize() {
 		buildUI();
 	}
 
-	private void buildUI(){
+	public void buildUI() {
 		try {
 			grid.getChildren().clear();
+
 			List<RoomBean> rooms = RoomController.getJoinedRooms();
-			int xLocation = 0;
-			int yLocation = 0;
-			for(RoomBean room : rooms){
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("roomCard.fxml"));
+
+			int columnsPerRow = 3;
+			int col = 0;
+			int row = 0;
+			
+
+			for (RoomBean room : rooms) {
+
+				FXMLLoader loader = new FXMLLoader(
+						getClass().getResource("/roomCard.fxml"));
+
 				Parent newCard = loader.load();
+
 				RoomCardGUIController cardCtrl = loader.getController();
-				cardCtrl.getAbandonButton().setOnAction(event -> handleRoomExit(cardCtrl));
 				cardCtrl.setRoom(room);
-				grid.add(newCard, (xLocation++) % 3, yLocation++);
+				cardCtrl.setParentController(this);
+
+				grid.add(newCard, col, row);
+
+				col++;
+				if (col == columnsPerRow) {
+					col = 0;
+					row++;
+				}
 			}
+
 		} catch (IOException e) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("Unable to load roomCard.fxml", e);
 		}
 	}
 
-	public void setOutLogTxt(String text){
+	public void setOutLogTxt(String text) {
 		outLogTxt.setText(text);
 	}
 
 	@FXML
-	public void refreshUI(){
+	public void refreshUI() {
 		buildUI();
 		outLogTxt.setText("refresh complete.");
 	}

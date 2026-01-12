@@ -1,12 +1,14 @@
 package tpgroup.controller.graphical.javafx;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public abstract class FxController {
 
@@ -35,6 +37,15 @@ public abstract class FxController {
 			newStage.showAndWait();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
+		}
+	}
+
+	protected void closeAll(){
+		List<Window> windows = Window.getWindows();
+		for(Window w : windows){
+			if(w instanceof Stage stage){
+				stage.close();
+			}
 		}
 	}
 	

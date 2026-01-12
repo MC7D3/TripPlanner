@@ -16,8 +16,8 @@
             </Text>
             <VBox style="-fx-spacing: 15;">
                <children>
-                  <TextField fx:id="newPwdTxt" promptText="new Password" styleClass="input-field" onKeyPressed="#onFocus"/>
-                  <TextField fx:id="confNewPwdTxt" promptText="new Password" styleClass="input-field" onKeyPressed="#onFocus"/>
+                  <TextField fx:id="newPwdTxt" promptText="new password" styleClass="input-field" onKeyPressed="#onFocus"/>
+                  <TextField fx:id="confNewPwdTxt" promptText="Confirm new password" styleClass="input-field" onKeyPressed="#onFocus"/>
                   <Button fx:id="changePwdBtn" styleClass="button-primary" text="Change Password" onAction="#updatePassword"/>
                </children>
             </VBox>

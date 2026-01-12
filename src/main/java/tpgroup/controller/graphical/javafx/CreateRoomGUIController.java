@@ -33,6 +33,7 @@ public class CreateRoomGUIController extends FxController {
 			try{
 				RoomController.createRoom(new RoomBean(roomName.getText(), countryCmBox.getEditor().getText(), cityCmBox.getEditor().getText()));
 				outLogTxt.setText("room created successfully!");
+				break;
 			}catch(InvalidBeanParamException e){
 				outLogTxt.setText("Invalid Room info provided");
 				break;

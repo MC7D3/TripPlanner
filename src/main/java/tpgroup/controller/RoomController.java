@@ -53,7 +53,7 @@ public class RoomController {
 		try {
 			User user = Session.getInstance().getLogged();
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-			Room toAbbandon = roomDao.get(new Room(toAbbandonBean.getName()));
+			Room toAbbandon = roomDao.get(new Room(toAbbandonBean.getCode()));
 			toAbbandon.getMembers().remove(user);
 			if (user.equals(toAbbandon.getAdmin()) && toAbbandon.getMembers().size() > 1) {
 				toAbbandon.setAdmin(toAbbandon.getMembers().stream().findAny().get());
