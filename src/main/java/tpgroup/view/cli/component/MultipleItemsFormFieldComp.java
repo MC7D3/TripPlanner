@@ -32,11 +32,10 @@ public class MultipleItemsFormFieldComp<T> implements FormFieldComp<List<T>>{
 		String input = "";
 		do{
 			try {
-				System.out.println(prompt);
-				System.out.print(">");
-				if(prompt.isEmpty()){
-					break;
+				if(!prompt.isEmpty()){
+					System.out.println(prompt);
 				}
+				System.out.print(">");
 				input = in.readLine();
 				if(input.isEmpty()){
 					break;

@@ -39,6 +39,7 @@ public class RoomDAODB implements DAO<Room> {
 				VALUES (?, ?, ?, ?, ?, ?)
 				""";
 		boolean res = false;
+		boolean setAutoCommitError = false;
 		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
 			connection.setAutoCommit(false);
@@ -73,9 +74,12 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				throw new IllegalStateException("Error saving room: " + e.getMessage(), e);
+				setAutoCommitError = true;
 			}
 		}
+		if(setAutoCommitError)
+			throw new IllegalStateException("Error setting auto commit back to true");
+
 		return res;
 	}
 
@@ -180,6 +184,7 @@ public class RoomDAODB implements DAO<Room> {
 	@Override
 	public void delete(Room room) {
 		String code = room.getCode();
+		boolean setAutoCommitError = false;
 		try {
 			connection.setAutoCommit(false);
 
@@ -214,13 +219,17 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				throw new IllegalStateException("Error deleting room: " + e.getMessage(), e);
+				setAutoCommitError = true;
 			}
 		}
+
+		if(setAutoCommitError)
+			throw new IllegalStateException("Error setting auto commit back to true");
 	}
 
 	@Override
 	public void save(Room room) {
+		boolean setAutoCommitError = false;
 		try {
 			connection.setAutoCommit(false);
 
@@ -263,9 +272,11 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				throw new IllegalStateException("Error updating room: " + e.getMessage(), e);
+				setAutoCommitError = false;
 			}
 		}
+		if(setAutoCommitError)
+			throw new IllegalStateException("Error setting auto commit back to true");
 	}
 
 	@Override

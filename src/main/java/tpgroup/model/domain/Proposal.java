@@ -52,8 +52,7 @@ public class Proposal {
 	}
 
 	public boolean like(User user) {
-		boolean res = likes.add(user);
-		return res;
+		return likes.add(user);
 	}
 
 	public boolean unlike(User user) {

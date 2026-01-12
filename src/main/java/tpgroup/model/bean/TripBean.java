@@ -77,7 +77,7 @@ public class TripBean {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("═══════════════════════════════════════════════════════════════\n");
-		sb.append(String.format("  TRIP TO %s, %s\n", mainCity.toUpperCase(), country.toUpperCase()));
+		sb.append(String.format("  TRIP TO %s, %s%n", mainCity.toUpperCase(), country.toUpperCase()));
 		sb.append("═══════════════════════════════════════════════════════════════\n\n");
 
 		sb.append("📍 TRIP STRUCTURE:\n");
@@ -158,7 +158,6 @@ public class TripBean {
 		}
 
 		return tripGraph.getNodes().stream()
-				.filter(node -> !connectedBranches.contains(node))
-				.collect(Collectors.toList());
+				.filter(node -> !connectedBranches.contains(node)).toList();
 	}
 }

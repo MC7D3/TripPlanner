@@ -74,7 +74,6 @@ public class Trip {
 		try {
 			return proposals.stream().filter(p -> p.equals(proposal)).findFirst().get().like(user);
 		} catch (NoSuchElementException e) {
-			System.out.println(e);
 			return false;
 		}
 	}

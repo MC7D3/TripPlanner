@@ -18,7 +18,7 @@ public class ConnectBranchesFormState extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			List<BranchBean> validConnections = RoomGController.getBranches().stream().filter(branch -> branch.getEvents().size() > 0).collect(Collectors.toList());
+			List<BranchBean> validConnections = RoomGController.getBranches().stream().filter(branch -> branch.getEvents().isEmpty()).collect(Collectors.toList());
 			System.out.println("NOTE: to go back without performing the connection, select no choice on the second node selection");
 			BranchBean parent = FormFieldFactory.getInstance().newSelectItem("select from where u want the connection to start:", validConnections).get();
 			validConnections.remove(parent);

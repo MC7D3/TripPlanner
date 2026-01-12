@@ -95,7 +95,6 @@ public class EventsNode {
 			return false;
 		}
 		NavigableSet<Event> toNewNode = new TreeSet<>(this.events.tailSet(pivot, true));
-		System.out.println(toNewNode);
 		this.events.removeAll(toNewNode);
 		EventsNode newNode = new EventsNode(graph);
 		newNode.events.addAll(toNewNode);

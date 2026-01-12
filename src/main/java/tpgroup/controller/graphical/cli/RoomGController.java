@@ -1,5 +1,6 @@
 package tpgroup.controller.graphical.cli;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import tpgroup.controller.POIController;
@@ -92,7 +93,7 @@ public class RoomGController {
 	}
 
 	public static List<ProposalBean> getProposalsSortedByLike() {
-		List<ProposalBean> proposal = TripController.getAllProposals();
+		List<ProposalBean> proposal = new ArrayList<>(TripController.getAllProposals());
 		proposal.sort((p1, p2) -> Integer.compare(p2.getLikes(), p1.getLikes()));
 		return proposal;
 	}
@@ -111,7 +112,6 @@ public class RoomGController {
 			POIFilterBean filters = new POIFilterBean(minRatingTxt, maxRatingTxt, chosenTags);
 			return POIController.getPOIFiltered(filters);
 		} catch (InvalidBeanParamException e) {
-			System.out.println("ERROR: " + e);
 			return List.of();
 		}
 

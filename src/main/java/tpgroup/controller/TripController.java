@@ -66,7 +66,7 @@ public class TripController {
 
 	public static List<ProposalBean> getAllProposals() {
 		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream()
-				.map(proposal -> new ProposalBean(proposal)).collect(Collectors.toList());
+				.map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
 	public static List<ProposalBean> getLoggedUserProposals() {

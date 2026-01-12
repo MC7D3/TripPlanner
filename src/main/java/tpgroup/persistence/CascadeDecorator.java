@@ -52,7 +52,7 @@ public class CascadeDecorator<T> implements DAO<T>{
 
 	@Override
 	public boolean add(T obj) {
-		Boolean res = decorated.add(obj);
+		boolean res = decorated.add(obj);
 		if(res){
 			for(Cascade<T, ?> policy : cascadePolicies){
 				res = res && policy.propagateAdd(obj);
