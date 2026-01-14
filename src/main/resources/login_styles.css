@@ -48,6 +48,22 @@
     -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.2), 5, 0.5, 0, 0);
 }
 
+.combo-field {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 4;
+    -fx-border-color: #dfe6e9;
+    -fx-border-radius: 4;
+    -fx-font-size: 1em;
+    -fx-pref-width: 20em;
+}
+
+.combo-label {
+    -fx-text-fill: #636e72;
+    -fx-font-size: 0.9em;
+    -fx-translate-x: 0.5em;
+    -fx-background-color: white;
+    -fx-padding: 0 0.3em;
+}
 /* Form Labels */
 .form-label {
     -fx-text-fill: #636e72;

@@ -13,7 +13,7 @@ public class StagingBranchBean extends BranchBean{
 	@Override
 	public String toString() {
 		try {
-			return events + " - " + events.first().getStart() + " , " + events.getLast().getEnd() + " (Staging)";
+			return  super.toString() + " (Staging)";
 		} catch (NoSuchElementException e) {
 			return "[no events] (Staging)";
 		}

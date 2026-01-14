@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox style="-fx-max-width: 450; -fx-min-width: 450;" styleClass="form-container"
+	stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="tpgroup.controller.graphical.javafx.ProposeUpdateModalGUIController">
+	<children>
+		<Text styleClass="heading" text="Propose Event Update" style="-fx-font-size: 18;" />
+
+		<Label text="Select Branch:" styleClass="form-label" />
+		<ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field"
+			prefWidth="400" onAction="#onBranchSelected" />
+
+		<Label text="Select Event to Update:" styleClass="form-label" />
+		<ComboBox fx:id="eventCmBox" promptText="Select event" styleClass="input-field"
+			prefWidth="400" />
+
+		<Label text="New Start Time (dd-MM-yyyy HH:mm):" styleClass="form-label" />
+		<TextField fx:id="newStartTimeTxt" promptText="e.g. 15-06-2024 14:00"
+			styleClass="input-field" />
+
+		<Label text="New End Time (dd-MM-yyyy HH:mm):" styleClass="form-label" />
+		<TextField fx:id="newEndTimeTxt" promptText="e.g. 15-06-2024 16:00"
+			styleClass="input-field" />
+
+		<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
+
+		<Button styleClass="button-primary" text="Submit Proposal" onAction="#onSubmit" />
+		<Button styleClass="button-logout" text="Cancel" onAction="#onCancel" />
+	</children>
+</VBox>

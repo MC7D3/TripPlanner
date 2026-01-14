@@ -12,12 +12,14 @@ public class EventsGraphBean {
 	private final BranchBean root;
 	private final Map<BranchBean, Set<BranchBean>> connectionsMapping;
 	private final Set<BranchBean> nodes;
+	private final Set<StagingBranchBean> stagingArea;
 
 
 	public EventsGraphBean(EventsGraph graph) {
 		this.root = new BranchBean(graph.getRoot());
 		this.connectionsMapping = graph.getConnectionsMapping().entrySet().stream().collect(Collectors.toMap(b -> new BranchBean(b.getKey()), b -> new HashSet<>(b.getValue()).stream().map(event -> new BranchBean(event)).collect(Collectors.toSet())));
 		this.nodes = graph.getGraphNodes().stream().map(node -> new BranchBean(node)).collect(Collectors.toCollection(() -> new HashSet<>()));
+		this.stagingArea = graph.getStagingNodes().stream().map(node -> new StagingBranchBean(node)).collect(Collectors.toCollection(() -> new HashSet<>()));
 	}
 
 
@@ -33,6 +35,10 @@ public class EventsGraphBean {
 
 	public Set<BranchBean> getNodes() {
 		return nodes;
+	}
+
+	public Set<StagingBranchBean> getStagingNodes(){
+		return stagingArea;
 	}
 
 

@@ -18,6 +18,10 @@ public class RoomController {
 		super();
 	}
 
+	public static RoomBean getEnteredRoom(){
+		return new RoomBean(Session.getInstance().getEnteredRoom());
+	}
+
 	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException {
 		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getTrip().getCountry(),
 				newRoom.getTrip().getMainCity());

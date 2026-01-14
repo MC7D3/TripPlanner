@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox style="-fx-max-width: 450; -fx-min-width: 450;" styleClass="form-container"
+	stylesheets="@login_styles.css" xmlns="http://javafx.com/javafx/23.0.1"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="tpgroup.controller.graphical.javafx.DisconnectBranchesModalGUIController">
+	<children>
+		<Text styleClass="heading" text="Disconnect Branches" style="-fx-font-size: 18;" />
+
+		<Label text="Select Parent Branch:" styleClass="form-label" />
+		<ComboBox fx:id="parentBranchCmBox" promptText="Parent branch" styleClass="input-field"
+			prefWidth="400" onAction="#onParentSelected" />
+
+		<Label text="Select Child Branch:" styleClass="form-label" />
+		<ComboBox fx:id="childBranchCmBox" promptText="Child branch" styleClass="input-field"
+			prefWidth="400" />
+
+		<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
+
+		<Button styleClass="button-primary" text="Disconnect" onAction="#onDisconnect" />
+		<Button styleClass="button-logout" text="Cancel" onAction="#onCancel" />
+	</children>
+</VBox>

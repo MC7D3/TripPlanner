@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox style="-fx-max-width: 600; -fx-min-width: 600;" styleClass="form-container"
+      stylesheets="@login_styles.css"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tpgroup.controller.graphical.javafx.ProposeAddModalGUIController">
+    
+    <children>
+        <Text styleClass="heading" text="Propose New Event" style="-fx-font-size: 18;" />
+
+        <!-- HBox for two columns -->
+        <HBox spacing="20">
+            <!-- Left column -->
+            <VBox spacing="10">
+                <Label text="Select Branch:" styleClass="combo-label" />
+                <ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field" prefWidth="400" />
+
+                <Label text="POI Filters (optional):" styleClass="combo-label" />
+                <ComboBox fx:id="minRatingCmBox" promptText="Min Rating" editable="false" styleClass="combo-field" />
+                <ComboBox fx:id="maxRatingCmBox" promptText="Max Rating" editable="false" styleClass="combo-field" />
+
+                <Label text="Select POI:" styleClass="combo-label" />
+                <ComboBox fx:id="poiCmBox" promptText="Select POI" styleClass="combo-field" prefWidth="400" onAction="#onPOISelected" />
+
+                <Label text="Start Time (dd-MM-yyyy HH:mm):" styleClass="combo-label" />
+                <TextField fx:id="startTimeTxt" promptText="e.g. 15-06-2024 10:00" styleClass="input-field" />
+
+                <Label text="End Time (dd-MM-yyyy HH:mm):" styleClass="combo-label" />
+                <TextField fx:id="endTimeTxt" promptText="e.g. 15-06-2024 12:00" styleClass="input-field" />
+            </VBox>
+
+            <!-- Right column -->
+            <VBox spacing="10">
+                <Label text="Tags:" styleClass="combo-label" />
+                <CheckBox fx:id="isFun" text="FUN" />
+                <CheckBox fx:id="isCulture" text="CULTURE" />
+                <CheckBox fx:id="isForFamilies" text="FOR FAMILIES" />
+                <CheckBox fx:id="isFood" text="FOOD" />
+                <CheckBox fx:id="isGastronomy" text="GASTRONOMY" />
+                <CheckBox fx:id="isRomantic" text="ROMANTIC" />
+            </VBox>
+        </HBox>
+
+        <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
+
+        <HBox spacing="10">
+            <Button styleClass="button-primary" text="Submit Proposal" onAction="#onSubmit" />
+            <Button styleClass="button-logout" text="Cancel" onAction="#onCancel" />
+        </HBox>
+    </children>
+</VBox>

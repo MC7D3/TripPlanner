@@ -191,10 +191,12 @@ public class RoomGController {
 
 	public static CliViewState acceptProposal(ProposalBean accepted) {
 		CliViewState ret = new RoomAdminMenuState();
-		if (TripController.acceptProposal(accepted)) {
-			ret.setOutLogTxt("proposal accepted!");
-		} else {
-			ret.setOutLogTxt("failed to accept proposal");
+		if(accepted != null){
+			if (TripController.acceptProposal(accepted)) {
+				ret.setOutLogTxt("proposal accepted!");
+			} else {
+				ret.setOutLogTxt("failed to accept proposal");
+			}
 		}
 		return ret;
 	}

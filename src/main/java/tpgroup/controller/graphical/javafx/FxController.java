@@ -1,14 +1,12 @@
 package tpgroup.controller.graphical.javafx;
 
 import java.io.IOException;
-import java.util.List;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 public abstract class FxController {
 
@@ -26,7 +24,8 @@ public abstract class FxController {
 
 	protected void open(String fxmlName, Stage parentStage) {
 		try {
-			Parent par = FXMLLoader.load(FxController.class.getResource("/" + fxmlName));
+			FXMLLoader loader = new FXMLLoader(FxController.class.getResource("/" + fxmlName));
+			Parent par = loader.load();
 			par.setUserData(this);
 			Stage newStage = new Stage();
 			newStage.setScene(new Scene(par));
@@ -40,13 +39,4 @@ public abstract class FxController {
 		}
 	}
 
-	protected void closeAll(){
-		List<Window> windows = Window.getWindows();
-		for(Window w : windows){
-			if(w instanceof Stage stage){
-				stage.close();
-			}
-		}
-	}
-	
 }

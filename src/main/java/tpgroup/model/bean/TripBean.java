@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,7 +85,7 @@ public class TripBean {
 		Set<BranchBean> visited = new HashSet<>();
 		buildGraphTree(tripGraph.getRoot(), sb, "", true, visited);
 
-		List<BranchBean> stagingBranches = getStagingBranches();
+		Set<StagingBranchBean> stagingBranches = getStagingBranches();
 		if (!stagingBranches.isEmpty()) {
 			sb.append("\n🔧 STAGING AREA:\n");
 			sb.append("───────────────────────────────────────────────────────────────\n");
@@ -148,16 +147,7 @@ public class TripBean {
 		}
 	}
 
-	private List<BranchBean> getStagingBranches() {
-		Set<BranchBean> connectedBranches = new HashSet<>();
-		connectedBranches.add(tripGraph.getRoot());
-
-		for (Map.Entry<BranchBean, Set<BranchBean>> entry : tripGraph.getConnectionsMapping().entrySet()) {
-			connectedBranches.add(entry.getKey());
-			connectedBranches.addAll(entry.getValue());
-		}
-
-		return tripGraph.getNodes().stream()
-				.filter(node -> !connectedBranches.contains(node)).toList();
+	private Set<StagingBranchBean> getStagingBranches() {
+		return tripGraph.getStagingNodes();
 	}
 }

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import tpgroup.controller.POIController;
 import tpgroup.controller.RoomController;
 import tpgroup.model.bean.RoomBean;
@@ -31,8 +32,9 @@ public class CreateRoomGUIController extends FxController {
 	public void createRoom(){
 		for(int attempt = 0; attempt < ATTEMPTS; attempt++){
 			try{
-				RoomController.createRoom(new RoomBean(roomName.getText(), countryCmBox.getEditor().getText(), cityCmBox.getEditor().getText()));
+				RoomController.createRoom(new RoomBean(roomName.getText(), countryCmBox.getValue(), cityCmBox.getValue()));
 				outLogTxt.setText("room created successfully!");
+				((Stage) outLogTxt.getScene().getWindow()).close();
 				break;
 			}catch(InvalidBeanParamException e){
 				outLogTxt.setText("Invalid Room info provided");
@@ -45,8 +47,10 @@ public class CreateRoomGUIController extends FxController {
 
 	@FXML
 	public void refreshCityCmBox(){
-		cityCmBox.getItems().clear();
-		cityCmBox.getItems().addAll(POIController.getAllCities(countryCmBox.getEditor().getText()));
+		if(countryCmBox.getValue() != null){
+			cityCmBox.getItems().clear();
+			cityCmBox.getItems().addAll(POIController.getAllCities(countryCmBox.getValue()));
+		}
 	}
 
 	@FXML

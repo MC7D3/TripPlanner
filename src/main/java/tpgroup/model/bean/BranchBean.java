@@ -24,6 +24,10 @@ public class BranchBean implements Comparable<BranchBean>{
 		return id;
 	}
 
+	public String getShortId(){
+		return id.toString().substring(0, 8);
+	}
+
 	public NavigableSet<EventBean> getEvents() {
 		return events;
 	}

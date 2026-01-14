@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+            prefHeight="800.0" prefWidth="1200.0" 
+            styleClass="loginBackPane" stylesheets="@login_styles.css" 
+            xmlns="http://javafx.com/javafx/23.0.1" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="tpgroup.controller.graphical.javafx.RoomViewGUIController">
+   
+   <top>
+      <HBox style="-fx-alignment: center_left; -fx-spacing: 20; -fx-padding: 15;" styleClass="form-container">
+         <children>
+            <VBox style="-fx-spacing: 5;">
+               <children>
+                  <Text fx:id="roomNameTxt" styleClass="heading" style="-fx-font-size: 20;" text="Room Name" />
+                  <Text fx:id="roomCodeTxt" style="-fx-font-size: 12;" text="Code: XXXXX" />
+               </children>
+            </VBox>
+            <Text fx:id="destinationTxt" style="-fx-font-size: 14;" text="Destination: City, Country" />
+         </children>
+      </HBox>
+   </top>
+
+   <center>
+      <BorderPane>
+         <center>
+            <Pane fx:id="graphPane" style="-fx-background-color: #f8f9fa;">
+            </Pane>
+         </center>
+      </BorderPane>
+   </center>
+
+   <right>
+      <VBox prefWidth="250.0" style="-fx-spacing: 10; -fx-padding: 10;" styleClass="form-container">
+         <children>
+            <Label text="Staging Area" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox fx:id="stagingContainer" style="-fx-spacing: 8;">
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </right>
+
+   <bottom>
+      <BorderPane>
+         <center>
+            <VBox style="-fx-spacing: 10; -fx-padding: 10;" styleClass="form-container">
+               <HBox style="-fx-spacing: 10; -fx-alignment: center;">
+                  <children>
+                     <Button fx:id="refreshBtn" styleClass="button-primary" text="refresh" onAction="#refreshGraph" />
+                     <Button fx:id="proposeAddBtn" styleClass="button-primary" text="Propose Add" onAction="#onProposeAdd" />
+                     <Button fx:id="proposeRemoveBtn" styleClass="button-primary" text="Propose Remove" onAction="#onProposeRemove" />
+                     <Button fx:id="proposeUpdateBtn" styleClass="button-primary" text="Propose Update" onAction="#onProposeUpdate" />
+                     <Button fx:id="viewProposalsBtn" styleClass="button-primary" text="View Proposals" onAction="#onViewProposals" />
+                  </children>
+               </HBox>
+               
+               <HBox fx:id="adminActionsBox" style="-fx-spacing: 10; -fx-alignment: center;" managed="false" visible="false">
+                  <children>
+                     <Button fx:id="createBranchBtn" styleClass="button-primary" text="Create Branch" onAction="#onCreateBranch" />
+                     <Button fx:id="connectBranchBtn" styleClass="button-primary" text="Connect Branches" onAction="#onConnectBranches" />
+                     <Button fx:id="disconnectBranchBtn" styleClass="button-primary" text="Disconnect Branches" onAction="#onDisconnectBranches" />
+                     <Button fx:id="splitBranchBtn" styleClass="button-primary" text="Split Branch" onAction="#onSplitBranch" />
+                     <Button fx:id="deleteBranchBtn" styleClass="button-cancel" text="Delete Branch" onAction="#onDeleteBranch" />
+                     <Button fx:id="deleteRoomBtn" styleClass="button-cancel" text="Delete Room" onAction="#onDeleteRoom" />
+                  </children>
+               </HBox>
+               
+               <HBox style="-fx-spacing: 10; -fx-alignment: center;">
+                  <children>
+                     <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 12;" />
+                     <Button fx:id="goBackBtn" styleClass="button-logout" text="Back to Menu" onAction="#onGoBack" />
+                  </children>
+               </HBox>
+            </VBox>
+         </center>
+      </BorderPane>
+   </bottom>
+</BorderPane>

@@ -14,8 +14,8 @@
 		<Text styleClass="heading" text="Room Creation form">
 		</Text>
 		<TextField fx:id="roomName" promptText="Room name" styleClass="input-field" />
-        <ComboBox fx:id="countryCmBox" promptText="country" editable="true" styleClass="input-field" onAction="#refreshCityCmBox"/>
-        <ComboBox fx:id="cityCmBox" promptText="city" editable="true" styleClass="input-field"/>
+        <ComboBox fx:id="countryCmBox" promptText="country" editable="false" styleClass="combo-field" onAction="#refreshCityCmBox"/>
+        <ComboBox fx:id="cityCmBox" promptText="city" editable="false" styleClass="combo-field"/>
         <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
 		<Button styleClass="button-primary" text="Create Room" onAction="#createRoom"/>
 	</children>

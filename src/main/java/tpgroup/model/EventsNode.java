@@ -41,11 +41,11 @@ public class EventsNode {
 			return false;
 		}
 
-		if (event.compareTo(events.first()) < 0) {
+		if (!events.isEmpty() && event.compareTo(events.first()) < 0) {
 			graph.checkFatherNodesConflicts(this, event.getStart());
 		}
 
-		if (event.compareTo(events.last()) > 0) {
+		if (!events.isEmpty() && event.compareTo(events.last()) > 0) {
 			graph.checkChildNodesConflicts(this, getEventsStart());
 		}
 
@@ -53,7 +53,15 @@ public class EventsNode {
 		return true;
 	}
 
-	public boolean removeEvent(Event event) {
+	public boolean removeEvent(Event event) throws NodeConflictException{
+		if(events.size() == 1){
+			if(graph.getConnectedNodes(this).isEmpty()){
+				graph.removeNode(this);
+				return true;
+			}else{
+				throw new NodeConflictException("cannot have a node with no events with child nodes");
+			}
+		}
 		return events.remove(event);
 	}
 

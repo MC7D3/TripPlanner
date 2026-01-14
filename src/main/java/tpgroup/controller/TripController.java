@@ -75,12 +75,15 @@ public class TripController {
 				.map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
+	public static List<StagingBranchBean> getStagingBranches(){
+		return Session.getInstance().getEnteredRoom().getTrip().getStagingBranches()
+				.stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
+	}
+
 	public static List<BranchBean> getBranches() {
 		List<BranchBean> allBranches = Session.getInstance().getEnteredRoom().getTrip().getAllBranches().stream()
 				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
-		List<StagingBranchBean> stagingBranches = Session.getInstance().getEnteredRoom().getTrip().getStagingBranches()
-				.stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
-		allBranches.addAll(stagingBranches);
+		allBranches.addAll(getStagingBranches());
 		return allBranches;
 	}
 

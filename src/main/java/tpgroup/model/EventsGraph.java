@@ -97,6 +97,11 @@ public class EventsGraph {
 					"cannot disconnect the nodes, the child would remain orphan, consider deletion instead");
 		}
 		connectionsMapping.get(parent).remove(child);
+		if(connectionsMapping.get(child).isEmpty()){
+			nodes.remove(child);
+			stagingArea.add(child);
+		}
+
 	}
 
 	private boolean isCycle(EventsNode start, EventsNode target) {
@@ -118,7 +123,7 @@ public class EventsGraph {
 	}
 
 	private boolean canConnect(EventsNode source, EventsNode target) {
-		return source.getEventsEnd().isBefore(target.getEventsStart());
+		return !source.getEvents().isEmpty() && !target.getEvents().isEmpty() && source.getEventsEnd().isBefore(target.getEventsStart());
 	}
 
 	public boolean areConnected(EventsNode source, EventsNode target) {
