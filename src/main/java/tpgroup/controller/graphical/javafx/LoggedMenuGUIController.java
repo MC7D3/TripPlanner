@@ -45,7 +45,6 @@ public class LoggedMenuGUIController extends FxController {
 	}
 
 	public void handleRoomExit(RoomCardGUIController ctrl) {
-		System.out.println(ctrl.getRoom());
 		RoomController.abbandonRoom(ctrl.getRoom());
 		buildUI();
 	}

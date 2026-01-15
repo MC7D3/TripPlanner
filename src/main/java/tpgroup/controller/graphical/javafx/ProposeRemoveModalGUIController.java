@@ -13,34 +13,33 @@ import tpgroup.model.bean.EventBean;
 public class ProposeRemoveModalGUIController extends FxController {
 
 	@FXML
-	private ComboBox<BranchBean> branchCmBox;
+	private ComboBox<BranchBean> delBranchCmBox;
 
 	@FXML
-	private ComboBox<EventBean> eventCmBox;
+	private ComboBox<EventBean> delEventCmBox;
 
 	@FXML
 	private Text outLogTxt;
 
 	@FXML
 	public void initialize() {
-		// Load branches
-		List<BranchBean> branches = TripController.getBranches();
-		branchCmBox.getItems().addAll(branches);
+		List<BranchBean> delBranches = TripController.getBranches();
+		delBranchCmBox.getItems().addAll(delBranches);
 	}
 
 	@FXML
 	public void onBranchSelected() {
-		BranchBean selectedBranch = branchCmBox.getValue();
+		BranchBean selectedBranch = delBranchCmBox.getValue();
 		if (selectedBranch != null) {
-			eventCmBox.getItems().clear();
-			eventCmBox.getItems().addAll(selectedBranch.getEvents());
+			delEventCmBox.getItems().clear();
+			delEventCmBox.getItems().addAll(selectedBranch.getEvents());
 		}
 	}
 
 	@FXML
 	public void onSubmit() {
-		BranchBean selectedBranch = branchCmBox.getValue();
-		EventBean selectedEvent = eventCmBox.getValue();
+		BranchBean selectedBranch = delBranchCmBox.getValue();
+		EventBean selectedEvent = delEventCmBox.getValue();
 
 		if (selectedBranch == null) {
 			outLogTxt.setText("Please select a branch");

@@ -13,10 +13,10 @@ import tpgroup.model.bean.TripBean;
 public class DisconnectBranchesModalGUIController extends FxController {
 
 	@FXML
-	private ComboBox<BranchBean> DisParentBranchCmBox;
+	private ComboBox<BranchBean> disParentBranchCmBox;
 
 	@FXML
-	private ComboBox<BranchBean> DisChildBranchCmBox;
+	private ComboBox<BranchBean> disChildBranchCmBox;
 
 	@FXML
 	private Text outLogTxt;
@@ -24,27 +24,27 @@ public class DisconnectBranchesModalGUIController extends FxController {
 	@FXML
 	public void initialize() {
 		List<BranchBean> disBranches = TripController.getBranches();
-		DisParentBranchCmBox.getItems().addAll(disBranches);
+		disParentBranchCmBox.getItems().addAll(disBranches);
 	}
 
 	@FXML
 	public void onParentSelected() {
-		BranchBean parent = DisParentBranchCmBox.getValue();
+		BranchBean parent = disParentBranchCmBox.getValue();
 		if (parent != null) {
-			DisChildBranchCmBox.getItems().clear();
+			disChildBranchCmBox.getItems().clear();
 			TripBean trip = TripController.getTrip();
 			List<BranchBean> connectedBranches = trip.getTripGraph().getConnectionsMapping()
 					.getOrDefault(parent, java.util.Collections.emptySet())
 					.stream().toList();
 			
-			DisChildBranchCmBox.getItems().addAll(connectedBranches);
+			disChildBranchCmBox.getItems().addAll(connectedBranches);
 		}
 	}
 
 	@FXML
 	public void onDisconnect() {
-		BranchBean parent = DisParentBranchCmBox.getValue();
-		BranchBean child = DisChildBranchCmBox.getValue();
+		BranchBean parent = disParentBranchCmBox.getValue();
+		BranchBean child = disChildBranchCmBox.getValue();
 
 		if (parent == null || child == null) {
 			outLogTxt.setText("Please select both parent and child branches");

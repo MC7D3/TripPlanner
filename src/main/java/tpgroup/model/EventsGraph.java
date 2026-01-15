@@ -171,7 +171,7 @@ public class EventsGraph {
 		return ret;
 	}
 
-	public void removeNode(EventsNode toRemove) throws NodeConflictException {
+	public void removeNode(EventsNode toRemove) {
 		if(toRemove.equals(root)){
 			root.resetEvents();
 			return;
