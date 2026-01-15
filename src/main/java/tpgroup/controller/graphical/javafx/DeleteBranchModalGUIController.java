@@ -8,7 +8,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.TripController;
 import tpgroup.model.bean.BranchBean;
-import tpgroup.model.exception.NodeConflictException;
 
 public class DeleteBranchModalGUIController extends FxController {
 
@@ -32,12 +31,12 @@ public class DeleteBranchModalGUIController extends FxController {
 		BranchBean selectedBranch = branchCmBox.getValue();
 		if (selectedBranch != null) {
 			List<BranchBean> candidates = TripController.getDeletionCandidates(selectedBranch);
-			
+
 			if (candidates.isEmpty()) {
 				warningTxt.setText("⚠ This branch has no orphan children that need deletion.");
 			} else {
-				warningTxt.setText("⚠ Warning: " + candidates.size() + 
-					" child branch(es) will also be deleted to prevent orphans.");
+				warningTxt.setText("⚠ Warning: " + candidates.size() +
+						" child branch(es) will also be deleted to prevent orphans.");
 			}
 		}
 	}
@@ -51,14 +50,10 @@ public class DeleteBranchModalGUIController extends FxController {
 			return;
 		}
 
-		try {
-			TripController.removeBranch(selectedBranch);
-			outLogTxt.setText("Branch deleted successfully!");
-			Stage stage = (Stage) outLogTxt.getScene().getWindow();
-			stage.close();
-		} catch (NodeConflictException e) {
-			outLogTxt.setText("Error: " + e.getMessage());
-		}
+		TripController.removeBranch(selectedBranch);
+		outLogTxt.setText("Branch deleted successfully!");
+		Stage stage = (Stage) outLogTxt.getScene().getWindow();
+		stage.close();
 	}
 
 	@FXML

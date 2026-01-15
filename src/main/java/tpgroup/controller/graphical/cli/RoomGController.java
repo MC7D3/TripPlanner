@@ -38,7 +38,8 @@ public class RoomGController {
 	private static final String PROPOSAL_INVALID = "proposal invalid or malformed";
 	private static final String ERROR_PROMPT = "ERROR: ";
 
-	private RoomGController() {}
+	private RoomGController() {
+	}
 
 	public static CliViewState process(String choice) {
 		switch (choice) {
@@ -80,14 +81,14 @@ public class RoomGController {
 		}
 	}
 
-	public static TripBean getTrip(){
+	public static TripBean getTrip() {
 		return TripController.getTrip();
 	}
 
 	public static List<BranchBean> getBranches() {
 		return TripController.getBranches();
 	}
-	
+
 	public static List<ProposalBean> getLoggedUserProposals() {
 		return TripController.getLoggedUserProposals();
 	}
@@ -106,7 +107,7 @@ public class RoomGController {
 	public static List<POIBean> getFilteredPOIs(String minRatingTxt, String maxRatingTxt,
 			List<String> chosenTags) {
 		try {
-			if(minRatingTxt.isEmpty() && maxRatingTxt.isEmpty() && chosenTags.isEmpty()){
+			if (minRatingTxt.isEmpty() && maxRatingTxt.isEmpty() && chosenTags.isEmpty()) {
 				return POIController.getAllPOI();
 			}
 			POIFilterBean filters = new POIFilterBean(minRatingTxt, maxRatingTxt, chosenTags);
@@ -121,7 +122,7 @@ public class RoomGController {
 			BranchBean chosenBranch, String startTimeTxt, String endTimeTxt) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 		try {
-			if(poi == null && chosenBranch == null && startTimeTxt.isEmpty() && endTimeTxt.isEmpty()){
+			if (poi == null && chosenBranch == null && startTimeTxt.isEmpty() && endTimeTxt.isEmpty()) {
 				return ret;
 			}
 			if (poi == null) {
@@ -142,7 +143,7 @@ public class RoomGController {
 
 	public static CliViewState createRemoveProposal(BranchBean chosenBranch, EventBean chosenEvent) {
 		CliViewState ret = RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
-		if(chosenEvent == null) {
+		if (chosenEvent == null) {
 			return ret;
 		}
 		if (TripController.createRemoveProposal(chosenBranch, chosenEvent)) {
@@ -156,9 +157,9 @@ public class RoomGController {
 	public static CliViewState likeProposal(ProposalBean proposal) {
 		if (proposal != null) {
 			CliViewState ret = new ListAndLikeProposalsState();
-			if(!TripController.likeProposal(proposal)){
+			if (!TripController.likeProposal(proposal)) {
 				ret.setOutLogTxt("proposal like removed");
-			}else{
+			} else {
 				ret.setOutLogTxt("proposal liked!");
 			}
 			return ret;
@@ -191,7 +192,7 @@ public class RoomGController {
 
 	public static CliViewState acceptProposal(ProposalBean accepted) {
 		CliViewState ret = new RoomAdminMenuState();
-		if(accepted != null){
+		if (accepted != null) {
 			if (TripController.acceptProposal(accepted)) {
 				ret.setOutLogTxt("proposal accepted!");
 			} else {
@@ -214,7 +215,7 @@ public class RoomGController {
 
 	public static CliViewState connectBranches(BranchBean parent, BranchBean child) {
 		CliViewState ret = new RoomAdminMenuState();
-		if(child == null){
+		if (child == null) {
 			return ret;
 		}
 		try {
@@ -228,7 +229,7 @@ public class RoomGController {
 
 	public static CliViewState disconnectBranches(BranchBean parent, BranchBean child) {
 		CliViewState ret = new RoomAdminMenuState();
-		if(child == null){
+		if (child == null) {
 			return ret;
 		}
 		TripController.disconnectBranches(parent, child);
@@ -238,13 +239,9 @@ public class RoomGController {
 
 	public static CliViewState deleteBranch(BranchBean chosenBranch, boolean deleteConf) {
 		CliViewState ret = new RoomAdminMenuState();
-		try {
-			if (deleteConf) {
-				TripController.removeBranch(chosenBranch);
-				ret.setOutLogTxt("branch deleted succesfully");
-			}
-		} catch (NodeConflictException e) {
-			ret.setOutLogTxt(ERROR_PROMPT + e.getMessage());
+		if (deleteConf) {
+			TripController.removeBranch(chosenBranch);
+			ret.setOutLogTxt("branch deleted succesfully");
 		}
 		return ret;
 	}
@@ -259,20 +256,20 @@ public class RoomGController {
 		return ret;
 	}
 
-	public static CliViewState splitBranch(BranchBean toSplit, EventBean pivot){
+	public static CliViewState splitBranch(BranchBean toSplit, EventBean pivot) {
 		CliViewState ret = new RoomAdminMenuState();
-		if(toSplit == null || pivot == null){
+		if (toSplit == null || pivot == null) {
 			return ret;
 		}
-		if(TripController.splitBranch(toSplit, pivot)){
+		if (TripController.splitBranch(toSplit, pivot)) {
 			ret.setOutLogTxt("branch splitted succesfully!");
-		}else{
+		} else {
 			ret.setOutLogTxt("failed to split branch");
 		}
 		return ret;
 	}
 
-	public static CliViewState showTripStatus(){
+	public static CliViewState showTripStatus() {
 		return RoomController.amIAdmin() ? new RoomAdminMenuState() : new RoomMemberMenuState();
 	}
 }

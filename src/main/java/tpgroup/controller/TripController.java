@@ -165,7 +165,7 @@ public class TripController {
 		saveChanges();
 	}
 
-	public static void removeBranch(BranchBean toDeleteBean) throws NodeConflictException {
+	public static void removeBranch(BranchBean toDeleteBean) {
 		getEnteredRoom().getTrip().removeNode(extractNode(toDeleteBean));
 		saveChanges();
 	}
