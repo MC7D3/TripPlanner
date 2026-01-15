@@ -114,7 +114,7 @@ public class Trip {
 		tripGraph.disconnect(parentNode, childNode);
 	}
 
-	public void removeNode(EventsNode toRemove) throws NodeConflictException{
+	public void removeNode(EventsNode toRemove){
 		tripGraph.removeNode(toRemove);
 	}
 

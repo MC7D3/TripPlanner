@@ -89,15 +89,6 @@ public class EventsNode {
 		return graph;
 	}
 
-	public boolean mergeWith(EventsNode other) throws NodeConflictException{
-		if (!graph.areConnected(this, other) && graph.connCount(this) != 1) {
-			return false;
-		}
-		this.events.addAll(other.events);
-		graph.removeNode(other);
-		return true;
-	}
-
 	public boolean split(Event pivot) {
 		if (!this.events.contains(pivot)) {
 			return false;
