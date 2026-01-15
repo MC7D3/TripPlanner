@@ -56,9 +56,9 @@ public class BranchBean implements Comparable<BranchBean>{
 	public String toString() {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-			return "branch " + id.toString().replace("-", "").substring(0, 6) + " - begin and end: " + formatter.format(events.first().getStart()) + " , " + formatter.format(events.getLast().getEnd());
+			return "branch " + getShortId() + " - begin and end: " + formatter.format(events.first().getStart()) + " , " + formatter.format(events.getLast().getEnd());
 		} catch (NoSuchElementException e) {
-			return "[no events]";
+			return "branch " + getShortId() + " - empty";
 		}
 	}
 

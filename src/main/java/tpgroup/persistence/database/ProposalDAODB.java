@@ -126,7 +126,8 @@ public class ProposalDAODB {
 				}
 
 				ProposalType proposalType = ProposalType.valueOf(rs.getString("proposal_type"));
-				Set<User> likes = gson.fromJson(rs.getString("likes"), new TypeToken<Set<User>>(){}.getType());
+				Set<User> likes = gson.fromJson(rs.getString("likes"), new TypeToken<Set<User>>() {
+				}.getType());
 
 				UUID id = UUID.fromString(rs.getString("node_id"));
 				EventsNode node = graph.getGraphNodes().stream().filter(n -> n.getId().equals(id)).findFirst().get();
@@ -150,6 +151,19 @@ public class ProposalDAODB {
 		executeProposalEdit(room, SAVE_QUERY);
 	}
 
+	private void setCoordinates(PreparedStatement stmt, int latInd, Double lat, int lonInd, Double lon) throws SQLException{
+		if (lat == null) {
+			stmt.setNull(latInd, Types.DOUBLE);
+		} else {
+			stmt.setDouble(latInd, lat);
+		}
+		if (lon == null) {
+			stmt.setNull(lonInd, Types.DOUBLE);
+		} else {
+			stmt.setDouble(lonInd, lon);
+		}
+	}
+
 	private int executeProposalEdit(Room room, String query) {
 		int count = 0;
 
@@ -168,18 +182,9 @@ public class ProposalDAODB {
 					stmt.setTimestamp(7, Timestamp.valueOf(proposal.getEvent().getEnd()));
 					Double lat2 = proposal.getUpdateEvent().map(event -> event.getInfo().getCoordinates().getLatitude())
 							.orElse(null);
-					if (lat2 == null) {
-						stmt.setNull(8, Types.DOUBLE);
-					} else {
-						stmt.setDouble(8, lat2);
-					}
 					Double lon2 = proposal.getUpdateEvent()
 							.map(event -> event.getInfo().getCoordinates().getLongitude()).orElse(null);
-					if (lon2 == null) {
-						stmt.setNull(9, Types.DOUBLE);
-					} else {
-						stmt.setDouble(9, lon2);
-					}
+					setCoordinates(stmt, 8, lat2, 9, lon2);
 					stmt.setTimestamp(10,
 							proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
 					stmt.setTimestamp(11,
@@ -196,14 +201,14 @@ public class ProposalDAODB {
 			try {
 				connection.rollback();
 			} catch (SQLException rollbackEx) {
-				//no action needed
+				// no action needed
 			}
 			throw new IllegalStateException("Error saving proposals: " + e.getMessage(), e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException e) {
-				//no action needed
+				// no action needed
 			}
 		}
 		return count;

@@ -14,11 +14,11 @@
 		<Text styleClass="heading" text="Propose Event Removal" style="-fx-font-size: 18;" />
 
 		<Label text="Select Branch:" styleClass="form-label" />
-		<ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field"
+		<ComboBox fx:id="delBranchCmBox" promptText="Select branch" styleClass="input-field"
 			prefWidth="400" onAction="#onBranchSelected" />
 
 		<Label text="Select Event to Remove:" styleClass="form-label" />
-		<ComboBox fx:id="eventCmBox" promptText="Select event" styleClass="input-field"
+		<ComboBox fx:id="delEventCmBox" promptText="Select event" styleClass="input-field"
 			prefWidth="400" />
 
 		<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />

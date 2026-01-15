@@ -14,11 +14,11 @@
 		<Text styleClass="heading" text="Disconnect Branches" style="-fx-font-size: 18;" />
 
 		<Label text="Select Parent Branch:" styleClass="form-label" />
-		<ComboBox fx:id="parentBranchCmBox" promptText="Parent branch" styleClass="input-field"
+		<ComboBox fx:id="disParentBranchCmBox" promptText="Parent branch" styleClass="input-field"
 			prefWidth="400" onAction="#onParentSelected" />
 
 		<Label text="Select Child Branch:" styleClass="form-label" />
-		<ComboBox fx:id="childBranchCmBox" promptText="Child branch" styleClass="input-field"
+		<ComboBox fx:id="disChildBranchCmBox" promptText="Child branch" styleClass="input-field"
 			prefWidth="400" />
 
 		<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />

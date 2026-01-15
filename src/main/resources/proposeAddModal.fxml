@@ -23,7 +23,7 @@
             <!-- Left column -->
             <VBox spacing="10">
                 <Label text="Select Branch:" styleClass="combo-label" />
-                <ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field" prefWidth="400" />
+                <ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="combo-field" prefWidth="400" />
 
                 <Label text="POI Filters (optional):" styleClass="combo-label" />
                 <ComboBox fx:id="minRatingCmBox" promptText="Min Rating" editable="false" styleClass="combo-field" />
