@@ -30,14 +30,15 @@ public class CreateRoomGUIController extends FxController {
 
 	@FXML
 	public void createRoom(){
-		for(int attempt = 0; attempt < ATTEMPTS; attempt++){
+		boolean success = false;
+		for(int attempt = 0; attempt < ATTEMPTS && !success; attempt++){
 			try{
 				RoomController.createRoom(new RoomBean(roomName.getText(), countryCmBox.getValue(), cityCmBox.getValue()));
 				outLogTxt.setText("room created successfully!");
 				((Stage) outLogTxt.getScene().getWindow()).close();
-				break;
+				success = true;
 			}catch(InvalidBeanParamException e){
-				outLogTxt.setText("Invalid Room info provided");
+				outLogTxt.setText("ERROR: " + e.getMessage());
 				break;
 			}catch(RoomGenConflictException e){
 				//it does another attempt, no actions needed

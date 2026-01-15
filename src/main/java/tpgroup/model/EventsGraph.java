@@ -93,15 +93,15 @@ public class EventsGraph {
 			throw new NodeConnectionException("the nodes arent connected");
 		}
 		if (this.findFathers(child).size() <= 1) {
-			throw new NodeConnectionException(
-					"cannot disconnect the nodes, the child would remain orphan, consider deletion instead");
+			if(connectionsMapping.get(child).isEmpty()){
+				nodes.remove(child);
+				stagingArea.add(child);
+			}else{
+				throw new NodeConnectionException(
+						"cannot disconnect the nodes, it has only one father and has child nodes, its removal would split the graph in two");
+			}
 		}
 		connectionsMapping.get(parent).remove(child);
-		if(connectionsMapping.get(child).isEmpty()){
-			nodes.remove(child);
-			stagingArea.add(child);
-		}
-
 	}
 
 	private boolean isCycle(EventsNode start, EventsNode target) {
@@ -177,8 +177,6 @@ public class EventsGraph {
 			return;
 		}
 		List<EventsNode> fathers = findFathers(toRemove);
-		if (fathers.isEmpty())
-			throw new NodeConflictException();
 		for (EventsNode father : fathers) {
 			Set<EventsNode> connections = connectionsMapping.get(father);
 			connections.remove(toRemove);

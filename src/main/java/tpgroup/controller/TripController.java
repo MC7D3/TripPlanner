@@ -25,6 +25,7 @@ import tpgroup.model.domain.User;
 import tpgroup.model.exception.BranchConnectionException;
 import tpgroup.model.exception.NodeConflictException;
 import tpgroup.model.exception.NodeConnectionException;
+import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.DAO;
 import tpgroup.persistence.factory.DAOFactory;
 
@@ -32,6 +33,16 @@ public class TripController {
 
 	private TripController() {
 		super();
+	}
+
+	private static Room getEnteredRoom(){
+		try {
+			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+			Session.getInstance().setEnteredRoom(roomDao.get(Session.getInstance().getEnteredRoom()));
+			return Session.getInstance().getEnteredRoom();
+		} catch (RecordNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	private static PointOfInterest extractPOI(POIBean bean) {
@@ -44,7 +55,7 @@ public class TripController {
 	}
 
 	private static EventsNode extractNode(BranchBean bean) {
-		EventsGraph graph = Session.getInstance().getEnteredRoom().getTrip().getTripGraph();
+		EventsGraph graph = getEnteredRoom().getTrip().getTripGraph();
 		return graph.getAllNodes().stream().filter(node -> node.getId().equals(bean.getId())).findFirst()
 				.orElseThrow(() -> new IllegalStateException("node not found in graph"));
 	}
@@ -54,7 +65,7 @@ public class TripController {
 	}
 
 	private static Proposal extractProposal(ProposalBean bean) {
-		Trip trip = Session.getInstance().getEnteredRoom().getTrip();
+		Trip trip = getEnteredRoom().getTrip();
 
 		return trip.getProposals().stream()
 				.filter(p -> p.getCreator().equals(extractUser(bean.getCreator())) &&
@@ -65,41 +76,41 @@ public class TripController {
 	}
 
 	public static List<ProposalBean> getAllProposals() {
-		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream()
+		return getEnteredRoom().getTrip().getProposals().stream()
 				.map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
 	public static List<ProposalBean> getLoggedUserProposals() {
-		return Session.getInstance().getEnteredRoom().getTrip().getProposals().stream()
+		return getEnteredRoom().getTrip().getProposals().stream()
 				.filter(proposal -> proposal.getCreator().equals(Session.getInstance().getLogged()))
 				.map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
 	public static List<StagingBranchBean> getStagingBranches(){
-		return Session.getInstance().getEnteredRoom().getTrip().getStagingBranches()
+		return getEnteredRoom().getTrip().getStagingBranches()
 				.stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
 	}
 
 	public static List<BranchBean> getBranches() {
-		List<BranchBean> allBranches = Session.getInstance().getEnteredRoom().getTrip().getAllBranches().stream()
+		List<BranchBean> allBranches = getEnteredRoom().getTrip().getAllBranches().stream()
 				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
 		allBranches.addAll(getStagingBranches());
 		return allBranches;
 	}
 
 	public static TripBean getTrip(){
-		return new TripBean(Session.getInstance().getEnteredRoom().getTrip());
+		return new TripBean(getEnteredRoom().getTrip());
 	}
 
 	public static boolean acceptProposal(ProposalBean proposal) {
-		boolean res = Session.getInstance().getEnteredRoom().getTrip().acceptProposal(extractProposal(proposal));
+		boolean res = getEnteredRoom().getTrip().acceptProposal(extractProposal(proposal));
 		saveChanges();
 		return res;
 	}
 
 	public static boolean createAddProposal(BranchBean whereBean, POIBean poi, IntervalBean interval) {
 		boolean res = false;
-		Trip curTrip = Session.getInstance().getEnteredRoom().getTrip();
+		Trip curTrip = getEnteredRoom().getTrip();
 		res = curTrip.addProposal(new Proposal(ProposalType.ADD, extractNode(whereBean),
 				new Event(extractPOI(poi), interval.getStartTime(), interval.getEndTime()),
 				Session.getInstance().getLogged()));
@@ -108,7 +119,7 @@ public class TripController {
 	}
 
 	public static boolean createRemoveProposal(BranchBean whereBean, EventBean toRemove) {
-		Trip curTrip = Session.getInstance().getEnteredRoom().getTrip();
+		Trip curTrip = getEnteredRoom().getTrip();
 		boolean res = curTrip.addProposal(
 				new Proposal(ProposalType.REMOVE, extractNode(whereBean), extractEvent(toRemove),
 						Session.getInstance().getLogged()));
@@ -118,7 +129,7 @@ public class TripController {
 
 	public static boolean createUpdateProposal(BranchBean whereBean, EventBean toUpdateBean, IntervalBean newData) {
 		Event toUpdate = extractEvent(toUpdateBean);
-		boolean res = Session.getInstance().getEnteredRoom().getTrip()
+		boolean res = getEnteredRoom().getTrip()
 				.addProposal(new Proposal(ProposalType.UPDATE, extractNode(whereBean), toUpdate,
 						new Event(toUpdate.getInfo(), newData.getStartTime(), newData.getEndTime()),
 						Session.getInstance().getLogged()));
@@ -127,17 +138,17 @@ public class TripController {
 	}
 
 	public static boolean undoProposal(Proposal chosen) {
-		boolean res = Session.getInstance().getEnteredRoom().getTrip().getProposals().remove(chosen);
+		boolean res = getEnteredRoom().getTrip().getProposals().remove(chosen);
 		saveChanges();
 		return res;
 	}
 
 	public static boolean likeProposal(ProposalBean chosen) {
 		Proposal proposal = extractProposal(chosen);
-		boolean res = Session.getInstance().getEnteredRoom().getTrip().likeProposal(Session.getInstance().getLogged(),
+		boolean res = getEnteredRoom().getTrip().likeProposal(Session.getInstance().getLogged(),
 				proposal);
 		if (!res) {
-			Session.getInstance().getEnteredRoom().getTrip().unlikeProposal(Session.getInstance().getLogged(),
+			getEnteredRoom().getTrip().unlikeProposal(Session.getInstance().getLogged(),
 					proposal);
 		}
 		saveChanges();
@@ -145,24 +156,24 @@ public class TripController {
 	}
 
 	public static void removeProposal(ProposalBean proposalBean) {
-		Session.getInstance().getEnteredRoom().getTrip().removeProposal(extractProposal(proposalBean));
+		getEnteredRoom().getTrip().removeProposal(extractProposal(proposalBean));
 		saveChanges();
 	}
 
 	public static void createBranch() throws NodeConflictException {
-		Session.getInstance().getEnteredRoom().getTrip().createBranch();
+		getEnteredRoom().getTrip().createBranch();
 		saveChanges();
 	}
 
 	public static void removeBranch(BranchBean toDeleteBean) throws NodeConflictException {
-		Session.getInstance().getEnteredRoom().getTrip().removeNode(extractNode(toDeleteBean));
+		getEnteredRoom().getTrip().removeNode(extractNode(toDeleteBean));
 		saveChanges();
 	}
 
 	public static void connectBranches(BranchBean branchFromBean, BranchBean branchToBean)
 			throws BranchConnectionException {
 		try {
-			Trip curTrip = Session.getInstance().getEnteredRoom().getTrip();
+			Trip curTrip = getEnteredRoom().getTrip();
 			curTrip.connectBranches(extractNode(branchFromBean), extractNode(branchToBean));
 			saveChanges();
 		} catch (NodeConnectionException e) {
@@ -171,26 +182,32 @@ public class TripController {
 	}
 
 	public static void disconnectBranches(BranchBean fromBean, BranchBean toBean) {
-		Session.getInstance().getEnteredRoom().getTrip().disconnectBranches(extractNode(fromBean),
+		getEnteredRoom().getTrip().disconnectBranches(extractNode(fromBean),
 				extractNode(toBean));
 		saveChanges();
 	}
 
 	public static List<BranchBean> getConnectedBranches(BranchBean branchBean) {
-		return Session.getInstance().getEnteredRoom().getTrip().getConnectedBranches(extractNode(branchBean))
-				.stream().map(eventsNode -> new BranchBean(eventsNode)).toList();
+		List<EventsNode> connectedBranches = getEnteredRoom().getTrip().getConnectedBranches(extractNode(branchBean));
+		if(connectedBranches == null){
+			return List.of();
+		}else{
+			return connectedBranches.stream().map(eventsNode -> new BranchBean(eventsNode)).toList();
+		}
 	}
 
 	public static List<BranchBean> getDeletionCandidates(BranchBean of) {
-		return new ArrayList<>(getConnectedBranches(of)).stream()
-				.filter(branch -> Session.getInstance().getEnteredRoom().getTrip()
+		List<BranchBean> candidates = new ArrayList<>(getConnectedBranches(of)).stream()
+				.filter(branch -> getEnteredRoom().getTrip()
 						.connCount(extractNode(branch)) == 0)
 				.toList();
+		candidates.addAll(getStagingBranches());
+		return candidates;
 	}
 
 	private static void saveChanges() {
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-		roomDao.save(Session.getInstance().getEnteredRoom());
+		roomDao.save(getEnteredRoom());
 	}
 
 	public static boolean splitBranch(BranchBean toSplitBean, EventBean pivotBean) {

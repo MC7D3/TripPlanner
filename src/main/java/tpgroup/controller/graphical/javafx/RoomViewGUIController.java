@@ -135,8 +135,9 @@ public class RoomViewGUIController extends FxController {
 
 		graphView.setVertexDoubleClickAction(vertex -> {
 			String nodeId = vertex.getUnderlyingVertex().element();
-			BranchBean selectedBranch = TripController.getBranches().stream().filter(b -> b.getId().toString().startsWith(nodeId))
-				.findFirst().get();
+			BranchBean selectedBranch = TripController.getBranches().stream()
+					.filter(b -> b.getId().toString().startsWith(nodeId))
+					.findFirst().get();
 			outLogTxt.setText("Selected branch: " + selectedBranch);
 			showBranchDetails(selectedBranch);
 		});
@@ -144,10 +145,15 @@ public class RoomViewGUIController extends FxController {
 		graphPane.getChildren().clear();
 		graphPane.getChildren().add(graphView);
 
+		graphView.prefWidthProperty().bind(graphPane.widthProperty());
+		graphView.prefHeightProperty().bind(graphPane.heightProperty());
+
+		graphPane.applyCss();
+		graphPane.layout();
 		Platform.runLater(() -> {
-			graphView.prefWidthProperty().bind(graphPane.widthProperty());
-			graphView.prefHeightProperty().bind(graphPane.heightProperty());
-			graphView.init();
+			Platform.runLater(() -> {
+				graphView.init();
+			});
 		});
 	}
 

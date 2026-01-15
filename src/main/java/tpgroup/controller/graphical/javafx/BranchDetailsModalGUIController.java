@@ -26,7 +26,6 @@ public class BranchDetailsModalGUIController extends FxController {
 
 	public void setBranch(BranchBean branch) {
 		this.branch = branch;
-		System.out.println(branch);
 		loadBranchDetails();
 	}
 

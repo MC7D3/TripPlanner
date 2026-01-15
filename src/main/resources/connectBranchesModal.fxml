@@ -15,7 +15,7 @@
 
 		<Label text="Select Parent Branch:" styleClass="form-label" />
 		<ComboBox fx:id="parentBranchCmBox" promptText="Parent branch" styleClass="input-field"
-			prefWidth="400" />
+			prefWidth="400" onAction="#getChilds"/>
 
 		<Label text="Select Child Branch:" styleClass="form-label" />
 		<ComboBox fx:id="childBranchCmBox" promptText="Child branch" styleClass="input-field"

@@ -20,6 +20,8 @@ import tpgroup.model.bean.ProposalBean;
 
 public class ViewProposalsModalGUIController extends FxController {
 
+	private static final String LABEL_STYLE = "-fx-font-size: 11; -fx-text-fill: #636e72;";
+
 	@FXML
 	private VBox proposalsContainer;
 
@@ -81,7 +83,7 @@ public class ViewProposalsModalGUIController extends FxController {
 		header.getChildren().addAll(typeLabel, likesLabel);
 
 		Label creatorLabel = new Label("By: " + proposal.getCreator().getEmail());
-		creatorLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #636e72;");
+		creatorLabel.setStyle(LABEL_STYLE);
 
 		Label eventLabel = new Label("Event: " + proposal.getEvent().getInfo().getName());
 		eventLabel.setStyle("-fx-font-size: 12;");
@@ -89,10 +91,10 @@ public class ViewProposalsModalGUIController extends FxController {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 		Label startEndLabel = new Label("start: " + formatter.format(proposal.getEvent().getStart()) + " end: " + formatter.format(proposal.getEvent().getEnd()));
-		startEndLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #636e72;");
+		startEndLabel.setStyle(LABEL_STYLE);
 
 		Label branchLabel = new Label("Branch: " + proposal.getNode());
-		branchLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #636e72;");
+		branchLabel.setStyle(LABEL_STYLE);
 
 
 		HBox actionsBox = new HBox(8);

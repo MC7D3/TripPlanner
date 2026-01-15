@@ -32,7 +32,6 @@ public class OptionsGUIController extends FxController {
 				Stage rootStage = (Stage) optionStage.getOwner();
 				optionStage.close();
 				redirect("login.fxml", rootStage);
-				//setParentOutTxt("Password Updated Succesfully!");
 			}
 		} catch (InvalidBeanParamException e) {
 			outLogTxt.setText(e.getMessage());

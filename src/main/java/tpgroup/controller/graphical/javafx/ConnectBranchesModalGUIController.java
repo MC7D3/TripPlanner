@@ -25,7 +25,15 @@ public class ConnectBranchesModalGUIController extends FxController {
 	public void initialize() {
 		List<BranchBean> branches = TripController.getBranches();
 		parentBranchCmBox.getItems().addAll(branches);
-		childBranchCmBox.getItems().addAll(branches);
+	}
+
+	@FXML
+	public void getChilds(){
+		if(parentBranchCmBox.getValue() != null){
+			childBranchCmBox.getItems().clear();
+			childBranchCmBox.getItems().addAll(TripController.getBranches());
+			childBranchCmBox.getItems().removeIf(elem -> parentBranchCmBox.getValue().equals(elem));
+		}
 	}
 
 	@FXML
