@@ -144,4 +144,8 @@ public class Proposal {
 				&& Objects.equals(updateEvent, other.updateEvent) && proposalType == other.proposalType;
 	}
 
+	public Set<User> getLikesList() {
+		return likes;
+	}
+
 }

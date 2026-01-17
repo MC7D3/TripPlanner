@@ -14,7 +14,7 @@ import tpgroup.view.ViewType;
 public class ConfigReader {
 	Properties conf;
 
-	public ConfigReader(String path) throws IOException{
+	public ConfigReader(String path) throws IOException {
 		File confFile = new File(path);
 		this.conf = new Properties();
 		conf.load(new FileReader(confFile));
@@ -22,19 +22,20 @@ public class ConfigReader {
 
 	public String readFileDBRoot() throws PropertyNotFoundException {
 		String res = conf.getProperty("dbfileroot");
-		if(res != null) return res;
+		if (res != null)
+			return res;
 		throw new PropertyNotFoundException();
 	}
 
-	public PersistenceType readPersistenceType() throws InvalidPersistenceTypeException{
-		try{
+	public PersistenceType readPersistenceType() throws InvalidPersistenceTypeException {
+		try {
 			return PersistenceType.valueOf(conf.getProperty("persistencetype"));
-		}catch(IllegalArgumentException e){
+		} catch (IllegalArgumentException e) {
 			throw new InvalidPersistenceTypeException(e);
 		}
 	}
 
-	public ViewType readViewType() throws InvalidViewTypeException{
+	public ViewType readViewType() throws InvalidViewTypeException {
 		try {
 			return ViewType.valueOf(conf.getProperty("viewtype"));
 		} catch (IllegalArgumentException e) {
@@ -42,31 +43,45 @@ public class ConfigReader {
 		}
 	}
 
-	public String readJdbcUrl() throws PropertyNotFoundException{
+	public String readJdbcUrl() throws PropertyNotFoundException {
 		String res = conf.getProperty("jdbc.url");
-		if(res != null) return res;
-		throw new PropertyNotFoundException();
-	}
-	
-	public String readJdbcUsername() throws PropertyNotFoundException{
-		String res = conf.getProperty("jdbc.username");
-		if(res != null) return res;
-		throw new PropertyNotFoundException();
-	}
-	public String readJdbcPassword() throws PropertyNotFoundException {
-		String res = conf.getProperty("jdbc.password");
-		if(res != null) return res;
-		throw new PropertyNotFoundException();
-	}
-	public String readJdbcDriver() throws PropertyNotFoundException{
-		String res = conf.getProperty("jdbc.driver");
-		if(res != null) return res;
+		if (res != null)
+			return res;
 		throw new PropertyNotFoundException();
 	}
 
-	public boolean readReloadPOI() throws PropertyNotFoundException{
+	public String readJdbcUsername() throws PropertyNotFoundException {
+		String res = conf.getProperty("jdbc.username");
+		if (res != null)
+			return res;
+		throw new PropertyNotFoundException();
+	}
+
+	public String readJdbcPassword() throws PropertyNotFoundException {
+		String res = conf.getProperty("jdbc.password");
+		if (res != null)
+			return res;
+		throw new PropertyNotFoundException();
+	}
+
+	public String readJdbcDriver() throws PropertyNotFoundException {
+		String res = conf.getProperty("jdbc.driver");
+		if (res != null)
+			return res;
+		throw new PropertyNotFoundException();
+	}
+
+	public boolean readReloadPOI() throws PropertyNotFoundException {
 		String res = conf.getProperty("reloadPOI");
-		if(res != null) return Boolean.parseBoolean(res);
+		if (res != null)
+			return Boolean.parseBoolean(res);
+		throw new PropertyNotFoundException();
+	}
+
+	public boolean readMockData() throws PropertyNotFoundException {
+		String res = conf.getProperty("mockdata");
+		if (res != null)
+			return Boolean.parseBoolean(res);
 		throw new PropertyNotFoundException();
 	}
 }

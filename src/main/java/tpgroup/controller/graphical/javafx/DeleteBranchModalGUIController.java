@@ -22,23 +22,8 @@ public class DeleteBranchModalGUIController extends FxController {
 
 	@FXML
 	public void initialize() {
-		List<BranchBean> branches = TripController.getBranches();
+		List<BranchBean> branches = TripController.getDeletionCandidates();
 		branchCmBox.getItems().addAll(branches);
-	}
-
-	@FXML
-	public void onBranchSelected() {
-		BranchBean selectedBranch = branchCmBox.getValue();
-		if (selectedBranch != null) {
-			List<BranchBean> candidates = TripController.getDeletionCandidates(selectedBranch);
-
-			if (candidates.isEmpty()) {
-				warningTxt.setText("⚠ This branch has no orphan children that need deletion.");
-			} else {
-				warningTxt.setText("⚠ Warning: " + candidates.size() +
-						" child branch(es) will also be deleted to prevent orphans.");
-			}
-		}
 	}
 
 	@FXML

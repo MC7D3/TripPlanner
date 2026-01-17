@@ -6,6 +6,7 @@ import tpgroup.model.ConfigReader;
 import tpgroup.model.exception.InvalidPersistenceTypeException;
 import tpgroup.model.exception.InvalidViewTypeException;
 import tpgroup.model.exception.PropertyNotFoundException;
+import tpgroup.persistence.MockDataLoader;
 import tpgroup.persistence.POIDataLoader;
 import tpgroup.persistence.factory.DAOFactory;
 import tpgroup.view.ViewElement;
@@ -20,10 +21,15 @@ public class App {
 			ViewElement view = ViewFactory.getInstance().getView(confRd.readViewType());
 			boolean reloadPOI = confRd.readReloadPOI();
 			POIDataLoader.load("rome_poi_data.json", reloadPOI);
+			boolean mockData = confRd.readMockData();
+			MockDataLoader loader = new MockDataLoader();
+			loader.cleanupMockData();
+			if(mockData){
+				loader.loadMockData();
+			}
 			do {
 				view.show();
 			} while (true);
-
 		} catch (IOException | InvalidPersistenceTypeException | InvalidViewTypeException
 				| PropertyNotFoundException e) {
 			System.err.println(e.toString());

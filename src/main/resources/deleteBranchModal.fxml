@@ -15,10 +15,7 @@
 
 		<Label text="Select Branch to Delete:" styleClass="form-label" />
 		<ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field"
-			prefWidth="400" onAction="#onBranchSelected" />
-
-		<Text fx:id="warningTxt" style="-fx-font-size: 11; -fx-fill: #d63031; -fx-font-weight: bold;" 
-			wrappingWidth="400" />
+			prefWidth="400" />
 
 		<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
 

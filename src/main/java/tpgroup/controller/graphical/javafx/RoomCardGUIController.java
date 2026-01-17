@@ -51,7 +51,7 @@ public class RoomCardGUIController extends FxController{
 		int memberCount = room.getMembers().size();
 		roomMembersTxt.setText(memberCount + " member" + (memberCount != 1 ? "s" : ""));
 
-		if (RoomController.amIAdmin()) {
+		if (RoomController.amIAdmin(room)) {
 			adminStatusTxt.setText("(Admin)");
 			adminStatusTxt.setVisible(true);
 			adminStatusTxt.setManaged(true);

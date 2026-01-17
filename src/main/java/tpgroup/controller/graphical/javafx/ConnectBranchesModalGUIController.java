@@ -1,6 +1,7 @@
 package tpgroup.controller.graphical.javafx;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -23,16 +24,19 @@ public class ConnectBranchesModalGUIController extends FxController {
 
 	@FXML
 	public void initialize() {
-		List<BranchBean> branches = TripController.getBranches();
-		parentBranchCmBox.getItems().addAll(branches);
+		parentBranchCmBox.getItems().addAll(TripController.getGraphBranches());
 	}
 
 	@FXML
-	public void getChilds(){
-		if(parentBranchCmBox.getValue() != null){
+	public void getChilds() {
+		BranchBean selectedParent = parentBranchCmBox.getValue();
+		if (selectedParent != null) {
 			childBranchCmBox.getItems().clear();
-			childBranchCmBox.getItems().addAll(TripController.getBranches());
-			childBranchCmBox.getItems().removeIf(elem -> parentBranchCmBox.getValue().equals(elem));
+			List<BranchBean> validChildren = TripController.getAllBranches().stream()
+					.filter(b -> !b.equals(selectedParent))
+					.collect(Collectors.toList());
+
+			childBranchCmBox.getItems().addAll(validChildren);
 		}
 	}
 
@@ -48,6 +52,11 @@ public class ConnectBranchesModalGUIController extends FxController {
 
 		if (parent.equals(child)) {
 			outLogTxt.setText("Cannot connect a branch to itself");
+			return;
+		}
+
+		if (parent.getEvents().isEmpty() || child.getEvents().isEmpty()) {
+			outLogTxt.setText("branch must have events");
 			return;
 		}
 

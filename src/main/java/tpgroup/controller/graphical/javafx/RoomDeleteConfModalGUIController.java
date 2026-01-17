@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import tpgroup.controller.OptionsController;
 
-public class ModalConfDelGUIController extends FxController{
+public class RoomDeleteConfModalGUIController extends FxController{
 
 	@FXML
 	private Button proceedBtn;
@@ -14,11 +14,9 @@ public class ModalConfDelGUIController extends FxController{
 	private void onSubmit(){
 		OptionsController.deleteAccount();
 		Stage confStage = (Stage) proceedBtn.getScene().getWindow();
-		Stage optionsStage = (Stage) confStage.getOwner();
-		Stage rootStage = (Stage) optionsStage.getOwner();
+		Stage roomStage = (Stage) confStage.getOwner();
 		confStage.close();
-		optionsStage.close();
-		redirect("login.fxml", rootStage);
+		redirect("loggedMenu.fxml", roomStage);
 	}
 
 	@FXML

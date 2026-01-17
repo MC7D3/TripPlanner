@@ -135,7 +135,7 @@ public class RoomViewGUIController extends FxController {
 
 		graphView.setVertexDoubleClickAction(vertex -> {
 			String nodeId = vertex.getUnderlyingVertex().element();
-			BranchBean selectedBranch = TripController.getBranches().stream()
+			BranchBean selectedBranch = TripController.getAllBranches().stream()
 					.filter(b -> b.getId().toString().startsWith(nodeId))
 					.findFirst().get();
 			outLogTxt.setText("Selected branch: " + selectedBranch);
@@ -277,7 +277,7 @@ public class RoomViewGUIController extends FxController {
 
 	@FXML
 	public void onDeleteRoom() {
-		open("modalConfirmationDelete.fxml", (Stage) graphPane.getScene().getWindow());
+		open("roomDeleteConfModal.fxml", (Stage) graphPane.getScene().getWindow());
 	}
 
 	@FXML

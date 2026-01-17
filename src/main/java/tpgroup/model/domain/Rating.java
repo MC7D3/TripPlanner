@@ -6,11 +6,11 @@ import java.util.List;
 import tpgroup.model.exception.EnumNotFoundException;
 
 public enum Rating{
-	ONESTAR("one star", "one", "one stars"),
-	TWOSTAR("two star", "two", "two stars"),
-	THREESTAR("three star", "three", "three stars"),
-	FOURSTAR("four star", "four", "four stars"),
-	FIVESTAR("five star", "five", "five stars");
+	ONESTAR("one star", "one", "one stars", "onestar"),
+	TWOSTAR("two star", "two", "two stars", "twostar"),
+	THREESTAR("three star", "three", "three stars", "threestar"),
+	FOURSTAR("four star", "four", "four stars", "fourstar"),
+	FIVESTAR("five star", "five", "five stars", "fivestar");
 
 	private final List<String> humanReadableNames;
 

@@ -9,10 +9,10 @@
 <VBox style="-fx-max-height: 170; -fx-min-height: 170; -fx-max-width: 450; -fx-min-width: 450;"
 	styleClass="form-container" stylesheets="@login_styles.css"
 	xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="tpgroup.controller.graphical.javafx.ModalConfDelGUIController">
+	fx:controller="tpgroup.controller.graphical.javafx.RoomDeleteConfModalGUIController">
 	<children>
 		<Text style="-fx-font-size: 15; -fx-font-weight: normal;" styleClass="heading"
-   text="Are you sure u want to proceed with the account deletion? " />
+			text="Are you sure u want to proceed with the room deletion? " />
 		<Text strokeType="OUTSIDE" strokeWidth="0.0"
 			style="-fx-font-size: 15; -fx-font-weight: normal;" styleClass="heading"
 			text="(this operation cannot be undone)" />

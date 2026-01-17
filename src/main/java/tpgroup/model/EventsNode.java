@@ -13,7 +13,7 @@ import tpgroup.model.exception.NodeConflictException;
 public class EventsNode {
 	private final UUID id;
 	private NavigableSet<Event> events;
-	private final EventsGraph graph;
+	private EventsGraph graph;
 
 	public EventsNode(UUID id, NavigableSet<Event> events, EventsGraph graph){
 		this.id = id;
@@ -25,8 +25,16 @@ public class EventsNode {
 		this(UUID.randomUUID(), new TreeSet<>(), graph);
 	}
 
+	public EventsNode(UUID id, NavigableSet<Event> events){
+		this(id, events, null);
+	}
+
 	public void resetEvents(){
 		events = new TreeSet<>();
+	}
+
+	public void setGraph(EventsGraph graph){
+		this.graph = graph;
 	}
 
 	public boolean addEvent(Event event) {

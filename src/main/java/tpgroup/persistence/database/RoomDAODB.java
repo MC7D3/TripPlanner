@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import tpgroup.model.EventsGraph;
 import tpgroup.model.domain.Proposal;
@@ -18,10 +20,12 @@ import tpgroup.model.domain.Room;
 import tpgroup.model.domain.Trip;
 import tpgroup.model.domain.User;
 import tpgroup.persistence.DAO;
+import tpgroup.persistence.EventsGraphJSONTypeAdapter;
+import tpgroup.persistence.LocalDateTimeJSONTypeAdaper;
 
 public class RoomDAODB implements DAO<Room> {
 	private Connection connection;
-	private Gson gson = new Gson();
+	private Gson gson;
 	private ProposalDAODB proposalDAO;
 
 	private static final String EMAIL_VAR = "email";
@@ -30,6 +34,10 @@ public class RoomDAODB implements DAO<Room> {
 	public RoomDAODB(Connection connection) {
 		this.connection = connection;
 		this.proposalDAO = new ProposalDAODB(connection);
+		this.gson = new GsonBuilder()
+			.registerTypeAdapter(EventsGraph.class, new EventsGraphJSONTypeAdapter())
+			.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJSONTypeAdaper())
+			.create();
 	}
 
 	@Override

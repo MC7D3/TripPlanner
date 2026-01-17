@@ -86,7 +86,7 @@ public class RoomGController {
 	}
 
 	public static List<BranchBean> getBranches() {
-		return TripController.getBranches();
+		return TripController.getAllBranches();
 	}
 
 	public static List<ProposalBean> getLoggedUserProposals() {
@@ -99,9 +99,13 @@ public class RoomGController {
 		return proposal;
 	}
 
-	public static List<BranchBean> getDeletionCandidates(BranchBean forNode) {
-		return TripController.getDeletionCandidates(forNode);
+	public static List<BranchBean> getDeletionCandidates() {
+		return TripController.getDeletionCandidates();
 
+	}
+
+	public static List<BranchBean> getConnectedBranches(BranchBean of){
+		return TripController.getConnectedBranches(of);
 	}
 
 	public static List<POIBean> getFilteredPOIs(String minRatingTxt, String maxRatingTxt,

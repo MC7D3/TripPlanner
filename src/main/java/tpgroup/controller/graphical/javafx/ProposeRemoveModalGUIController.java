@@ -23,7 +23,7 @@ public class ProposeRemoveModalGUIController extends FxController {
 
 	@FXML
 	public void initialize() {
-		List<BranchBean> delBranches = TripController.getBranches();
+		List<BranchBean> delBranches = TripController.getAllBranches();
 		delBranchCmBox.getItems().addAll(delBranches);
 	}
 

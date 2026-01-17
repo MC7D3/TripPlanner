@@ -18,7 +18,7 @@ public class RoomController {
 		super();
 	}
 
-	public static RoomBean getEnteredRoom(){
+	public static RoomBean getEnteredRoom() {
 		return new RoomBean(Session.getInstance().getEnteredRoom());
 	}
 
@@ -87,11 +87,20 @@ public class RoomController {
 		return Session.getInstance().getEnteredRoom().getAdmin().equals(Session.getInstance().getLogged());
 	}
 
-	// inteso per la prima volta che entri, volte successive usi la card
+	public static boolean amIAdmin(RoomBean room) {
+		try {
+			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+			Room fullRoom = roomDao.get(new Room(room.getCode()));
+			return fullRoom.getAdmin().equals(Session.getInstance().getLogged());
+		} catch (RecordNotFoundException e) {
+			return false;
+		}
+	}
+
 	public static boolean joinRoom(RoomBean roomCode) {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-			Room joined = roomDao.get(new Room(roomCode.getName()));
+			Room joined = roomDao.get(new Room(roomCode.getCode()));
 			joined.add(Session.getInstance().getLogged());
 			Session.getInstance().setEnteredRoom(joined);
 			roomDao.save(joined);

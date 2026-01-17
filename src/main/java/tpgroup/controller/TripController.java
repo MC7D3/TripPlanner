@@ -91,11 +91,17 @@ public class TripController {
 				.stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
 	}
 
-	public static List<BranchBean> getBranches() {
-		List<BranchBean> allBranches = getEnteredRoom().getTrip().getAllBranches().stream()
-				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
+	public static List<BranchBean> getAllBranches() {
+		List<BranchBean> allBranches = getGraphBranches();
 		allBranches.addAll(getStagingBranches());
 		return allBranches;
+	}
+
+	public static List<BranchBean> getGraphBranches(){
+		List<BranchBean> branches= getEnteredRoom().getTrip().getAllBranches().stream()
+				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
+		return branches;
+
 	}
 
 	public static TripBean getTrip(){
@@ -196,11 +202,11 @@ public class TripController {
 		}
 	}
 
-	public static List<BranchBean> getDeletionCandidates(BranchBean of) {
-		List<BranchBean> candidates = new ArrayList<>(getConnectedBranches(of)).stream()
+	public static List<BranchBean> getDeletionCandidates() {
+		List<BranchBean> candidates = new ArrayList<>(getGraphBranches()).stream()
 				.filter(branch -> getEnteredRoom().getTrip()
 						.connCount(extractNode(branch)) == 0)
-				.toList();
+				.collect(Collectors.toList());
 		candidates.addAll(getStagingBranches());
 		return candidates;
 	}
@@ -219,4 +225,5 @@ public class TripController {
 		}
 		return res;
 	}
+
 }

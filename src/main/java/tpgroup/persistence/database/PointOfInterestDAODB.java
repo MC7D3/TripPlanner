@@ -23,6 +23,11 @@ import tpgroup.persistence.DAO;
 public class PointOfInterestDAODB implements DAO<PointOfInterest> {
     private final Connection connection;
     private final Gson gson = new Gson();
+	private final String GET_QUERY = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
+    private final String GETALL_QUERY = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";
+    private final String UPDATE_QUERY = "UPDATE poi_tbl SET description = ?, country = ?, city = ?, rating = ?, tags = ? WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
+	private final String ADD_QUERY = "INSERT INTO poi_tbl (name, description, country, city, coordinates_latitude, coordinates_longitude, rating, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String DELETE_QUERY = "DELETE FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
 
     public PointOfInterestDAODB(Connection connection) {
         this.connection = connection;
@@ -30,12 +35,11 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
 
     @Override
     public PointOfInterest get(PointOfInterest poi) throws RecordNotFoundException {
-       final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
         PreparedStatement stmt = null;
         ResultSet rs = null;
         
         try {
-            stmt = connection.prepareStatement(query);
+            stmt = connection.prepareStatement(GET_QUERY);
             stmt.setString(1, poi.getName());
             stmt.setDouble(2, poi.getCoordinates().getLatitude());
             stmt.setDouble(3, poi.getCoordinates().getLongitude());
@@ -49,21 +53,20 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
         } catch (SQLException e) {
             throw new SQLConnInterruptedException(e);
         } finally {
-            closeQuietly(rs);
-            closeQuietly(stmt);
+            close(rs);
+            close(stmt);
         }
     }
 
     @Override
     public List<PointOfInterest> getAll() {
-        final String query = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";
 		Statement stmt = null;
         ResultSet rs = null;
         List<PointOfInterest> pois = new ArrayList<>();
         
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery(query);
+            rs = stmt.executeQuery(GETALL_QUERY);
             
             while (rs.next()) {
                 pois.add(mapResultSetToPOI(rs));
@@ -72,18 +75,17 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
         } catch (SQLException e) {
             throw new SQLConnInterruptedException(e);
         } finally {
-            closeQuietly(rs);
-            closeQuietly(stmt);
+            close(rs);
+            close(stmt);
         }
     }
 
     @Override
     public void save(PointOfInterest poi) {
-        final String query = "UPDATE poi_tbl SET description = ?, country = ?, city = ?, rating = ?, tags = ? WHERE name = ? AND latitude = ? AND longitude = ?";
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement(query);
+            stmt = connection.prepareStatement(UPDATE_QUERY);
             stmt.setString(1, poi.getDescription());
             stmt.setString(2, poi.getCountry());
             stmt.setString(3, poi.getCity());
@@ -99,18 +101,16 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
         } catch (SQLException e) {
             throw new SQLConnInterruptedException(e);
         } finally {
-            closeQuietly(stmt);
+            close(stmt);
         }
     }
 
     @Override
     public boolean add(PointOfInterest poi) {
-        final String query = "INSERT INTO poi_tbl (name, description, country, city, latitude, longitude, rating, tags) "
-                           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement(query);
+            stmt = connection.prepareStatement(ADD_QUERY);
             stmt.setString(1, poi.getName());
             stmt.setString(2, poi.getDescription());
             stmt.setString(3, poi.getCountry());
@@ -122,22 +122,21 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) { // Duplicate entry
+            if (e.getErrorCode() == 1062) {
                 return false;
             }
             throw new SQLConnInterruptedException(e);
         } finally {
-            closeQuietly(stmt);
+            close(stmt);
         }
     }
 
     @Override
     public void delete(PointOfInterest poi) throws RecordNotFoundException {
-        final String query = "DELETE FROM poi_tbl WHERE name = ? AND latitude = ? AND longitude = ?";
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement(query);
+            stmt = connection.prepareStatement(DELETE_QUERY);
             stmt.setString(1, poi.getName());
             stmt.setDouble(2, poi.getCoordinates().getLatitude());
             stmt.setDouble(3, poi.getCoordinates().getLongitude());
@@ -148,7 +147,7 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
         } catch (SQLException e) {
             throw new SQLConnInterruptedException(e);
         } finally {
-            closeQuietly(stmt);
+            close(stmt);
         }
     }
 
@@ -163,21 +162,20 @@ public class PointOfInterestDAODB implements DAO<PointOfInterest> {
         return new PointOfInterest(
             rs.getString("name"),
             rs.getString("description"),
-			rs.getString("country"),
 			rs.getString("city"),
-			new Coordinates(rs.getDouble("latitude"), rs.getDouble("longitude")),
+			rs.getString("country"),
+			new Coordinates(rs.getDouble("coordinates_latitude"), rs.getDouble("coordinates_longitude")),
             Rating.valueOf(rs.getString("rating")),
             gson.fromJson(rs.getString("tags"), new TypeToken<List<Tag>>(){}.getType())
         );
     }
 
-    private void closeQuietly(AutoCloseable resource) {
+    private void close(AutoCloseable resource) {
         if (resource != null) {
             try {
                 resource.close();
             } catch (Exception e) {
-                // Log or handle at the application level
-                System.err.println("Error closing resource: " + e.getMessage());
+				throw new IllegalStateException(e);
             }
         }
     }

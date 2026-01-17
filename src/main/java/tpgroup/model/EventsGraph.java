@@ -27,6 +27,19 @@ public class EventsGraph {
 		nodes.add(root);
 	}
 
+	public EventsGraph(EventsNode root, Map<EventsNode, Set<EventsNode>> connectionsMapping, Set<EventsNode> nodes, Set<EventsNode> stagingArea){
+		this.root = root;
+		this.connectionsMapping = connectionsMapping;
+		for(EventsNode node : nodes){
+			node.setGraph(this);
+		}
+		this.nodes = nodes;
+		for(EventsNode stageNode : stagingArea){
+			stageNode.setGraph(this);
+		}
+		this.stagingArea = stagingArea;
+	}
+
 	public List<EventsNode> getConnectedNodes(EventsNode of) {
 		return connectionsMapping.get(of).stream().toList();
 	}
@@ -176,14 +189,18 @@ public class EventsGraph {
 			root.resetEvents();
 			return;
 		}
-		List<EventsNode> fathers = findFathers(toRemove);
-		for (EventsNode father : fathers) {
-			Set<EventsNode> connections = connectionsMapping.get(father);
-			connections.remove(toRemove);
-			connections.addAll(connectionsMapping.get(toRemove));
+		if(nodes.contains(toRemove)){
+			List<EventsNode> fathers = findFathers(toRemove);
+			for (EventsNode father : fathers) {
+				Set<EventsNode> connections = connectionsMapping.get(father);
+				connections.remove(toRemove);
+				connections.addAll(connectionsMapping.get(toRemove));
+			}
+			nodes.remove(toRemove);
+			connectionsMapping.remove(toRemove);
+		}else{
+			stagingArea.remove(toRemove);
 		}
-		nodes.remove(toRemove);
-		connectionsMapping.remove(toRemove);
 	}
 
 	public void notifySplit(EventsNode eventsNode, EventsNode newNode) {

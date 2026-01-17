@@ -33,7 +33,7 @@ public class ProposeUpdateModalGUIController extends FxController {
 	@FXML
 	public void initialize() {
 		// Load branches
-		List<BranchBean> branches = TripController.getBranches();
+		List<BranchBean> branches = TripController.getAllBranches();
 		branchCmBox.getItems().addAll(branches);
 	}
 

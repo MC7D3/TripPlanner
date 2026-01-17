@@ -23,7 +23,7 @@ public class SplitBranchModalGUIController extends FxController {
 
 	@FXML
 	public void initialize() {
-		List<BranchBean> branches = TripController.getBranches();
+		List<BranchBean> branches = TripController.getAllBranches();
 		branchCmBox.getItems().addAll(branches);
 	}
 

@@ -23,7 +23,7 @@ public class DisconnectBranchesModalGUIController extends FxController {
 
 	@FXML
 	public void initialize() {
-		List<BranchBean> disBranches = TripController.getBranches();
+		List<BranchBean> disBranches = TripController.getAllBranches();
 		disParentBranchCmBox.getItems().addAll(disBranches);
 	}
 
