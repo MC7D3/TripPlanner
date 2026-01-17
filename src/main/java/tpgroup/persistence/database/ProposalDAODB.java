@@ -53,6 +53,7 @@ public class ProposalDAODB {
 			"updateevent_start, updateevent_end, proposal_type" +
 			") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
 			"ON DUPLICATE KEY UPDATE " +
+			"node_id = VALUES(node_id), " +
 			"event_poi_coord_lat_fk = VALUES(event_poi_coord_lat_fk), " +
 			"event_poi_coord_lon_fk = VALUES(event_poi_coord_lon_fk), " +
 			"event_start = VALUES(event_start), " +
@@ -61,8 +62,7 @@ public class ProposalDAODB {
 			"updateevent_poi_coord_lon = VALUES(updateevent_poi_coord_lon), " +
 			"updateevent_start = VALUES(updateevent_start), " +
 			"updateevent_end = VALUES(updateevent_end), " +
-			"proposal_type = VALUES(proposal_type), " +
-			"node_id = VALUES(node_id)";
+			"proposal_type = VALUES(proposal_type)";
 
 	private final String GET_QUERY = "SELECT " +
 			"p.*, u.*, " +
@@ -80,6 +80,8 @@ public class ProposalDAODB {
 			"AND p.updateevent_poi_coord_lon = poi2.coordinates_longitude " +
 			"WHERE p.trip_fk = ?";
 
+	private final String DELETE_QUERY = "DELETE FROM proposal_tbl WHERE creator_fk = ? AND trip_fk = ? AND creation_time = ?";
+
 	private final String GET_LIKES_QUERY = "SELECT u.email, u.password FROM likes_tbl l " +
 			"JOIN user_tbl u ON l.user_fk = u.email " +
 			"WHERE l.creator_prop_fk = ? AND l.trip_prop_fk = ? AND l.creation_time_prop_fk = ?";
@@ -89,7 +91,6 @@ public class ProposalDAODB {
 	private final String INSERT_LIKES_QUERY = "INSERT INTO likes_tbl (user_fk, creator_prop_fk, trip_prop_fk, creation_time_prop_fk) VALUES (?, ?, ?, ?)";
 
 	public Set<Proposal> getTripProposals(String roomCode, EventsGraph graph) {
-
 		Set<Proposal> proposals = new HashSet<>();
 
 		try (PreparedStatement stmt = connection.prepareStatement(GET_QUERY)) {
@@ -99,6 +100,7 @@ public class ProposalDAODB {
 			while (rs.next()) {
 				User creator = new User(rs.getString("email"), rs.getString("password"));
 				LocalDateTime creationTime = rs.getTimestamp("creation_time").toLocalDateTime();
+
 				PointOfInterest poi1 = new PointOfInterest(
 						rs.getString("name1"),
 						rs.getString("desc1"),
@@ -111,11 +113,13 @@ public class ProposalDAODB {
 						gson.fromJson(rs.getString("tags1"), new TypeToken<List<Tag>>() {
 						}.getType()));
 
-				Event event = new Event(poi1, rs.getTimestamp("event_start").toLocalDateTime(),
+				Event event = new Event(poi1,
+						rs.getTimestamp("event_start").toLocalDateTime(),
 						rs.getTimestamp("event_end").toLocalDateTime());
+
 				Event updateEvent = null;
 
-				if (rs.getString("name2") != null) {
+				if (rs.getString("name2") != null && rs.getTimestamp("updateevent_start") != null) {
 					PointOfInterest poi2 = new PointOfInterest(
 							rs.getString("name2"),
 							rs.getString("desc2"),
@@ -125,18 +129,23 @@ public class ProposalDAODB {
 									rs.getDouble("lat2"),
 									rs.getDouble("lon2")),
 							Rating.getRatingFromName(rs.getString("rating2")),
-							gson.fromJson(rs.getString("tags1"), new TypeToken<List<Tag>>() {
+							gson.fromJson(rs.getString("tags2"), new TypeToken<List<Tag>>() {
 							}.getType()));
 
-					updateEvent = new Event(poi2, rs.getTimestamp("updateevent_start").toLocalDateTime(),
+					updateEvent = new Event(poi2,
+							rs.getTimestamp("updateevent_start").toLocalDateTime(),
 							rs.getTimestamp("updateevent_end").toLocalDateTime());
 				}
 
 				ProposalType proposalType = ProposalType.valueOf(rs.getString("proposal_type"));
+
 				Set<User> likes = getLikesForProposal(creator.getEmail(), roomCode, creationTime);
 
 				UUID id = UUID.fromString(rs.getString("node_id"));
-				EventsNode node = graph.getGraphNodes().stream().filter(n -> n.getId().equals(id)).findFirst().get();
+				EventsNode node = graph.getAllNodes().stream()
+						.filter(n -> n.getId().equals(id))
+						.findFirst()
+						.orElseThrow(() -> new NoSuchElementException("Node not found with id: " + id));
 
 				proposals.add(new Proposal(proposalType, node, event, Optional.ofNullable(updateEvent), creator,
 						likes, creationTime));
@@ -144,7 +153,7 @@ public class ProposalDAODB {
 
 			return proposals;
 		} catch (SQLException | NoSuchElementException e) {
-			throw new IllegalStateException("Error retriving room proposals:" + e.getMessage(), e);
+			throw new IllegalStateException("Error retrieving room proposals: " + e.getMessage(), e);
 		}
 	}
 
@@ -162,7 +171,7 @@ public class ProposalDAODB {
 				likes.add(user);
 			}
 		} catch (SQLException e) {
-			throw new IllegalStateException("Error retrieving likes for proposal: " + e.getMessage(), e);
+			// emtpy list will be returned
 		}
 
 		return likes;
@@ -175,57 +184,103 @@ public class ProposalDAODB {
 			saveLikesForProposal(proposal, room.getCode());
 		}
 
+		alignRoomProposals(room);
+
 		return count == room.getTrip().getProposals().size();
 	}
 
 	public void saveRoomProposals(Room room) {
 		executeProposalEdit(room, SAVE_QUERY);
 
-        for (Proposal proposal : room.getTrip().getProposals()) {
-            saveLikesForProposal(proposal, room.getCode());
-        }
+		for (Proposal proposal : room.getTrip().getProposals()) {
+			saveLikesForProposal(proposal, room.getCode());
+		}
+
+		alignRoomProposals(room);
+
 	}
 
-    private void saveLikesForProposal(Proposal proposal, String roomCode) {
-        try {
-            connection.setAutoCommit(false);
-            
-            try (PreparedStatement deleteStmt = connection.prepareStatement(DELETE_LIKES_QUERY)) {
-                deleteStmt.setString(1, proposal.getCreator().getEmail());
-                deleteStmt.setString(2, roomCode);
-                deleteStmt.setTimestamp(3, Timestamp.valueOf(proposal.getCreationTime()));
-                deleteStmt.executeUpdate();
-            }
-            
-            if (proposal.getLikesList() != null && !proposal.getLikesList().isEmpty()) {
-                try (PreparedStatement insertStmt = connection.prepareStatement(INSERT_LIKES_QUERY)) {
-                    for (User user : proposal.getLikesList()) {
-                        insertStmt.setString(1, user.getEmail());
-                        insertStmt.setString(2, proposal.getCreator().getEmail());
-                        insertStmt.setString(3, roomCode);
-                        insertStmt.setTimestamp(4, Timestamp.valueOf(proposal.getCreationTime()));
-                        insertStmt.addBatch();
-                    }
-                    insertStmt.executeBatch();
-                }
-            }
-            
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackEx) {
-                // no action needed
-            }
-            throw new IllegalStateException("Error saving likes for proposal: " + e.getMessage(), e);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                // no action needed
-            }
-        }
-    }
+	private void alignRoomProposals(Room room) {
+		Set<Proposal> all = getTripProposals(room.getCode(), room.getTrip().getTripGraph());
+		all.removeAll(room.getTrip().getProposals());
+
+		if (all.isEmpty()) {
+			return;
+		}
+
+		try {
+			connection.setAutoCommit(false);
+			try (PreparedStatement stmt = connection.prepareStatement(DELETE_QUERY)) {
+				for (Proposal prop : all) {
+					stmt.setString(1, prop.getCreator().getEmail());
+					stmt.setString(2, room.getCode());
+					stmt.setTimestamp(3, Timestamp.valueOf(prop.getCreationTime()));
+					stmt.addBatch();
+				}
+				stmt.executeBatch();
+				connection.commit();
+			} catch (SQLException e) {
+				throw new IllegalStateException(e);
+			}
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+				throw new IllegalStateException("Error saving proposals: " + e.getMessage(), e);
+			} catch (SQLException rollbackEx) {
+				throw new IllegalStateException("Error saving proposals and rollback failed: " + e.getMessage() +
+						" | Rollback error: " + rollbackEx.getMessage(), e);
+			}
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				// no action needed
+			}
+		}
+
+	}
+
+	private void saveLikesForProposal(Proposal proposal, String roomCode) {
+		try {
+			connection.setAutoCommit(false);
+
+			try (PreparedStatement deleteStmt = connection.prepareStatement(DELETE_LIKES_QUERY)) {
+				deleteStmt.setString(1, proposal.getCreator().getEmail());
+				deleteStmt.setString(2, roomCode);
+				deleteStmt.setTimestamp(3, Timestamp.valueOf(proposal.getCreationTime()));
+				deleteStmt.executeUpdate();
+			}
+
+			if (proposal.getLikesList() != null && !proposal.getLikesList().isEmpty()) {
+				try (PreparedStatement insertStmt = connection.prepareStatement(INSERT_LIKES_QUERY)) {
+					for (User user : proposal.getLikesList()) {
+						insertStmt.setString(1, user.getEmail());
+						insertStmt.setString(2, proposal.getCreator().getEmail());
+						insertStmt.setString(3, roomCode);
+						insertStmt.setTimestamp(4, Timestamp.valueOf(proposal.getCreationTime()));
+						insertStmt.addBatch();
+					}
+					insertStmt.executeBatch();
+				}
+			}
+
+			connection.commit();
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+				throw new IllegalStateException("Error saving likes for proposal: " + e.getMessage(), e);
+			} catch (SQLException rollbackEx) {
+				throw new IllegalStateException("Error saving likes and rollback failed: " + e.getMessage() +
+						" | Rollback error: " + rollbackEx.getMessage(), e);
+			}
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				// no action required
+			}
+		}
+	}
 
 	private void setCoordinates(PreparedStatement stmt, int latInd, Double lat, int lonInd, Double lon)
 			throws SQLException {
@@ -234,6 +289,7 @@ public class ProposalDAODB {
 		} else {
 			stmt.setDouble(latInd, lat);
 		}
+
 		if (lon == null) {
 			stmt.setNull(lonInd, Types.DOUBLE);
 		} else {
@@ -243,14 +299,19 @@ public class ProposalDAODB {
 
 	private int executeProposalEdit(Room room, String query) {
 		int count = 0;
-
 		Set<Proposal> proposals = room.getTrip().getProposals();
+
+		if (proposals.isEmpty()) {
+			return 0;
+		}
 
 		try {
 			connection.setAutoCommit(false);
+
 			try (PreparedStatement stmt = connection.prepareStatement(query)) {
 				for (Proposal proposal : proposals) {
 					int paramIndex = 1;
+
 					stmt.setString(paramIndex++, proposal.getCreator().getEmail());
 					stmt.setString(paramIndex++, room.getCode());
 					stmt.setTimestamp(paramIndex++, Timestamp.valueOf(proposal.getCreationTime()));
@@ -259,29 +320,52 @@ public class ProposalDAODB {
 					stmt.setDouble(paramIndex++, proposal.getEvent().getInfo().getCoordinates().getLongitude());
 					stmt.setTimestamp(paramIndex++, Timestamp.valueOf(proposal.getEvent().getStart()));
 					stmt.setTimestamp(paramIndex++, Timestamp.valueOf(proposal.getEvent().getEnd()));
-					Double lat2 = proposal.getUpdateEvent().map(event -> event.getInfo().getCoordinates().getLatitude())
+
+					Double lat2 = proposal.getUpdateEvent()
+							.map(event -> event.getInfo().getCoordinates().getLatitude())
 							.orElse(null);
 					Double lon2 = proposal.getUpdateEvent()
-							.map(event -> event.getInfo().getCoordinates().getLongitude()).orElse(null);
+							.map(event -> event.getInfo().getCoordinates().getLongitude())
+							.orElse(null);
 					setCoordinates(stmt, paramIndex++, lat2, paramIndex++, lon2);
-					stmt.setTimestamp(paramIndex++,
-							proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
-					stmt.setTimestamp(paramIndex++,
-							proposal.getUpdateEvent().map(event -> Timestamp.valueOf(event.getStart())).orElse(null));
-					stmt.setString(paramIndex, proposal.getProposalType().name());
-					stmt.setString(14, proposal.getNodeName().getId().toString());
+
+					Timestamp updateStart = proposal.getUpdateEvent()
+							.map(event -> Timestamp.valueOf(event.getStart()))
+							.orElse(null);
+					Timestamp updateEnd = proposal.getUpdateEvent()
+							.map(event -> Timestamp.valueOf(event.getEnd()))
+							.orElse(null);
+
+					if (updateStart != null) {
+						stmt.setTimestamp(paramIndex++, updateStart);
+					} else {
+						stmt.setNull(paramIndex++, Types.TIMESTAMP);
+					}
+
+					if (updateEnd != null) {
+						stmt.setTimestamp(paramIndex++, updateEnd);
+					} else {
+						stmt.setNull(paramIndex++, Types.TIMESTAMP);
+					}
+
+					stmt.setString(paramIndex++, proposal.getProposalType().name());
 
 					stmt.addBatch();
 				}
-				count = Arrays.stream(stmt.executeBatch()).sum();
+
+				int[] batchResults = stmt.executeBatch();
+				count = Arrays.stream(batchResults).sum();
+
+				connection.commit();
 			}
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
+				throw new IllegalStateException("Error saving proposals: " + e.getMessage(), e);
 			} catch (SQLException rollbackEx) {
-				// no action needed
+				throw new IllegalStateException("Error saving proposals and rollback failed: " + e.getMessage() +
+						" | Rollback error: " + rollbackEx.getMessage(), e);
 			}
-			throw new IllegalStateException("Error saving proposals: " + e.getMessage(), e);
 		} finally {
 			try {
 				connection.setAutoCommit(true);

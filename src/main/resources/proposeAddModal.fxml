@@ -87,7 +87,7 @@
                 <ComboBox fx:id="maxRatingCmBox" promptText="Max Rating" editable="false" styleClass="combo-field" />
 
                 <Label text="Select POI:" styleClass="combo-label" />
-                <ComboBox fx:id="poiCmBox" promptText="Select POI" styleClass="combo-field" prefWidth="400" onAction="#onPOISelected" />
+                <ComboBox fx:id="poiCmBox" promptText="Select POI" styleClass="combo-field" prefWidth="400" />
 
                 <Label text="Start Date:" styleClass="combo-label" />
                 <DatePicker fx:id="startDatePicker" styleClass="combo-field" prefWidth="200" />

@@ -2,6 +2,7 @@ package tpgroup.model.domain;
 
 import java.security.SecureRandom;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -94,32 +95,30 @@ public class Room {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		return result;
+		return Objects.hash(code, name, admin, members, trip);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Room other = (Room) obj;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		return true;
+		return Objects.equals(code, other.code) && Objects.equals(name, other.name)
+				&& Objects.equals(admin, other.admin) && Objects.equals(members, other.members)
+				&& Objects.equals(trip, other.trip);
 	}
 
 	@Override
 	public String toString() {
-		return "Room [code=" + code + ", name=" + name + ", admin=" + admin + ", members=" + members + "]";
-	}	
+		return "Room{code=" + code + ", name=" + name + ", admin=" + admin + ", members=" + members + ", trip=" + trip
+				+ "}";
+	}
 
 }

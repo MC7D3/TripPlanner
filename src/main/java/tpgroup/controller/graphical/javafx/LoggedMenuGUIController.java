@@ -10,6 +10,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tpgroup.controller.AuthController;
@@ -71,7 +72,7 @@ public class LoggedMenuGUIController extends FxController {
 			int totalRows = (int) Math.ceil(rooms.size() / (double) columnsPerRow);
 
 			for (int i = 0; i < totalRows; i++) {
-				javafx.scene.layout.RowConstraints rc = new javafx.scene.layout.RowConstraints();
+				RowConstraints rc = new RowConstraints();
 				rc.setVgrow(Priority.SOMETIMES);
 				rc.setMinHeight(250); 
 				rc.setPrefHeight(250);

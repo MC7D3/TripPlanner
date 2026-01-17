@@ -1,6 +1,8 @@
 package tpgroup.controller.graphical.javafx;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -33,9 +35,10 @@ public class DisconnectBranchesModalGUIController extends FxController {
 		if (parent != null) {
 			disChildBranchCmBox.getItems().clear();
 			TripBean trip = TripController.getTrip();
-			List<BranchBean> connectedBranches = trip.getTripGraph().getConnectionsMapping()
+			Map<BranchBean, Set<BranchBean>> connMapping = trip.getTripGraph().getConnectionsMapping();
+			List<BranchBean> connectedBranches = connMapping
 					.getOrDefault(parent, java.util.Collections.emptySet())
-					.stream().toList();
+					.stream().filter(branch -> connMapping.get(branch).isEmpty()).toList();
 			
 			disChildBranchCmBox.getItems().addAll(connectedBranches);
 		}

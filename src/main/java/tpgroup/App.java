@@ -24,9 +24,12 @@ public class App {
 			boolean mockData = confRd.readMockData();
 			MockDataLoader loader = new MockDataLoader();
 			loader.cleanupMockData();
-			if(mockData){
+			if (mockData) {
 				loader.loadMockData();
 			}
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				loader.cleanupMockData();
+			}));
 			do {
 				view.show();
 			} while (true);

@@ -44,7 +44,6 @@ public class CacheDecorator<T> implements DAO<T> {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + getEnclosingInstance().hashCode();
 			result = prime * result + Objects.hash(elem);
 			return result;
 		}
@@ -65,14 +64,7 @@ public class CacheDecorator<T> implements DAO<T> {
 				return false;
 			}
 			CachedElement other = (CachedElement) obj;
-			if (!getEnclosingInstance().equals(other.getEnclosingInstance())) {
-				return false;
-			}
 			return Objects.equals(elem, other.elem);
-		}
-
-		private CacheDecorator<T> getEnclosingInstance() {
-			return CacheDecorator.this;
 		}
 
 	}

@@ -48,9 +48,12 @@ public class RoomController {
 	}
 
 	public static List<RoomBean> getJoinedRooms() {
-		return DAOFactory.getInstance().getDAO(Room.class)
-				.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()))
-				.stream().map(item -> new RoomBean(item)).toList();
+		//return DAOFactory.getInstance().getDAO(Room.class)
+		//		.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()))
+		//		.stream().map(item -> new RoomBean(item)).toList();
+		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
+		List<Room> joined  = roomDao.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()));
+		return joined.stream().map(item -> new RoomBean(item)).toList();
 	}
 
 	public static boolean abbandonRoom(RoomBean toAbbandonBean) {

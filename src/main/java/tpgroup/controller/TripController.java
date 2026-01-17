@@ -35,10 +35,12 @@ public class TripController {
 		super();
 	}
 
-	private static Room getEnteredRoom(){
+	private static Room getEnteredRoom() {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-			Session.getInstance().setEnteredRoom(roomDao.get(Session.getInstance().getEnteredRoom()));
+			Room dbRoom = roomDao.get(Session.getInstance().getEnteredRoom());
+			if(!dbRoom.equals(Session.getInstance().getEnteredRoom()))
+				Session.getInstance().setEnteredRoom(dbRoom);
 			return Session.getInstance().getEnteredRoom();
 		} catch (RecordNotFoundException e) {
 			throw new IllegalStateException(e);
@@ -86,7 +88,7 @@ public class TripController {
 				.map(proposal -> new ProposalBean(proposal)).toList();
 	}
 
-	public static List<StagingBranchBean> getStagingBranches(){
+	public static List<StagingBranchBean> getStagingBranches() {
 		return getEnteredRoom().getTrip().getStagingBranches()
 				.stream().map(stageBranch -> new StagingBranchBean(stageBranch)).toList();
 	}
@@ -97,14 +99,14 @@ public class TripController {
 		return allBranches;
 	}
 
-	public static List<BranchBean> getGraphBranches(){
-		List<BranchBean> branches= getEnteredRoom().getTrip().getAllBranches().stream()
+	public static List<BranchBean> getGraphBranches() {
+		List<BranchBean> branches = getEnteredRoom().getTrip().getAllBranches().stream()
 				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
 		return branches;
 
 	}
 
-	public static TripBean getTrip(){
+	public static TripBean getTrip() {
 		return new TripBean(getEnteredRoom().getTrip());
 	}
 
@@ -195,9 +197,9 @@ public class TripController {
 
 	public static List<BranchBean> getConnectedBranches(BranchBean branchBean) {
 		List<EventsNode> connectedBranches = getEnteredRoom().getTrip().getConnectedBranches(extractNode(branchBean));
-		if(connectedBranches == null){
+		if (connectedBranches == null) {
 			return List.of();
-		}else{
+		} else {
 			return connectedBranches.stream().map(eventsNode -> new BranchBean(eventsNode)).toList();
 		}
 	}
@@ -213,7 +215,7 @@ public class TripController {
 
 	private static void saveChanges() {
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
-		roomDao.save(getEnteredRoom());
+		roomDao.save(Session.getInstance().getEnteredRoom());
 	}
 
 	public static boolean splitBranch(BranchBean toSplitBean, EventBean pivotBean) {

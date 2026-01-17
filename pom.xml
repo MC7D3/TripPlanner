@@ -93,9 +93,11 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version> <!-- Try older version -->
 					<configuration>
 						<mainClass>tpgroup.App</mainClass>
+						<commandlineArgs>
+							-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</commandlineArgs>
 					</configuration>
 				</plugin>
 				<plugin>

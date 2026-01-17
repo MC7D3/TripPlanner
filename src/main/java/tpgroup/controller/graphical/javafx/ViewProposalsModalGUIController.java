@@ -58,7 +58,6 @@ public class ViewProposalsModalGUIController extends FxController {
 			return;
 		}
 
-		// Sort by likes
 		proposals.sort((p1, p2) -> Integer.compare(p2.getLikes(), p1.getLikes()));
 
 		for (ProposalBean proposal : proposals) {
@@ -72,7 +71,6 @@ public class ViewProposalsModalGUIController extends FxController {
 		card.setStyle(
 				"-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-border-color: #dfe6e9; -fx-border-radius: 4; -fx-background-radius: 4;");
 
-		// Header with type and likes
 		HBox header = new HBox(10);
 		Label typeLabel = new Label(proposal.getProposalType().toString());
 		typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13;");

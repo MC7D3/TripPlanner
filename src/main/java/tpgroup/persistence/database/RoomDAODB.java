@@ -67,7 +67,7 @@ public class RoomDAODB implements DAO<Room> {
 
 			saveRoomMembers(room);
 
-			res = res && proposalDAO.addRoomProposals(room); // handle return value
+			res = res && proposalDAO.addRoomProposals(room);
 
 			connection.commit();
 
@@ -280,7 +280,7 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				setAutoCommitError = false;
+				setAutoCommitError = true;
 			}
 		}
 		if(setAutoCommitError)
