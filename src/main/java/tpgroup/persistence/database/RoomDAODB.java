@@ -20,8 +20,8 @@ import tpgroup.model.domain.Room;
 import tpgroup.model.domain.Trip;
 import tpgroup.model.domain.User;
 import tpgroup.persistence.DAO;
-import tpgroup.persistence.EventsGraphJSONTypeAdapter;
-import tpgroup.persistence.LocalDateTimeJSONTypeAdaper;
+import tpgroup.persistence.gson.EventsGraphJSONTypeAdapter;
+import tpgroup.persistence.gson.LocalDateTimeJSONTypeAdaper;
 
 public class RoomDAODB implements DAO<Room> {
 	private Connection connection;
@@ -30,6 +30,33 @@ public class RoomDAODB implements DAO<Room> {
 
 	private static final String EMAIL_VAR = "email";
 	private static final String PWD_VAR = "password";
+
+	private final String ADD_SQL = "INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph) " +
+								"VALUES (?, ?, ?, ?, ?, ?)";
+
+	private final String GET_SQL = "SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph, u.email, u.password " + 
+									"FROM room_tbl r LEFT JOIN user_tbl u ON r.admin_fk = u.email WHERE r.code = ?";
+
+	private final String GETALL_SQL = "SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph, u.email, u.password " + 
+									"FROM room_tbl r LEFT JOIN user_tbl u ON r.admin_fk = u.email";
+
+	private final String DELETEMEMBERS_SQL = "DELETE FROM room_members_tbl WHERE room_fk = ?";
+
+	private final String DELETEPROPOSALS_SQL = "DELETE FROM proposal_tbl WHERE trip_fk = ?";
+
+	private final String DELETE_SQL = "DELETE FROM room_tbl WHERE code = ?";
+
+	private final String SAVE_SQL = "INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph) VALUES (?, ?, ?, ?, ?, ?) " + 
+					"ON DUPLICATE KEY UPDATE " +
+					    "name = VALUES(name), " + 
+					    "admin_fk = VALUES(admin_fk), " + 
+					    "trip_country = VALUES(trip_country), " +
+					    "trip_main_city = VALUES(trip_main_city), " +
+					    "trip_graph = VALUES(trip_graph)";
+
+	private final String ADDMEMBERS_SQL = "INSERT INTO room_members_tbl (room_fk, user_fk) VALUES (?, ?)";
+
+	private final String GETMEMBERS_SQL = "SELECT u.email, u.password FROM room_members_tbl rm JOIN user_tbl u ON rm.user_fk = u.email WHERE rm.room_fk = ?";
 
 	public RoomDAODB(Connection connection) {
 		this.connection = connection;
@@ -42,13 +69,8 @@ public class RoomDAODB implements DAO<Room> {
 
 	@Override
 	public boolean add(Room room) {
-		String sql = """
-				INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph)
-				VALUES (?, ?, ?, ?, ?, ?)
-				""";
 		boolean res = false;
-		boolean setAutoCommitError = false;
-		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+		try (PreparedStatement stmt = connection.prepareStatement(ADD_SQL)) {
 
 			connection.setAutoCommit(false);
 
@@ -62,12 +84,13 @@ public class RoomDAODB implements DAO<Room> {
 			res = stmt.executeUpdate() > 0;
 
 			if (!res) {
+				connection.rollback();
 				return res;
 			}
 
 			saveRoomMembers(room);
 
-			res = res && proposalDAO.addRoomProposals(room);
+			res = proposalDAO.addRoomProposals(room);
 
 			connection.commit();
 
@@ -82,11 +105,9 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				setAutoCommitError = true;
+				throw new IllegalStateException("Error setting auto commit back to true");
 			}
 		}
-		if(setAutoCommitError)
-			throw new IllegalStateException("Error setting auto commit back to true");
 
 		return res;
 	}
@@ -97,15 +118,8 @@ public class RoomDAODB implements DAO<Room> {
 		if (code == null) {
 			return null;
 		}
-		String sql = """
-				SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph,
-				       u.email, u.password
-				FROM room_tbl r
-				LEFT JOIN user_tbl u ON r.admin_fk = u.email
-				WHERE r.code = ?
-				""";
 
-		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+		try (PreparedStatement stmt = connection.prepareStatement(GET_SQL)) {
 			stmt.setString(1, code);
 
 			try (ResultSet rs = stmt.executeQuery()) {
@@ -143,14 +157,8 @@ public class RoomDAODB implements DAO<Room> {
 
 	@Override
 	public List<Room> getAll() {
-		String sql = """
-				SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph,
-				       u.email, u.password
-				FROM room_tbl r
-				LEFT JOIN user_tbl u ON r.admin_fk = u.email
-				""";
 
-		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+		try (PreparedStatement stmt = connection.prepareStatement(GETALL_SQL)) {
 
 			List<Room> rooms = new ArrayList<>();
 
@@ -192,24 +200,20 @@ public class RoomDAODB implements DAO<Room> {
 	@Override
 	public void delete(Room room) {
 		String code = room.getCode();
-		boolean setAutoCommitError = false;
 		try {
 			connection.setAutoCommit(false);
 
-			String deleteMembersSql = "DELETE FROM room_members_tbl WHERE room_fk = ?";
-			try (PreparedStatement stmt = connection.prepareStatement(deleteMembersSql)) {
+			try (PreparedStatement stmt = connection.prepareStatement(DELETEMEMBERS_SQL)) {
 				stmt.setString(1, code);
 				stmt.executeUpdate();
 			}
 
-			String deleteProposalsSql = "DELETE FROM proposal_tbl WHERE trip_fk = ?";
-			try (PreparedStatement stmt = connection.prepareStatement(deleteProposalsSql)) {
+			try (PreparedStatement stmt = connection.prepareStatement(DELETEPROPOSALS_SQL)) {
 				stmt.setString(1, code);
 				stmt.executeUpdate();
 			}
 
-			String deleteRoomSql = "DELETE FROM room_tbl WHERE code = ?";
-			try (PreparedStatement stmt = connection.prepareStatement(deleteRoomSql)) {
+			try (PreparedStatement stmt = connection.prepareStatement(DELETE_SQL)) {
 				stmt.setString(1, code);
 				stmt.executeUpdate();
 			}
@@ -227,32 +231,18 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				setAutoCommitError = true;
+				throw new IllegalStateException("Error setting auto commit back to true");
 			}
 		}
-
-		if(setAutoCommitError)
-			throw new IllegalStateException("Error setting auto commit back to true");
 	}
 
 	@Override
 	public void save(Room room) {
-		boolean setAutoCommitError = false;
 		try {
 			connection.setAutoCommit(false);
 
-			String sql = """
-					INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph)
-					VALUES (?, ?, ?, ?, ?, ?)
-					ON DUPLICATE KEY UPDATE
-					    name = VALUES(name),
-					    admin_fk = VALUES(admin_fk),
-					    trip_country = VALUES(trip_country),
-					    trip_main_city = VALUES(trip_main_city),
-					    trip_graph = VALUES(trip_graph)
-					""";
 
-			try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+			try (PreparedStatement stmt = connection.prepareStatement(SAVE_SQL)) {
 				stmt.setString(1, room.getCode());
 				stmt.setString(2, room.getName());
 				stmt.setString(3, room.getAdmin().getEmail());
@@ -280,11 +270,9 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				setAutoCommitError = true;
+				throw new IllegalStateException("Error setting auto commit back to true");
 			}
 		}
-		if(setAutoCommitError)
-			throw new IllegalStateException("Error setting auto commit back to true");
 	}
 
 	@Override
@@ -294,14 +282,12 @@ public class RoomDAODB implements DAO<Room> {
 
 	private void saveRoomMembers(Room room) throws SQLException {
 
-		String deleteSql = "DELETE FROM room_members_tbl WHERE room_fk = ?";
-		try (PreparedStatement stmt = connection.prepareStatement(deleteSql)) {
+		try (PreparedStatement stmt = connection.prepareStatement(DELETEMEMBERS_SQL)) {
 			stmt.setString(1, room.getCode());
 			stmt.executeUpdate();
 		}
 
-		String insertSql = "INSERT INTO room_members_tbl (room_fk, user_fk) VALUES (?, ?)";
-		try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
+		try (PreparedStatement stmt = connection.prepareStatement(ADDMEMBERS_SQL)) {
 			for (User member : room.getMembers()) {
 				stmt.setString(1, room.getCode());
 				stmt.setString(2, member.getEmail());
@@ -313,16 +299,10 @@ public class RoomDAODB implements DAO<Room> {
 	}
 
 	private Set<User> findRoomMembers(String roomCode) {
-		String sql = """
-				SELECT u.email, u.password
-				FROM room_members_tbl rm
-				JOIN user_tbl u ON rm.user_fk = u.email
-				WHERE rm.room_fk = ?
-				""";
 
 		Set<User> members = new HashSet<>();
 
-		try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+		try (PreparedStatement stmt = connection.prepareStatement(GETMEMBERS_SQL)) {
 			stmt.setString(1, roomCode);
 
 			try (ResultSet rs = stmt.executeQuery()) {

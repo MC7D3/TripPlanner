@@ -1,23 +1,17 @@
 package tpgroup.persistence.filesystem;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.google.gson.GsonBuilder;
-
-import tpgroup.model.EventsGraph;
 import tpgroup.model.domain.Room;
 import tpgroup.model.exception.RecordNotFoundException;
-import tpgroup.persistence.EventsGraphJSONTypeAdapter;
-import tpgroup.persistence.LocalDateTimeJSONTypeAdaper;
+import tpgroup.persistence.gson.GsonFactory;
 
 public class RoomDAOFile extends FileDAO<Room> {
 
 	public RoomDAOFile(String filePath) {
-		super(filePath, new GsonBuilder().registerTypeAdapter(EventsGraph.class, new EventsGraphJSONTypeAdapter()).registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJSONTypeAdaper()));
+		super(filePath, GsonFactory.createRoomBuilder());
 	}
-
 
 	@Override
 	public Room get(Room room) throws RecordNotFoundException {

@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import tpgroup.controller.RoomController;
 import tpgroup.controller.TripController;
 import tpgroup.model.bean.ProposalBean;
+import tpgroup.model.domain.ProposalType;
 
 public class ViewProposalsModalGUIController extends FxController {
 
@@ -44,14 +45,14 @@ public class ViewProposalsModalGUIController extends FxController {
 	private void loadProposals() {
 		proposalsContainer.getChildren().clear();
 
-		List<ProposalBean> proposals = new ArrayList<>(showMyOnlyChk.isSelected() 
-			? TripController.getLoggedUserProposals()
-			: TripController.getAllProposals());
+		List<ProposalBean> proposals = new ArrayList<>(showMyOnlyChk.isSelected()
+				? TripController.getLoggedUserProposals()
+				: TripController.getAllProposals());
 
 		if (proposals.isEmpty()) {
-			String emptyMessage = showMyOnlyChk.isSelected() 
-				? "You haven't created any proposals yet"
-				: "No proposals yet";
+			String emptyMessage = showMyOnlyChk.isSelected()
+					? "You haven't created any proposals yet"
+					: "No proposals yet";
 			Label emptyLabel = new Label(emptyMessage);
 			emptyLabel.setStyle("-fx-text-fill: #636e72; -fx-font-style: italic;");
 			proposalsContainer.getChildren().add(emptyLabel);
@@ -88,9 +89,16 @@ public class ViewProposalsModalGUIController extends FxController {
 		eventLabel.setWrapText(true);
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-		Label startEndLabel = new Label("start: " + formatter.format(proposal.getEvent().getStart()) + " end: " + formatter.format(proposal.getEvent().getEnd()));
+		Label startEndLabel = new Label("start: " + formatter.format(proposal.getEvent().getStart()) + " end: "
+				+ formatter.format(proposal.getEvent().getEnd()));
 		startEndLabel.setStyle(LABEL_STYLE);
 
+		Label newStartEndLabel = null;
+		if (proposal.getProposalType().equals(ProposalType.UPDATE) && proposal.getUpdateEvent().isPresent()) {
+			newStartEndLabel = new Label("new start: " + formatter.format(proposal.getUpdateEvent().get().getStart()) + " new end: "
+					+ formatter.format(proposal.getUpdateEvent().get().getEnd()));
+			startEndLabel.setStyle(LABEL_STYLE);
+		}
 		Label branchLabel = new Label("Branch: " + proposal.getNode());
 		branchLabel.setStyle(LABEL_STYLE);
 
@@ -140,7 +148,11 @@ public class ViewProposalsModalGUIController extends FxController {
 			actionsBox.getChildren().add(removeBtn);
 		}
 
-		card.getChildren().addAll(header, creatorLabel, eventLabel, startEndLabel, branchLabel, actionsBox);
+		card.getChildren().addAll(header, creatorLabel, eventLabel, startEndLabel);
+		if(newStartEndLabel != null){
+			card.getChildren().add(newStartEndLabel);
+		}
+		card.getChildren().addAll(branchLabel, actionsBox);
 
 		VBox.setMargin(card, new Insets(0, 0, 5, 0));
 

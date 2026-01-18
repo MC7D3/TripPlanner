@@ -3,15 +3,14 @@ package tpgroup.persistence.filesystem;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.google.gson.GsonBuilder;
-
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.persistence.gson.GsonFactory;
 
 public class PointOfInterestDAOFile extends FileDAO<PointOfInterest>{ 
 
     public PointOfInterestDAOFile(String filePath) {
-		super(filePath, new GsonBuilder());
+		super(filePath, GsonFactory.createDefaultBuilder());
     }
 
 	@Override

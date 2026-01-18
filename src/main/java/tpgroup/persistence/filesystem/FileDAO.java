@@ -24,15 +24,21 @@ public abstract class FileDAO<T> implements DAO<T> {
 
 	protected FileDAO(String filePath, GsonBuilder config) {
 		this.file = new File(filePath);
-		this.gson = config.setPrettyPrinting().create();
+
+		File parentDir = this.file.getParentFile();
+		if (parentDir != null && !parentDir.exists()) {
+			parentDir.mkdirs();
+		}
+
+		this.gson = config.create();
 		this.collectionType = new TypeToken<List<T>>() {}.getType();
-		if(!file.exists()){
-			try(Writer wr = new FileWriter(file)){
+
+		if (!file.exists()) {
+			try (Writer wr = new FileWriter(file)) {
 				wr.write("[]");
-			}catch(IOException e){
+			} catch (IOException e) {
 				throw new InvalidPathException();
 			}
-
 		}
 	}
 

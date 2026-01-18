@@ -3,6 +3,8 @@ package tpgroup.model.domain;
 import java.util.Objects;
 
 public class Coordinates {
+	private static final double EPSILON = 0.00001;
+
 	private double latitude;
 	private double longitude;
 
@@ -44,8 +46,7 @@ public class Coordinates {
 			return false;
 		}
 		Coordinates other = (Coordinates) obj;
-		return Double.doubleToLongBits(latitude) == Double.doubleToLongBits(other.latitude)
-				&& Double.doubleToLongBits(longitude) == Double.doubleToLongBits(other.longitude);
+		return Math.abs(latitude - other.latitude) < EPSILON && Math.abs(longitude - other.longitude) < EPSILON;
 	}
 
 	@Override

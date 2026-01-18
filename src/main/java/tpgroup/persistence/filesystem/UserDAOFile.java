@@ -3,17 +3,15 @@ package tpgroup.persistence.filesystem;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.google.gson.GsonBuilder;
-
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.persistence.gson.GsonFactory;
 
-public class UserDAOFile extends FileDAO<User>{
+public class UserDAOFile extends FileDAO<User> {
 
 	public UserDAOFile(String filePath) {
-		super(filePath, new GsonBuilder());
+		super(filePath, GsonFactory.createDefaultBuilder());
 	}
-
 
 	@Override
 	public User get(User user) throws RecordNotFoundException {
@@ -29,10 +27,17 @@ public class UserDAOFile extends FileDAO<User>{
 	@Override
 	public void save(User user) {
 		List<User> users = readAll();
-		if (users.contains(user)) {
-			users.remove(user);
+		boolean updated = false;
+		for (int i = 0; i < users.size(); i++) {
+			if (users.get(i).equals(user)) {
+				users.set(i, user);
+				updated = true;
+				break;
+			}
 		}
-		users.add(user);
+		if (!updated) {
+			users.add(user);
+		}
 		writeAll(users);
 	}
 

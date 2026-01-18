@@ -1,4 +1,4 @@
-package tpgroup.persistence;
+package tpgroup.persistence.gson;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

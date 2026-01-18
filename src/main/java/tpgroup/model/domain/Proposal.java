@@ -112,6 +112,7 @@ public class Proposal {
 				if (updateEvent.isEmpty()) {
 					break;
 				}
+				
 				if (!nodeName.getEvents().remove(event)) {
 					break;
 				}

@@ -89,7 +89,7 @@ public class MockDataLoader {
 
 			createSampleProposals(room.getTrip(), room);
 
-			roomDAO.save(room);
+			roomDAO.add(room);
 			createdRooms.add(room);
 
 		} catch (Exception e) {
@@ -107,7 +107,7 @@ public class MockDataLoader {
 
 			buildLinearTripGraph(room.getTrip(), romePOIs);
 
-			roomDAO.save(room);
+			roomDAO.add(room);
 			createdRooms.add(room);
 
 		} catch (Exception e) {
@@ -124,7 +124,7 @@ public class MockDataLoader {
 
 			buildRomanticTripGraph(room.getTrip(), romePOIs);
 
-			roomDAO.save(room);
+			roomDAO.add(room);
 			createdRooms.add(room);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -264,6 +264,7 @@ public class MockDataLoader {
 							originalEvent.getEnd().getHour() + 1,
 							originalEvent.getEnd().getMinute());
 
+					Thread.sleep(1000);
 					Proposal updateProposal = new Proposal(
 							ProposalType.UPDATE,
 							targetNode,
