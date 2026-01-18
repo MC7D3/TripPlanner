@@ -54,7 +54,7 @@ public class MockDataLoader {
 			createItalianExplorersRoom(romePOIs);
 			createRomanticRomeRoom(romePOIs);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to load mock data: " + e.getMessage(), e);
+			throw new IllegalStateException("Failed to load mock data: " + e.getMessage(), e);
 		}
 	}
 

@@ -79,7 +79,7 @@ public class Proposal {
 	}
 
 	public Optional<Event> getUpdateEvent() {
-		return updateEvent != null ? updateEvent : Optional.empty();
+		return updateEvent; 
 	}
 
 	public void setNode(EventsNode nodeName) {

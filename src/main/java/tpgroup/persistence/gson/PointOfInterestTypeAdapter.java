@@ -12,6 +12,7 @@ import tpgroup.model.domain.Coordinates;
 import tpgroup.model.domain.PointOfInterest;
 import tpgroup.model.domain.Rating;
 import tpgroup.model.domain.Tag;
+import tpgroup.model.exception.EnumNotFoundException;
 
 public class PointOfInterestTypeAdapter extends TypeAdapter<PointOfInterest> {
     
@@ -28,16 +29,13 @@ public class PointOfInterestTypeAdapter extends TypeAdapter<PointOfInterest> {
         out.name("city").value(poi.getCity());
         out.name("country").value(poi.getCountry());
         
-        // Coordinates
         out.name("coordinates");
         new CoordinatesTypeAdapter().write(out, poi.getCoordinates());
         
-        // Rating
         if (poi.getRating() != null) {
             out.name("rating").value(poi.getRating().name());
         }
         
-        // Tags
         if (poi.getTags() != null && !poi.getTags().isEmpty()) {
             out.name("tags").beginArray();
             for (Tag tag : poi.getTags()) {
@@ -85,9 +83,9 @@ public class PointOfInterestTypeAdapter extends TypeAdapter<PointOfInterest> {
                 case "rating":
                     String ratingStr = in.nextString();
                     try {
-                        rating = Rating.valueOf(ratingStr);
-                    } catch (IllegalArgumentException e) {
-                        rating = null;
+                        rating = Rating.getRatingFromName(ratingStr);
+                    } catch (EnumNotFoundException e) {
+						throw new IllegalStateException(e);
                     }
                     break;
                 case "tags":
@@ -95,9 +93,9 @@ public class PointOfInterestTypeAdapter extends TypeAdapter<PointOfInterest> {
                     while (in.hasNext()) {
                         String tagStr = in.nextString();
                         try {
-                            tags.add(Tag.valueOf(tagStr));
-                        } catch (IllegalArgumentException e) {
-                            // Skip invalid tags
+                            tags.add(Tag.getTagFromName(tagStr));
+                        } catch (EnumNotFoundException e) {
+							throw new IllegalStateException(e);
                         }
                     }
                     in.endArray();

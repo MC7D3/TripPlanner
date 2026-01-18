@@ -21,6 +21,8 @@ import tpgroup.model.domain.User;
 
 public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final EventTypeAdapter eventAdapter = new EventTypeAdapter();
+    private static final UserTypeAdapter userAdapter = new UserTypeAdapter();
     
     @Override
     public void write(JsonWriter out, Proposal proposal) throws IOException {
@@ -30,6 +32,11 @@ public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
         }
         
         out.beginObject();
+        writeProposalFields(out, proposal);
+        out.endObject();
+    }
+    
+    private void writeProposalFields(JsonWriter out, Proposal proposal) throws IOException {
         out.name("proposalType").value(proposal.getProposalType().name());
         
         if (proposal.getNodeName() != null) {
@@ -38,31 +45,34 @@ public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
         
         if (proposal.getEvent() != null) {
             out.name("event");
-            new EventTypeAdapter().write(out, proposal.getEvent());
+            eventAdapter.write(out, proposal.getEvent());
         }
         
         if (proposal.getUpdateEvent().isPresent()) {
             out.name("updateEvent");
-            new EventTypeAdapter().write(out, proposal.getUpdateEvent().get());
+            eventAdapter.write(out, proposal.getUpdateEvent().get());
         }
         
         if (proposal.getCreator() != null) {
             out.name("creator");
-            new UserTypeAdapter().write(out, proposal.getCreator());
+            userAdapter.write(out, proposal.getCreator());
         }
         
         if (proposal.getLikesList() != null && !proposal.getLikesList().isEmpty()) {
-            out.name("likes").beginArray();
-            for (User user : proposal.getLikesList()) {
-                new UserTypeAdapter().write(out, user);
-            }
-            out.endArray();
+            writeLikesArray(out, proposal.getLikesList());
         }
         
         if (proposal.getCreationTime() != null) {
             out.name("creationTime").value(proposal.getCreationTime().format(formatter));
         }
-        out.endObject();
+    }
+    
+    private void writeLikesArray(JsonWriter out, Set<User> likes) throws IOException {
+        out.name("likes").beginArray();
+        for (User user : likes) {
+            userAdapter.write(out, user);
+        }
+        out.endArray();
     }
     
     @Override
@@ -72,63 +82,133 @@ public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
             return null;
         }
         
-        in.beginObject();
-        ProposalType proposalType = null;
-        UUID nodeId = null;
-        Event event = null;
-        Event updateEvent = null;
-        User creator = null;
-        Set<User> likes = new HashSet<>();
-        LocalDateTime creationTime = LocalDateTime.now();
+        ProposalParseResult parseResult = parseProposalJson(in);
         
+        if (!isValidProposalData(parseResult)) {
+            return null;
+        }
+        
+        return buildProposalFromParseResult(parseResult);
+    }
+    
+    private ProposalParseResult parseProposalJson(JsonReader in) throws IOException {
+        ProposalParseResult result = new ProposalParseResult();
+        
+        in.beginObject();
         while (in.hasNext()) {
-            String fieldName = in.nextName();
-            switch (fieldName) {
-                case "proposalType":
-                    try {
-                        proposalType = ProposalType.valueOf(in.nextString());
-                    } catch (IllegalArgumentException e) {
-                        proposalType = null;
-                    }
-                    break;
-                case "nodeId":
-                    nodeId = UUID.fromString(in.nextString());
-                    break;
-                case "event":
-                    event = new EventTypeAdapter().read(in);
-                    break;
-                case "updateEvent":
-                    updateEvent = new EventTypeAdapter().read(in);
-                    break;
-                case "creator":
-                    creator = new UserTypeAdapter().read(in);
-                    break;
-                case "likes":
-                    in.beginArray();
-                    while (in.hasNext()) {
-                        User user = new UserTypeAdapter().read(in);
-                        if (user != null) {
-                            likes.add(user);
-                        }
-                    }
-                    in.endArray();
-                    break;
-                case "creationTime":
-                    creationTime = LocalDateTime.parse(in.nextString(), formatter);
-                    break;
-                default:
-                    in.skipValue();
-            }
+            parseField(in, in.nextName(), result);
         }
         in.endObject();
         
-        if (proposalType != null && event != null && creator != null) {
-            EventsNode node = nodeId != null ? new EventsNode(nodeId, new TreeSet<>()) : null;
-            
-            Optional<Event> updateEventOpt = updateEvent != null ? Optional.of(updateEvent) : Optional.empty();
-            return new Proposal(proposalType, node, event, updateEventOpt, creator, likes, creationTime);
+        return result;
+    }
+    
+    private void parseField(JsonReader in, String fieldName, ProposalParseResult result) throws IOException {
+        switch (fieldName) {
+            case "proposalType":
+                result.proposalType = parseProposalType(in);
+                break;
+            case "nodeId":
+                result.nodeId = parseUUID(in);
+                break;
+            case "event":
+                result.event = parseEvent(in);
+                break;
+            case "updateEvent":
+                result.updateEvent = parseEvent(in);
+                break;
+            case "creator":
+                result.creator = parseUser(in);
+                break;
+            case "likes":
+                result.likes = parseLikesArray(in);
+                break;
+            case "creationTime":
+                result.creationTime = parseCreationTime(in);
+                break;
+            default:
+                in.skipValue();
         }
+    }
+    
+    private ProposalType parseProposalType(JsonReader in) throws IOException {
+        try {
+            return ProposalType.valueOf(in.nextString());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    
+    private UUID parseUUID(JsonReader in) throws IOException {
+        try {
+            return UUID.fromString(in.nextString());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+    
+    private Event parseEvent(JsonReader in) throws IOException {
+        return eventAdapter.read(in);
+    }
+    
+    private User parseUser(JsonReader in) throws IOException {
+        return userAdapter.read(in);
+    }
+    
+    private Set<User> parseLikesArray(JsonReader in) throws IOException {
+        Set<User> likes = new HashSet<>();
         
-        return null;
+        in.beginArray();
+        while (in.hasNext()) {
+            User user = userAdapter.read(in);
+            if (user != null) {
+                likes.add(user);
+            }
+        }
+        in.endArray();
+        
+        return likes;
+    }
+    
+    private LocalDateTime parseCreationTime(JsonReader in) throws IOException {
+        try {
+            return LocalDateTime.parse(in.nextString(), formatter);
+        } catch (Exception e) {
+            return LocalDateTime.now();
+        }
+    }
+    
+    private boolean isValidProposalData(ProposalParseResult parseResult) {
+        return parseResult.proposalType != null && 
+               parseResult.event != null && 
+               parseResult.creator != null;
+    }
+    
+    private Proposal buildProposalFromParseResult(ProposalParseResult parseResult) {
+        EventsNode node = parseResult.nodeId != null ? 
+            new EventsNode(parseResult.nodeId, new TreeSet<>()) : null;
+        
+        Optional<Event> updateEventOpt = parseResult.updateEvent != null ? 
+            Optional.of(parseResult.updateEvent) : Optional.empty();
+        
+        return new Proposal(
+            parseResult.proposalType,
+            node,
+            parseResult.event,
+            updateEventOpt,
+            parseResult.creator,
+            parseResult.likes,
+            parseResult.creationTime
+        );
+    }
+    
+    private static class ProposalParseResult {
+        ProposalType proposalType;
+        UUID nodeId;
+        Event event;
+        Event updateEvent;
+        User creator;
+        Set<User> likes = new HashSet<>();
+        LocalDateTime creationTime = LocalDateTime.now();
     }
 }

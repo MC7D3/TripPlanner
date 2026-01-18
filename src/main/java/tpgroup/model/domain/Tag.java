@@ -8,7 +8,7 @@ import tpgroup.model.exception.EnumNotFoundException;
 public enum Tag {
 	FUN("fun"),
 	CULTURE("culture"),
-	FORFAMILIES("families"),
+	FORFAMILIES("forfamilies"),
 	FOOD("food"),
 	GASTRONOMY("gastronomy"),
 	ROMANTIC("romantic");

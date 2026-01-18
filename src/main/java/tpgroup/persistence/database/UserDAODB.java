@@ -94,7 +94,7 @@ public class UserDAODB implements DAO<User> {
 
 			ret = stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) { // Duplicate entry error code
+			if (e.getErrorCode() == 1062) { 
 				return false;
 			}
 			throw new SQLConnInterruptedException(e);

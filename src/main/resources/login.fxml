@@ -25,7 +25,6 @@
             </Group>
             <Group fx:id="pwdField" styleClass="group">
                <children>
-						<!--       <Hyperlink fx:id="recoverPwdLink" text="Recover Password" />-->
                   <PasswordField fx:id="pwdTxt" styleClass="input-field" onKeyPressed="#onFocus"/>
                   <Label fx:id="pwdLabel" styleClass="form-label" text="Password">
                   </Label>

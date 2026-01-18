@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -16,8 +16,8 @@
             </Text>
             <VBox style="-fx-spacing: 15;">
                <children>
-                  <TextField fx:id="newPwdTxt" promptText="new password" styleClass="input-field" onKeyPressed="#onFocus"/>
-                  <TextField fx:id="confNewPwdTxt" promptText="Confirm new password" styleClass="input-field" onKeyPressed="#onFocus"/>
+                  <PasswordField fx:id="newPwdTxt" promptText="new password" styleClass="input-field" onKeyPressed="#onFocus"/>
+                  <PasswordField fx:id="confNewPwdTxt" promptText="Confirm new password" styleClass="input-field" onKeyPressed="#onFocus"/>
                   <Button fx:id="changePwdBtn" styleClass="button-primary" text="Change Password" onAction="#updatePassword"/>
                </children>
             </VBox>
