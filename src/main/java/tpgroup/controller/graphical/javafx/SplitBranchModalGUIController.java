@@ -32,7 +32,7 @@ public class SplitBranchModalGUIController extends FxController {
 		BranchBean selectedBranch = branchCmBox.getValue();
 		if (selectedBranch != null) {
 			eventCmBox.getItems().clear();
-			eventCmBox.getItems().addAll(selectedBranch.getEvents());
+			eventCmBox.getItems().addAll(selectedBranch.getEvents().removeFirst());
 		}
 	}
 

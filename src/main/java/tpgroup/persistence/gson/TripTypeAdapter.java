@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import tpgroup.model.EventsGraph;
+import tpgroup.model.EventsNode;
 import tpgroup.model.domain.Proposal;
 import tpgroup.model.domain.Trip;
 
@@ -25,7 +26,6 @@ public class TripTypeAdapter extends TypeAdapter<Trip> {
         out.name("country").value(trip.getCountry());
         out.name("mainCity").value(trip.getMainCity());
         
-        // Proposals
         if (trip.getProposals() != null && !trip.getProposals().isEmpty()) {
             out.name("proposals").beginArray();
             for (Proposal proposal : trip.getProposals()) {
@@ -34,8 +34,11 @@ public class TripTypeAdapter extends TypeAdapter<Trip> {
             out.endArray();
         }
         
-        // EventsGraph will be handled by its own adapter
-        // (already registered separately)
+        if (trip.getTripGraph() != null) {
+            out.name("tripGraph");
+            new EventsGraphJSONTypeAdapter().write(out, trip.getTripGraph());
+        }
+        
         out.endObject();
     }
     
@@ -50,7 +53,7 @@ public class TripTypeAdapter extends TypeAdapter<Trip> {
         String country = null;
         String mainCity = null;
         Set<Proposal> proposals = new HashSet<>();
-        EventsGraph tripGraph = new EventsGraph(); // Default empty graph
+        EventsGraph tripGraph = new EventsGraph();
         
         while (in.hasNext()) {
             String fieldName = in.nextName();
@@ -72,14 +75,41 @@ public class TripTypeAdapter extends TypeAdapter<Trip> {
                     in.endArray();
                     break;
                 case "tripGraph":
-                    // Skip - EventsGraph will be set separately
-                    in.skipValue();
+                    tripGraph = new EventsGraphJSONTypeAdapter().read(in);
+                    if (tripGraph == null) {
+                        tripGraph = new EventsGraph();
+                    }
                     break;
                 default:
                     in.skipValue();
             }
         }
         in.endObject();
+        
+        if (!proposals.isEmpty() && tripGraph != null) {
+            Set<Proposal> reconnectedProposals = new HashSet<>();
+            for (Proposal proposal : proposals) {
+                if (proposal.getNodeName() != null) {
+                    EventsNode actualNode = tripGraph.getAllNodes().stream()
+                        .filter(node -> node.getId().equals(proposal.getNodeName().getId()))
+                        .findFirst()
+                        .orElse(proposal.getNodeName());
+                    Proposal reconnected = new Proposal(
+                        proposal.getProposalType(),
+                        actualNode,
+                        proposal.getEvent(),
+                        proposal.getUpdateEvent(),
+                        proposal.getCreator(),
+                        proposal.getLikesList(),
+                        proposal.getCreationTime()
+                    );
+                    reconnectedProposals.add(reconnected);
+                } else {
+                    reconnectedProposals.add(proposal);
+                }
+            }
+            proposals = reconnectedProposals;
+        }
         
         return new Trip(country, mainCity, proposals, tripGraph);
     }

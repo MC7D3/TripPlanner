@@ -1,16 +1,65 @@
 package tpgroup.persistence.filesystem;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import tpgroup.model.domain.User;
+import tpgroup.model.exception.InvalidPathException;
 import tpgroup.model.exception.RecordNotFoundException;
+import tpgroup.persistence.DAO;
 import tpgroup.persistence.gson.GsonFactory;
 
-public class UserDAOFile extends FileDAO<User> {
+public class UserDAOFile implements DAO<User>{
+	private final File file;
+	private final Gson gson;
+	private final Type collectionType;
 
 	public UserDAOFile(String filePath) {
-		super(filePath, GsonFactory.createDefaultBuilder());
+		this.file = new File(filePath);
+
+		File parentDir = this.file.getParentFile();
+		if (parentDir != null && !parentDir.exists()) {
+			parentDir.mkdirs();
+		}
+
+		this.gson = GsonFactory.createDefaultBuilder().create();
+		this.collectionType = new TypeToken<List<User>>() {}.getType();
+
+		if (!file.exists()) {
+			try (Writer wr = new FileWriter(file)) {
+				wr.write("[]");
+			} catch (IOException e) {
+				throw new InvalidPathException();
+			}
+		}
+	}
+
+	private List<User> readAll() {
+		try (Reader reader = new FileReader(file)) {
+			List<User> list = gson.fromJson(reader, collectionType);
+			return list != null ? list : new ArrayList<>();
+		} catch (IOException e) {
+			throw new InvalidPathException();
+		}
+	}
+
+	private void writeAll(List<User> list) {
+		try (Writer writer = new FileWriter(file)) {
+			gson.toJson(list, collectionType, writer);
+		} catch (IOException e) {
+			throw new InvalidPathException();
+		}
 	}
 
 	@Override
@@ -71,5 +120,4 @@ public class UserDAOFile extends FileDAO<User> {
 		}
 		writeAll(users);
 	}
-
 }

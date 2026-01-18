@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.google.gson.TypeAdapter;
@@ -128,8 +129,7 @@ public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
         in.endObject();
         
         if (proposalType != null && event != null && creator != null) {
-            // Create EventsNode stub with just ID
-            EventsNode node = nodeId != null ? new EventsNode(nodeId, null) : null;
+            EventsNode node = nodeId != null ? new EventsNode(nodeId, new TreeSet<>()) : null;
             
             Optional<Event> updateEventOpt = updateEvent != null ? Optional.of(updateEvent) : Optional.empty();
             return new Proposal(proposalType, node, event, updateEventOpt, creator, likes, creationTime);
