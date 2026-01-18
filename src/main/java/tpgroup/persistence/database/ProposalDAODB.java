@@ -171,7 +171,7 @@ public class ProposalDAODB {
 				likes.add(user);
 			}
 		} catch (SQLException e) {
-			// emtpy list will be returned
+			// no action needed
 		}
 
 		return likes;
@@ -183,8 +183,6 @@ public class ProposalDAODB {
 		for (Proposal proposal : room.getTrip().getProposals()) {
 			saveLikesForProposal(proposal, room.getCode());
 		}
-
-		alignRoomProposals(room);
 
 		return count == room.getTrip().getProposals().size();
 	}
@@ -218,7 +216,7 @@ public class ProposalDAODB {
 					stmt.addBatch();
 				}
 				stmt.executeBatch();
-				connection.commit();
+			connection.commit();
 			} catch (SQLException e) {
 				throw new IllegalStateException(e);
 			}

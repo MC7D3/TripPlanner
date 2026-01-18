@@ -14,10 +14,7 @@ import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
 import tpgroup.model.exception.PropertyNotFoundException;
 import tpgroup.persistence.CacheDecorator;
-import tpgroup.persistence.CascadeDecorator;
 import tpgroup.persistence.DAO;
-import tpgroup.persistence.cascade.UserToProposalCascadeDemo;
-import tpgroup.persistence.cascade.UserToRoomCascade;
 import tpgroup.persistence.database.PointOfInterestDAODB;
 import tpgroup.persistence.database.RoomDAODB;
 import tpgroup.persistence.database.UserDAODB;
@@ -37,11 +34,7 @@ public class DBDAOFactory extends DAOFactory {
 			PointOfInterestDAODB poiDao = new PointOfInterestDAODB(conn);
 			RoomDAODB roomDao = new RoomDAODB(conn);
 
-			CascadeDecorator<User> usrDaoDemoCascade = new CascadeDecorator<>(userDao)
-					.addCascadePolicy(new UserToRoomCascade(roomDao))
-					.addCascadePolicy(new UserToProposalCascadeDemo(roomDao));
-
-			daos.put(User.class, new CacheDecorator<>(usrDaoDemoCascade));
+			daos.put(User.class, new CacheDecorator<>(userDao));
 			daos.put(Room.class, new CacheDecorator<>(roomDao));
 			daos.put(PointOfInterest.class, new CacheDecorator<>(poiDao));
 		} catch (ClassNotFoundException | IOException | SQLException | PropertyNotFoundException e) {

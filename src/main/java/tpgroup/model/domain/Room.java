@@ -95,11 +95,25 @@ public class Room {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(code, name, admin, members, trip);
+		return Objects.hash(code);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Room other = (Room) obj;
+		return Objects.equals(code, other.code);
+	}
+
+	public boolean deepEquals(Object obj) {
 		if (this == obj) {
 			return true;
 		}

@@ -122,9 +122,10 @@ public class Proposal {
 		return false;
 	}
 
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(creator, nodeName, event, updateEvent, proposalType);
+		return Objects.hash(creator, creationTime, nodeName, event, updateEvent, proposalType);
 	}
 
 	@Override
@@ -139,7 +140,7 @@ public class Proposal {
 			return false;
 		}
 		Proposal other = (Proposal) obj;
-		return Objects.equals(creator, other.creator)
+		return Objects.equals(creator, other.creator) && Objects.equals(creationTime, other.creationTime)
 				&& Objects.equals(nodeName, other.nodeName) && Objects.equals(event, other.event)
 				&& Objects.equals(updateEvent, other.updateEvent) && proposalType == other.proposalType;
 	}

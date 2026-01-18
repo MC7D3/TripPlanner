@@ -39,7 +39,7 @@ public class TripController {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 			Room dbRoom = roomDao.get(Session.getInstance().getEnteredRoom());
-			if(!dbRoom.equals(Session.getInstance().getEnteredRoom()))
+			if(!dbRoom.deepEquals(Session.getInstance().getEnteredRoom()))
 				Session.getInstance().setEnteredRoom(dbRoom);
 			return Session.getInstance().getEnteredRoom();
 		} catch (RecordNotFoundException e) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import tpgroup.model.domain.Room;
 import tpgroup.model.domain.User;
+import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.Cascade;
 import tpgroup.persistence.DAO;
 
@@ -25,6 +26,17 @@ public class UserToRoomCascade extends Cascade<User, Room> {
 			if (room.getMembers().contains(toDelete)) {
 				room.getMembers().remove(toDelete);
 				getTo().save(room);
+			}
+			if(room.getAdmin().equals(toDelete)){
+				if(!room.getMembers().isEmpty()){
+					room.setAdmin(room.getMembers().stream().findFirst().get());
+				}else{
+					try {
+						getTo().delete(room);
+					} catch (RecordNotFoundException e) {
+						throw new IllegalStateException(e);
+					}
+				}
 			}
 		}
 		return true;
