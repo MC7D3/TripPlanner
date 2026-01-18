@@ -281,10 +281,10 @@ public class ProposalDAODB {
 		}
 
 		try (PreparedStatement stmt = connection.prepareStatement(INSERT_LIKES_QUERY)) {
+			stmt.setString(3, roomCode);
 			for (User user : proposal.getLikesList()) {
 				stmt.setString(1, user.getEmail());
 				stmt.setString(2, proposal.getCreator().getEmail());
-				stmt.setString(3, roomCode);
 				stmt.setTimestamp(4, Timestamp.valueOf(proposal.getCreationTime()));
 				stmt.addBatch();
 			}

@@ -94,16 +94,14 @@ public class TripController {
 	}
 
 	public static List<BranchBean> getAllBranches() {
-		List<BranchBean> allBranches = getGraphBranches();
+		List<BranchBean> allBranches = new ArrayList<>(getGraphBranches());
 		allBranches.addAll(getStagingBranches());
 		return allBranches;
 	}
 
 	public static List<BranchBean> getGraphBranches() {
-		List<BranchBean> branches = getEnteredRoom().getTrip().getAllBranches().stream()
-				.map(eventsNode -> new BranchBean(eventsNode)).collect(Collectors.toList());
-		return branches;
-
+		return getEnteredRoom().getTrip().getAllBranches().stream()
+				.map(eventsNode -> new BranchBean(eventsNode)).toList();
 	}
 
 	public static TripBean getTrip() {

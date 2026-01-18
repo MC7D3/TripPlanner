@@ -23,11 +23,11 @@ import tpgroup.persistence.DAO;
 public class PointOfInterestDAODB implements DAO<PointOfInterest> {
     private final Connection connection;
     private final Gson gson = new Gson();
-	private final String GET_QUERY = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
-    private final String GETALL_QUERY = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";
-    private final String UPDATE_QUERY = "UPDATE poi_tbl SET description = ?, country = ?, city = ?, rating = ?, tags = ? WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
-	private final String ADD_QUERY = "INSERT INTO poi_tbl (name, description, country, city, coordinates_latitude, coordinates_longitude, rating, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String DELETE_QUERY = "DELETE FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
+	private static final String GET_QUERY = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
+    private static final String GETALL_QUERY = "SELECT name, description, city, coordinates_latitude, coordinates_longitude, country, rating, tags FROM poi_tbl";
+    private static final String UPDATE_QUERY = "UPDATE poi_tbl SET description = ?, country = ?, city = ?, rating = ?, tags = ? WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
+	private static final String ADD_QUERY = "INSERT INTO poi_tbl (name, description, country, city, coordinates_latitude, coordinates_longitude, rating, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM poi_tbl WHERE name = ? AND coordinates_latitude = ? AND coordinates_longitude = ?";
 
     public PointOfInterestDAODB(Connection connection) {
         this.connection = connection;

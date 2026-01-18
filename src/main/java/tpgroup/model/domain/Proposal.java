@@ -79,7 +79,7 @@ public class Proposal {
 	}
 
 	public Optional<Event> getUpdateEvent() {
-		return updateEvent;
+		return updateEvent != null ? updateEvent : Optional.empty();
 	}
 
 	public void setNode(EventsNode nodeName) {
@@ -113,6 +113,7 @@ public class Proposal {
 					break;
 				}
 				
+				nodeName.getEvents().getFirst().equals(event);
 				if (!nodeName.getEvents().remove(event)) {
 					break;
 				}

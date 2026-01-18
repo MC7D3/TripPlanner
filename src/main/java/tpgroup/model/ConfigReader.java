@@ -84,4 +84,11 @@ public class ConfigReader {
 			return Boolean.parseBoolean(res);
 		throw new PropertyNotFoundException();
 	}
+
+	public String readMockUserPwd() throws PropertyNotFoundException {
+		String res = conf.getProperty("mockuserpwd");
+		if (res != null)
+			return res;
+		throw new PropertyNotFoundException();
+	}
 }

@@ -1,12 +1,13 @@
 package tpgroup.persistence;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import tpgroup.model.ConfigReader;
 import tpgroup.model.Event;
 import tpgroup.model.EventsNode;
 import tpgroup.model.domain.PointOfInterest;
@@ -19,6 +20,7 @@ import tpgroup.model.domain.User;
 import tpgroup.model.exception.FactoryNotInitializedException;
 import tpgroup.model.exception.NodeConflictException;
 import tpgroup.model.exception.NodeConnectionException;
+import tpgroup.model.exception.PropertyNotFoundException;
 import tpgroup.model.exception.RecordNotFoundException;
 import tpgroup.persistence.factory.DAOFactory;
 
@@ -30,6 +32,8 @@ public class MockDataLoader {
 
 	private final List<User> createdUsers = new ArrayList<>();
 	private final List<Room> createdRooms = new ArrayList<>();
+
+	private static final String ITALY_STR = "Italy";
 
 	public MockDataLoader() throws FactoryNotInitializedException {
 		this.userDAO = DAOFactory.getInstance().getDAO(User.class);
@@ -54,13 +58,15 @@ public class MockDataLoader {
 		}
 	}
 
-	private void createUsers() {
+	private void createUsers() throws IOException, PropertyNotFoundException{
+		ConfigReader confRd = new ConfigReader("configuration.properties");
+		String mockPwd = confRd.readMockUserPwd();
 		User[] users = {
-				new User("mario.rossi@example.com", BCrypt.hashpw("Password.123", BCrypt.gensalt())),
-				new User("laura.bianchi@example.com", BCrypt.hashpw("Password.123", BCrypt.gensalt())),
-				new User("giovanni.verdi@example.com", BCrypt.hashpw("Password.123", BCrypt.gensalt())),
-				new User("francesca.russo@example.com", BCrypt.hashpw("Password.123", BCrypt.gensalt())),
-				new User("antonio.esposito@example.com", BCrypt.hashpw("Password.123", BCrypt.gensalt()))
+				new User("mario.rossi@example.com", BCrypt.hashpw(mockPwd, BCrypt.gensalt())),
+				new User("laura.bianchi@example.com", BCrypt.hashpw(mockPwd, BCrypt.gensalt())),
+				new User("giovanni.verdi@example.com", BCrypt.hashpw(mockPwd, BCrypt.gensalt())),
+				new User("francesca.russo@example.com", BCrypt.hashpw(mockPwd, BCrypt.gensalt())),
+				new User("antonio.esposito@example.com", BCrypt.hashpw(mockPwd, BCrypt.gensalt()))
 		};
 
 		for (User user : users) {
@@ -72,14 +78,13 @@ public class MockDataLoader {
 	private List<PointOfInterest> getRomePOIs() {
 		List<PointOfInterest> allPOIs = poiDAO.getAll();
 		return allPOIs.stream()
-				.filter(poi -> "Rome".equalsIgnoreCase(poi.getCity()))
-				.collect(Collectors.toList());
+				.filter(poi -> "Rome".equalsIgnoreCase(poi.getCity())).toList();
 	}
 
 	private void createRomeTripRoom(List<PointOfInterest> romePOIs) {
 		try {
 			User admin = createdUsers.get(0);
-			Room room = new Room("Rome Trip 2024", admin, "Italy", "Rome");
+			Room room = new Room("Rome Trip 2024", admin, ITALY_STR, "Rome");
 
 			for (int i = 1; i < createdUsers.size(); i++) {
 				room.add(createdUsers.get(i));
@@ -93,14 +98,14 @@ public class MockDataLoader {
 			createdRooms.add(room);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new IllegalStateException(e);
 		}
 	}
 
 	private void createItalianExplorersRoom(List<PointOfInterest> romePOIs) {
 		try {
 			User admin = createdUsers.get(1);
-			Room room = new Room("Italian Explorers", admin, "Italy", "Rome");
+			Room room = new Room("Italian Explorers", admin, ITALY_STR, "Rome");
 
 			room.add(createdUsers.get(2));
 			room.add(createdUsers.get(3));
@@ -111,14 +116,14 @@ public class MockDataLoader {
 			createdRooms.add(room);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new IllegalStateException(e);
 		}
 	}
 
 	private void createRomanticRomeRoom(List<PointOfInterest> romePOIs) {
 		try {
 			User admin = createdUsers.get(3);
-			Room room = new Room("Romantic Rome Getaway", admin, "Italy", "Rome");
+			Room room = new Room("Romantic Rome Getaway", admin, ITALY_STR, "Rome");
 
 			room.add(createdUsers.get(4));
 
@@ -127,7 +132,7 @@ public class MockDataLoader {
 			roomDAO.add(room);
 			createdRooms.add(room);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -164,7 +169,7 @@ public class MockDataLoader {
 			trip.connectBranches(node3, node4);
 
 		} catch (NodeConflictException | NodeConnectionException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -190,7 +195,7 @@ public class MockDataLoader {
 			}
 
 		} catch (NodeConflictException | NodeConnectionException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -198,10 +203,9 @@ public class MockDataLoader {
 		try {
 			List<PointOfInterest> romanticPOIs = pois.stream()
 					.filter(poi -> poi.getTags().contains(Tag.ROMANTIC))
-					.limit(5)
-					.collect(Collectors.toList());
+					.limit(5).toList();
 
-			if (romanticPOIs.size() < 5) {
+			if (romanticPOIs.size() > 5) {
 				romanticPOIs = selectPOIs(pois, 5);
 			}
 
@@ -234,7 +238,7 @@ public class MockDataLoader {
 			trip.connectBranches(node2, node4);
 
 		} catch (NodeConflictException | NodeConnectionException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -282,8 +286,11 @@ public class MockDataLoader {
 
 			}
 
-		} catch (Exception e) {
-			throw new IllegalStateException();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new IllegalStateException(e);
+		} catch(Exception e){
+			throw new IllegalStateException(e);
 		}
 	}
 

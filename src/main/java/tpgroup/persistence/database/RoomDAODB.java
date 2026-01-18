@@ -31,22 +31,22 @@ public class RoomDAODB implements DAO<Room> {
 	private static final String EMAIL_VAR = "email";
 	private static final String PWD_VAR = "password";
 
-	private final String ADD_SQL = "INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph) " +
+	private static final String ADD_SQL = "INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph) " +
 								"VALUES (?, ?, ?, ?, ?, ?)";
 
-	private final String GET_SQL = "SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph, u.email, u.password " + 
+	private static final String GET_SQL = "SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph, u.email, u.password " + 
 									"FROM room_tbl r LEFT JOIN user_tbl u ON r.admin_fk = u.email WHERE r.code = ?";
 
-	private final String GETALL_SQL = "SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph, u.email, u.password " + 
+	private static final String GETALL_SQL = "SELECT r.code, r.name, r.admin_fk, r.trip_country, r.trip_main_city, r.trip_graph, u.email, u.password " + 
 									"FROM room_tbl r LEFT JOIN user_tbl u ON r.admin_fk = u.email";
 
-	private final String DELETEMEMBERS_SQL = "DELETE FROM room_members_tbl WHERE room_fk = ?";
+	private static final String DELETEMEMBERS_SQL = "DELETE FROM room_members_tbl WHERE room_fk = ?";
 
-	private final String DELETEPROPOSALS_SQL = "DELETE FROM proposal_tbl WHERE trip_fk = ?";
+	private static final String DELETEPROPOSALS_SQL = "DELETE FROM proposal_tbl WHERE trip_fk = ?";
 
-	private final String DELETE_SQL = "DELETE FROM room_tbl WHERE code = ?";
+	private static final String DELETE_SQL = "DELETE FROM room_tbl WHERE code = ?";
 
-	private final String SAVE_SQL = "INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph) VALUES (?, ?, ?, ?, ?, ?) " + 
+	private static final String SAVE_SQL = "INSERT INTO room_tbl (code, name, admin_fk, trip_country, trip_main_city, trip_graph) VALUES (?, ?, ?, ?, ?, ?) " + 
 					"ON DUPLICATE KEY UPDATE " +
 					    "name = VALUES(name), " + 
 					    "admin_fk = VALUES(admin_fk), " + 
@@ -54,9 +54,9 @@ public class RoomDAODB implements DAO<Room> {
 					    "trip_main_city = VALUES(trip_main_city), " +
 					    "trip_graph = VALUES(trip_graph)";
 
-	private final String ADDMEMBERS_SQL = "INSERT INTO room_members_tbl (room_fk, user_fk) VALUES (?, ?)";
+	private static final String ADDMEMBERS_SQL = "INSERT INTO room_members_tbl (room_fk, user_fk) VALUES (?, ?)";
 
-	private final String GETMEMBERS_SQL = "SELECT u.email, u.password FROM room_members_tbl rm JOIN user_tbl u ON rm.user_fk = u.email WHERE rm.room_fk = ?";
+	private static final String GETMEMBERS_SQL = "SELECT u.email, u.password FROM room_members_tbl rm JOIN user_tbl u ON rm.user_fk = u.email WHERE rm.room_fk = ?";
 
 	public RoomDAODB(Connection connection) {
 		this.connection = connection;
@@ -70,6 +70,7 @@ public class RoomDAODB implements DAO<Room> {
 	@Override
 	public boolean add(Room room) {
 		boolean res = false;
+		boolean finallyThrow = false;
 		try (PreparedStatement stmt = connection.prepareStatement(ADD_SQL)) {
 
 			connection.setAutoCommit(false);
@@ -105,9 +106,11 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				throw new IllegalStateException("Error setting auto commit back to true");
+				finallyThrow = true;
 			}
 		}
+		if(finallyThrow)
+			throw new IllegalStateException("Error setting auto commit back to true");
 
 		return res;
 	}
@@ -200,6 +203,7 @@ public class RoomDAODB implements DAO<Room> {
 	@Override
 	public void delete(Room room) {
 		String code = room.getCode();
+		boolean throwFinally = false;
 		try {
 			connection.setAutoCommit(false);
 
@@ -231,13 +235,16 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				throw new IllegalStateException("Error setting auto commit back to true");
+				throwFinally = true;
 			}
 		}
+		if(throwFinally)
+			throw new IllegalStateException("Error setting auto commit back to true");
 	}
 
 	@Override
 	public void save(Room room) {
+		boolean throwFinally = false;
 		try {
 			connection.setAutoCommit(false);
 
@@ -270,9 +277,11 @@ public class RoomDAODB implements DAO<Room> {
 			try {
 				connection.setAutoCommit(true);
 			} catch (Exception e) {
-				throw new IllegalStateException("Error setting auto commit back to true");
+				throwFinally = true;
 			}
 		}
+		if(throwFinally)
+			throw new IllegalStateException("Error setting auto commit back to true");
 	}
 
 	@Override

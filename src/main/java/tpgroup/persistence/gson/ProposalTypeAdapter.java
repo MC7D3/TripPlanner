@@ -32,30 +32,25 @@ public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
         out.beginObject();
         out.name("proposalType").value(proposal.getProposalType().name());
         
-        // EventsNode - we'll store just the ID since it's graph-dependent
         if (proposal.getNodeName() != null) {
             out.name("nodeId").value(proposal.getNodeName().getId().toString());
         }
         
-        // Event
         if (proposal.getEvent() != null) {
             out.name("event");
             new EventTypeAdapter().write(out, proposal.getEvent());
         }
         
-        // Update Event
-        if (proposal.getUpdateEvent() != null && proposal.getUpdateEvent().isPresent()) {
+        if (proposal.getUpdateEvent().isPresent()) {
             out.name("updateEvent");
             new EventTypeAdapter().write(out, proposal.getUpdateEvent().get());
         }
         
-        // Creator
         if (proposal.getCreator() != null) {
             out.name("creator");
             new UserTypeAdapter().write(out, proposal.getCreator());
         }
         
-        // Likes
         if (proposal.getLikesList() != null && !proposal.getLikesList().isEmpty()) {
             out.name("likes").beginArray();
             for (User user : proposal.getLikesList()) {
@@ -64,7 +59,6 @@ public class ProposalTypeAdapter extends TypeAdapter<Proposal> {
             out.endArray();
         }
         
-        // Creation Time
         if (proposal.getCreationTime() != null) {
             out.name("creationTime").value(proposal.getCreationTime().format(formatter));
         }

@@ -1,7 +1,6 @@
 package tpgroup.controller.graphical.javafx;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -34,7 +33,7 @@ public class ConnectBranchesModalGUIController extends FxController {
 			childBranchCmBox.getItems().clear();
 			List<BranchBean> validChildren = TripController.getAllBranches().stream()
 					.filter(b -> !b.equals(selectedParent))
-					.collect(Collectors.toList());
+					.toList();
 
 			childBranchCmBox.getItems().addAll(validChildren);
 		}
