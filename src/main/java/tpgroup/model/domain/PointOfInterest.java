@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class PointOfInterest {
-	String name;
-	String description;
-	String city;
-	String country;
-	Coordinates coordinates;
-	Rating rating;
-	List<Tag> tags;
+	private String name;
+	private String description;
+	private String city;
+	private String country;
+	private Coordinates coordinates;
+	private Rating rating;
+	private List<Tag> tags;
 
 	public PointOfInterest(String name, String description, String city, String country, Coordinates coordinates,
 			Rating rating, List<Tag> tags) {
