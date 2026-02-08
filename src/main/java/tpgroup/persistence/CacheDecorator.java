@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 import tpgroup.model.exception.RecordNotFoundException;
 
-public class CacheDecorator<T> implements DAO<T> {
+public class CacheDecorator<T> extends DAODecorator<T> {
 	private class CachedElement {
 		private final T elem;
 		private int ttl;
@@ -69,18 +69,16 @@ public class CacheDecorator<T> implements DAO<T> {
 
 	}
 
-	private final DAO<T> decorated;
 	private final Set<CachedElement> cache;
 
 	public CacheDecorator(DAO<T> decorated) {
-		super();
-		this.decorated = decorated;
+		super(decorated);
 		cache = new HashSet<>();
 	}
 
 	@Override
 	public List<T> getAll() {
-		List<T> all = decorated.getAll();
+		List<T> all = super.getAll();
 		for (CachedElement cached : cache) {
 			if (all.contains(cached.getElem())) {
 				cached.resetTtl();
@@ -101,7 +99,7 @@ public class CacheDecorator<T> implements DAO<T> {
 				item.getElem();
 			}
 		}
-		List<T> notCached = decorated
+		List<T> notCached = super 
 				.getFiltered(item -> !cache.contains(new CachedElement(item)) && filter.test(item));
 		cache.addAll(notCached.stream().map(item -> new CachedElement(item)).toList());
 		items.addAll(notCached);
@@ -122,14 +120,14 @@ public class CacheDecorator<T> implements DAO<T> {
 				}
 			}
 		}
-		T item = decorated.get(obj);
+		T item = super.get(obj);
 		cache.add(new CachedElement(item));
 		return item;
 	}
 
 	@Override
 	public void save(T obj) {
-		decorated.save(obj);
+		super.save(obj);
 		CachedElement toSave = new CachedElement(obj);
 		cache.remove(toSave);
 		cache.add(toSave);
@@ -137,7 +135,7 @@ public class CacheDecorator<T> implements DAO<T> {
 
 	@Override
 	public boolean add(T obj) {
-		boolean res = decorated.add(obj);
+		boolean res = super.add(obj);
 		if (res) {
 			cache.add(new CachedElement(obj));
 		}
@@ -146,7 +144,7 @@ public class CacheDecorator<T> implements DAO<T> {
 
 	@Override
 	public void delete(T obj) throws RecordNotFoundException {
-		decorated.delete(obj);
+		super.delete(obj);
 		cache.remove(new CachedElement(obj));
 	}
 
