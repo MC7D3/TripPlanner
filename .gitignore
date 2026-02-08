@@ -1,2 +1,4 @@
 target/*
+data/*
+configuration.properties
 
