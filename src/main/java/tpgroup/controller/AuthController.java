@@ -11,11 +11,12 @@ import tpgroup.persistence.DAO;
 import tpgroup.persistence.factory.DAOFactory;
 
 public class AuthController {
-	private AuthController() {
+
+	public AuthController() {
 		super();
 	}
 
-	public static boolean validateCredentials(UserBean user) {
+	public boolean validateCredentials(UserBean user) {
 		try {
 			DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 			User fullCred = userDao.get(new User(user.getEmail(), null));
@@ -29,7 +30,7 @@ public class AuthController {
 		}
 	}
 
-	public static boolean executeRegistration(UserBean user) throws InvalidBeanParamException {
+	public boolean executeRegistration(UserBean user) throws InvalidBeanParamException {
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		String encPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
 		if (!BCrypt.checkpw(user.getConfPassword(), encPassword)) {
@@ -43,7 +44,7 @@ public class AuthController {
 		return res;
 	}
 
-	public static void logout() {
+	public void logout() {
 		Session.resetSession();
 	}
 }

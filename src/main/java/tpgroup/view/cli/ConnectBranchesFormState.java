@@ -11,6 +11,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class ConnectBranchesFormState extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
 	public ConnectBranchesFormState() {
 		super();
 	}
@@ -18,17 +20,20 @@ public class ConnectBranchesFormState extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			List<BranchBean> validConnections = RoomGController.getBranches().stream().filter(branch -> branch.getEvents().isEmpty()).collect(Collectors.toList());
-			System.out.println("NOTE: to go back without performing the connection, select no choice on the second node selection");
-			BranchBean parent = FormFieldFactory.getInstance().newSelectItem("select from where u want the connection to start:", validConnections).get();
+			List<BranchBean> validConnections = roomGCtrl.getBranches().stream()
+					.filter(branch -> branch.getEvents().isEmpty()).collect(Collectors.toList());
+			System.out.println(
+					"NOTE: to go back without performing the connection, select no choice on the second node selection");
+			BranchBean parent = FormFieldFactory.getInstance()
+					.newSelectItem("select from where u want the connection to start:", validConnections).get();
 			validConnections.remove(parent);
-			BranchBean child = FormFieldFactory.getInstance().newSelectItem("select where u want the connection to go:", validConnections, true).get();
-			CliViewState next = RoomGController.connectBranches(parent, child);
+			BranchBean child = FormFieldFactory.getInstance()
+					.newSelectItem("select where u want the connection to go:", validConnections, true).get();
+			CliViewState next = roomGCtrl.connectBranches(parent, child);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 	}
 
-	
 }

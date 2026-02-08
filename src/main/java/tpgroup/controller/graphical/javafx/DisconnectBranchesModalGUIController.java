@@ -23,9 +23,11 @@ public class DisconnectBranchesModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+
 	@FXML
 	public void initialize() {
-		List<BranchBean> disBranches = TripController.getAllBranches();
+		List<BranchBean> disBranches = tripCtrl.getAllBranches();
 		disParentBranchCmBox.getItems().addAll(disBranches);
 	}
 
@@ -34,7 +36,7 @@ public class DisconnectBranchesModalGUIController extends FxController {
 		BranchBean parent = disParentBranchCmBox.getValue();
 		if (parent != null) {
 			disChildBranchCmBox.getItems().clear();
-			TripBean trip = TripController.getTrip();
+			TripBean trip = tripCtrl.getTrip();
 			Map<BranchBean, Set<BranchBean>> connMapping = trip.getTripGraph().getConnectionsMapping();
 			List<BranchBean> connectedBranches = connMapping
 					.getOrDefault(parent, java.util.Collections.emptySet())
@@ -54,7 +56,7 @@ public class DisconnectBranchesModalGUIController extends FxController {
 			return;
 		}
 
-		TripController.disconnectBranches(parent, child);
+		tripCtrl.disconnectBranches(parent, child);
 		outLogTxt.setText("Branches disconnected successfully!");
 		Stage stage = (Stage) outLogTxt.getScene().getWindow();
 		stage.close();

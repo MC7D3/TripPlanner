@@ -8,6 +8,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class RemoveProposalForm extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
 	public RemoveProposalForm() {
 		super();
 	}
@@ -16,8 +18,8 @@ public class RemoveProposalForm extends CliViewState {
 	public void present() {
 		try {
 			ProposalBean toRemove = FormFieldFactory.getInstance().newSelectItem(
-					"select the proposal u want to remove:", RoomGController.getLoggedUserProposals()).get();
-			CliViewState next = RoomGController.removeProposal(toRemove);
+					"select the proposal u want to remove:", roomGCtrl.getLoggedUserProposals()).get();
+			CliViewState next = roomGCtrl.removeProposal(toRemove);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

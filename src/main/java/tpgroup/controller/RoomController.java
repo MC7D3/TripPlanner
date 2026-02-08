@@ -14,30 +14,24 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class RoomController {
 
-	private RoomController() {
+	public RoomController() {
 		super();
 	}
 
-	public static RoomBean getEnteredRoom() {
+	public RoomBean getEnteredRoom() {
 		return new RoomBean(Session.getInstance().getEnteredRoom());
 	}
 
-	public static void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException {
+	public void createRoom(RoomBean newRoom) throws RoomGenConflictException, InvalidBeanParamException {
 		Room room = new Room(newRoom.getName(), Session.getInstance().getLogged(), newRoom.getTrip().getCountry(),
 				newRoom.getTrip().getMainCity());
-		if (!POIController.isValidCountry(room.getTrip().getCountry())) {
-			throw new InvalidBeanParamException("country");
-		}
-		if (!POIController.isValidCity(room.getTrip().getMainCity())) {
-			throw new InvalidBeanParamException("city");
-		}
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		if (!roomDao.add(room))
 			throw new RoomGenConflictException();
 		Session.getInstance().setEnteredRoom(room);
 	}
 
-	public static void deleteRoom() {
+	public void deleteRoom() {
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		try {
 			roomDao.delete(Session.getInstance().getEnteredRoom());
@@ -47,13 +41,13 @@ public class RoomController {
 		}
 	}
 
-	public static List<RoomBean> getJoinedRooms() {
+	public List<RoomBean> getJoinedRooms() {
 		DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 		List<Room> joined  = roomDao.getFiltered(room -> room.getMembers().contains(Session.getInstance().getLogged()));
 		return joined.stream().map(item -> new RoomBean(item)).toList();
 	}
 
-	public static boolean abbandonRoom(RoomBean toAbbandonBean) {
+	public boolean abbandonRoom(RoomBean toAbbandonBean) {
 		try {
 			User user = Session.getInstance().getLogged();
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
@@ -72,7 +66,7 @@ public class RoomController {
 		return true;
 	}
 
-	public static boolean enterRoom(RoomBean room) {
+	public boolean enterRoom(RoomBean room) {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 			Room entered = roomDao.get(new Room(room.getCode()));
@@ -83,11 +77,11 @@ public class RoomController {
 		return true;
 	}
 
-	public static boolean amIAdmin() {
+	public boolean amIAdmin() {
 		return Session.getInstance().getEnteredRoom().getAdmin().equals(Session.getInstance().getLogged());
 	}
 
-	public static boolean amIAdmin(RoomBean room) {
+	public boolean amIAdmin(RoomBean room) {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 			Room fullRoom = roomDao.get(new Room(room.getCode()));
@@ -97,7 +91,7 @@ public class RoomController {
 		}
 	}
 
-	public static boolean joinRoom(RoomBean roomCode) {
+	public boolean joinRoom(RoomBean roomCode) {
 		try {
 			DAO<Room> roomDao = DAOFactory.getInstance().getDAO(Room.class);
 			Room joined = roomDao.get(new Room(roomCode.getCode()));

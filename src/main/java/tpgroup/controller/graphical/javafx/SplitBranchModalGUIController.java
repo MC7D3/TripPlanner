@@ -21,9 +21,11 @@ public class SplitBranchModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+
 	@FXML
 	public void initialize() {
-		List<BranchBean> branches = TripController.getAllBranches();
+		List<BranchBean> branches = tripCtrl.getAllBranches();
 		branchCmBox.getItems().addAll(branches);
 	}
 
@@ -51,7 +53,7 @@ public class SplitBranchModalGUIController extends FxController {
 			return;
 		}
 
-		boolean success = TripController.splitBranch(selectedBranch, pivotEvent);
+		boolean success = tripCtrl.splitBranch(selectedBranch, pivotEvent);
 
 		if (success) {
 			outLogTxt.setText("Branch split successfully!");

@@ -28,6 +28,8 @@ public class LoginGUIController extends FxController {
 	@FXML
 	private Button loginBtn;
 
+	private final AuthController authCtrl = new AuthController();
+
 	@FXML
 	public void onLogin() {
 		try {
@@ -37,7 +39,7 @@ public class LoginGUIController extends FxController {
 				outLogTxt.setText("all the fields are required");
 				return;
 			}
-			if (AuthController.validateCredentials(new UserBean(email, pwd))) {
+			if (authCtrl.validateCredentials(new UserBean(email, pwd))) {
 				redirect("loggedMenu.fxml", (Stage) outLogTxt.getScene().getWindow());
 				return;
 			}

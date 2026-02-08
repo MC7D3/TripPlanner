@@ -7,6 +7,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class DeleteRoomConfirmationState extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
 	public DeleteRoomConfirmationState() {
 		super();
 	}
@@ -14,13 +16,15 @@ public class DeleteRoomConfirmationState extends CliViewState {
 	@Override
 	public void present() {
 		try {
-			boolean delete = FormFieldFactory.getInstance().newConfField("are you sure u want to proceed, all the room's data will be lost and cannot be recovered").get();
-			CliViewState next = RoomGController.deleteRoom(delete);
+			boolean delete = FormFieldFactory.getInstance()
+					.newConfField(
+							"are you sure u want to proceed, all the room's data will be lost and cannot be recovered")
+					.get();
+			CliViewState next = roomGCtrl.deleteRoom(delete);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 	}
 
-	
 }

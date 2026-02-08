@@ -21,9 +21,11 @@ public class ConnectBranchesModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+
 	@FXML
 	public void initialize() {
-		parentBranchCmBox.getItems().addAll(TripController.getGraphBranches());
+		parentBranchCmBox.getItems().addAll(tripCtrl.getGraphBranches());
 	}
 
 	@FXML
@@ -31,7 +33,7 @@ public class ConnectBranchesModalGUIController extends FxController {
 		BranchBean selectedParent = parentBranchCmBox.getValue();
 		if (selectedParent != null) {
 			childBranchCmBox.getItems().clear();
-			List<BranchBean> validChildren = TripController.getAllBranches().stream()
+			List<BranchBean> validChildren = tripCtrl.getAllBranches().stream()
 					.filter(b -> !b.equals(selectedParent))
 					.toList();
 
@@ -60,7 +62,7 @@ public class ConnectBranchesModalGUIController extends FxController {
 		}
 
 		try {
-			TripController.connectBranches(parent, child);
+			tripCtrl.connectBranches(parent, child);
 			outLogTxt.setText("Branches connected successfully!");
 			Stage stage = (Stage) outLogTxt.getScene().getWindow();
 			stage.close();

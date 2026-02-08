@@ -30,10 +30,12 @@ public class ProposeUpdateModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+
 	@FXML
 	public void initialize() {
 		// Load branches
-		List<BranchBean> branches = TripController.getAllBranches();
+		List<BranchBean> branches = tripCtrl.getAllBranches();
 		branchCmBox.getItems().addAll(branches);
 	}
 
@@ -70,7 +72,7 @@ public class ProposeUpdateModalGUIController extends FxController {
 
 		try {
 			IntervalBean newInterval = new IntervalBean(newStartTime, newEndTime);
-			boolean success = TripController.createUpdateProposal(selectedBranch, selectedEvent, newInterval);
+			boolean success = tripCtrl.createUpdateProposal(selectedBranch, selectedEvent, newInterval);
 
 			if (success) {
 				outLogTxt.setText("Update proposal submitted successfully!");

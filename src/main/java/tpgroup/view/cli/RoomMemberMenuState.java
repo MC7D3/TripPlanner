@@ -10,7 +10,10 @@ import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
 
 public class RoomMemberMenuState extends CliViewState {
+
 	protected final List<String> menuOptions;
+
+	private final RoomGController roomGCtrl = new RoomGController();
 
 	public RoomMemberMenuState() {
 		super();
@@ -23,7 +26,7 @@ public class RoomMemberMenuState extends CliViewState {
 	public void present() {
 		try {
 			String chosen = FormFieldFactory.getInstance().newSelectItem(menuOptions).get();
-			CliViewState next = RoomGController.process(chosen);
+			CliViewState next = roomGCtrl.process(chosen);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e);

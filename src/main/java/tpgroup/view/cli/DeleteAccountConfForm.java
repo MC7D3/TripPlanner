@@ -7,6 +7,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class DeleteAccountConfForm extends CliViewState {
 
+	private final LoggedMenuGController loggedMenuGCtrl = new LoggedMenuGController();
+
 	public DeleteAccountConfForm() {
 		super();
 	}
@@ -16,7 +18,7 @@ public class DeleteAccountConfForm extends CliViewState {
 		try {
 			boolean answer = FormFieldFactory.getInstance()
 					.newConfField("are you sure you want to proceed, this operation cannot be undone (yes/no):").get();
-			CliViewState next = LoggedMenuGController.processDeleteRequest(answer);
+			CliViewState next = loggedMenuGCtrl.processDeleteRequest(answer);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

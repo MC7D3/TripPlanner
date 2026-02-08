@@ -16,6 +16,9 @@ import tpgroup.model.exception.RoomGenConflictException;
 public class CreateRoomGUIController extends FxController {
 	private static final Integer ATTEMPTS = 3;
 
+	private final RoomController roomCtrl = new RoomController();
+	private final POIController poiCtrl = new POIController();
+
 	@FXML
 	private TextField roomName;
 
@@ -29,36 +32,43 @@ public class CreateRoomGUIController extends FxController {
 	private Text outLogTxt;
 
 	@FXML
-	public void createRoom(){
+	public void createRoom() {
 		boolean success = false;
-		for(int attempt = 0; attempt < ATTEMPTS && !success; attempt++){
-			try{
-				RoomController.createRoom(new RoomBean(roomName.getText(), countryCmBox.getValue(), cityCmBox.getValue()));
+		for (int attempt = 0; attempt < ATTEMPTS && !success; attempt++) {
+			try {
+				RoomBean roomBean = new RoomBean(roomName.getText(), countryCmBox.getValue(), cityCmBox.getValue()); 
+				if (!poiCtrl.isValidCountry(countryCmBox.getValue())) {
+					throw new InvalidBeanParamException("country");
+				}
+				if (!poiCtrl.isValidCity(cityCmBox.getValue())) {
+					throw new InvalidBeanParamException("city");
+				}
+				roomCtrl.createRoom(roomBean);
 				outLogTxt.setText("room created successfully!");
 				((Stage) outLogTxt.getScene().getWindow()).close();
 				success = true;
-			}catch(InvalidBeanParamException e){
+			} catch (InvalidBeanParamException e) {
 				outLogTxt.setText("ERROR: " + e.getMessage());
 				break;
-			}catch(RoomGenConflictException e){
-				//it does another attempt, no actions needed
+			} catch (RoomGenConflictException e) {
+				// it does another attempt, no actions needed
 			}
 		}
 	}
 
 	@FXML
-	public void refreshCityCmBox(){
-		if(countryCmBox.getValue() != null){
+	public void refreshCityCmBox() {
+		if (countryCmBox.getValue() != null) {
 			cityCmBox.getItems().clear();
-			cityCmBox.getItems().addAll(POIController.getAllCities(countryCmBox.getValue()));
+			cityCmBox.getItems().addAll(poiCtrl.getAllCities(countryCmBox.getValue()));
 		}
 	}
 
 	@FXML
-	public void initialize(){
-		List<String> availableCountries = POIController.getAllCountries();
+	public void initialize() {
+		List<String> availableCountries = poiCtrl.getAllCountries();
 		countryCmBox.getItems().clear();
 		countryCmBox.getItems().addAll(availableCountries);
 	}
-	
+
 }

@@ -8,6 +8,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class EnterRoomFormState extends CliViewState {
 
+	private final LoggedMenuGController loggedMenuGCtrl = new LoggedMenuGController();
+
 	public EnterRoomFormState() {
 		super();
 	}
@@ -16,8 +18,8 @@ public class EnterRoomFormState extends CliViewState {
 	public void present() {
 		try {
 			RoomBean chosen = FormFieldFactory.getInstance()
-					.newSelectItem("select a room to enter:", LoggedMenuGController.getJoinedRooms(), true).get();
-			CliViewState next = LoggedMenuGController.enterRoom(chosen);
+					.newSelectItem("select a room to enter:", loggedMenuGCtrl.getJoinedRooms(), true).get();
+			CliViewState next = loggedMenuGCtrl.enterRoom(chosen);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

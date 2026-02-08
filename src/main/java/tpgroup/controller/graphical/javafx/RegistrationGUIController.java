@@ -31,10 +31,12 @@ public class RegistrationGUIController extends FxController {
 	@FXML
 	private Button registerBtn;
 
+	private final AuthController authCtrl = new AuthController();
+
 	@FXML
 	public void onRegistration() {
 		try {
-			if (AuthController.executeRegistration(new UserBean(emailTxt.getText(), pwdTxt.getText(), confPwdTxt.getText()))) {
+			if (authCtrl.executeRegistration(new UserBean(emailTxt.getText(), pwdTxt.getText(), confPwdTxt.getText()))) {
 				redirect("loggedMenu.fxml", (Stage) outLogTxt.getScene().getWindow());
 			} else {
 				outLogTxt.setText("the account already exists");

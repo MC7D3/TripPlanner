@@ -26,10 +26,14 @@ import tpgroup.view.cli.statemachine.CliViewState;
 public class LoggedMenuGController {
 	private static final String ERROR_PROMPT = "ERROR: ";
 
-	private LoggedMenuGController() {
+	private final POIController poiCtrl = new POIController();
+	private final RoomController roomCtrl = new RoomController();
+	private final OptionsController optionsCtrl = new OptionsController();
+
+	public LoggedMenuGController() {
 	}
 
-	public static CliViewState process(String choice) {
+	public CliViewState process(String choice) {
 		switch (choice) {
 			case "create new room":
 				return new NewRoomFormState();
@@ -51,10 +55,16 @@ public class LoggedMenuGController {
 
 	}
 
-	private static boolean attemptCreation(RoomBean roomBean, int attempts) throws InvalidBeanParamException{
+	private boolean attemptCreation(RoomBean roomBean, int attempts) throws InvalidBeanParamException {
 		for (int attempt = 0; attempt < attempts; attempt++) {
 			try {
-				RoomController.createRoom(roomBean);
+				if (!poiCtrl.isValidCountry(roomBean.getTrip().getCountry())) {
+					throw new InvalidBeanParamException("country");
+				}
+				if (!poiCtrl.isValidCity(roomBean.getTrip().getMainCity())) {
+					throw new InvalidBeanParamException("city");
+				}
+				roomCtrl.createRoom(roomBean);
 				return true;
 			} catch (RoomGenConflictException e) {
 				// it does another attempt, no actions needed
@@ -63,7 +73,7 @@ public class LoggedMenuGController {
 		return false;
 	}
 
-	public static CliViewState createNewRoom(String name, String country, String city) {
+	public CliViewState createNewRoom(String name, String country, String city) {
 		CliViewState ret = new NewRoomFormState();
 		if (name.isEmpty() || country == null || city == null) {
 			return new LoggedMenuState();
@@ -71,7 +81,7 @@ public class LoggedMenuGController {
 		try {
 			RoomBean newRoom = new RoomBean(name, country, city);
 			boolean created = false;
-			if(attemptCreation(newRoom, 3)){
+			if (attemptCreation(newRoom, 3)) {
 				ret = new RoomAdminMenuState();
 				ret.setOutLogTxt("room created successfully!");
 				created = true;
@@ -86,21 +96,21 @@ public class LoggedMenuGController {
 		return ret;
 	}
 
-	public static List<String> getAllCountries() {
-		return POIController.getAllCountries();
+	public List<String> getAllCountries() {
+		return poiCtrl.getAllCountries();
 	}
 
-	public static List<String> getAllCities(String ofCountry) {
-		return POIController.getAllCities(ofCountry);
+	public List<String> getAllCities(String ofCountry) {
+		return poiCtrl.getAllCities(ofCountry);
 	}
 
-	public static CliViewState joinRoom(String roomCode) {
+	public CliViewState joinRoom(String roomCode) {
 		CliViewState ret = new JoinRoomFormState();
 		if (roomCode.isEmpty()) {
 			return new LoggedMenuState();
 		}
 		try {
-			if (RoomController.joinRoom(new RoomBean(roomCode))) {
+			if (roomCtrl.joinRoom(new RoomBean(roomCode))) {
 				ret.setOutLogTxt("room joined successfully!");
 				ret = new RoomMemberMenuState();
 			}
@@ -110,12 +120,12 @@ public class LoggedMenuGController {
 		return ret;
 	}
 
-	public static CliViewState enterRoom(RoomBean chosen) {
+	public CliViewState enterRoom(RoomBean chosen) {
 		if (chosen == null) {
 			return new LoggedMenuState();
 		}
-		RoomController.enterRoom(chosen);
-		if (RoomController.amIAdmin()) {
+		roomCtrl.enterRoom(chosen);
+		if (roomCtrl.amIAdmin()) {
 			return new RoomAdminMenuState();
 		} else {
 			return new RoomMemberMenuState();
@@ -123,19 +133,19 @@ public class LoggedMenuGController {
 
 	}
 
-	public static List<RoomBean> getJoinedRooms() {
-		return RoomController.getJoinedRooms();
+	public List<RoomBean> getJoinedRooms() {
+		return roomCtrl.getJoinedRooms();
 	}
 
-	public static CliViewState abbandonRoom(RoomBean chosen) {
+	public CliViewState abbandonRoom(RoomBean chosen) {
 		if (chosen == null) {
 			return new LoggedMenuState();
 		}
-		RoomController.abbandonRoom(chosen);
+		roomCtrl.abbandonRoom(chosen);
 		return new LoggedMenuState();
 	}
 
-	public static CliViewState processOptionsChoice(String choice) {
+	public CliViewState processOptionsChoice(String choice) {
 		switch (choice) {
 			case "change password":
 				return new UpdatePwdFormState();
@@ -146,11 +156,11 @@ public class LoggedMenuGController {
 		}
 	}
 
-	public static CliViewState updatePwd(String password, String confPwd) {
+	public CliViewState updatePwd(String password, String confPwd) {
 		CliViewState ret = new OptionsMenuState();
 		try {
 			if (!password.isEmpty() && !confPwd.isEmpty()) {
-				OptionsController.updatePassword(new UserBean("updatepwd@invalidprovider.com", password, confPwd));
+				optionsCtrl.updatePassword(new UserBean("updatepwd@invalidprovider.com", password, confPwd));
 				ret.setOutLogTxt("password updated succesfully!");
 			}
 		} catch (InvalidBeanParamException e) {
@@ -160,10 +170,10 @@ public class LoggedMenuGController {
 
 	}
 
-	public static CliViewState processDeleteRequest(boolean answer) {
+	public CliViewState processDeleteRequest(boolean answer) {
 		CliViewState ret = new OptionsMenuState();
 		if (answer) {
-			OptionsController.deleteAccount();
+			optionsCtrl.deleteAccount();
 			ret = new UnloggedMenuState();
 			ret.setOutLogTxt("account deleted succesfully!");
 		}

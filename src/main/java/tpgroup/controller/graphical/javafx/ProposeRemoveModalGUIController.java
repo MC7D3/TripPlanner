@@ -21,9 +21,11 @@ public class ProposeRemoveModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+
 	@FXML
 	public void initialize() {
-		List<BranchBean> delBranches = TripController.getAllBranches();
+		List<BranchBean> delBranches = tripCtrl.getAllBranches();
 		delBranchCmBox.getItems().addAll(delBranches);
 	}
 
@@ -51,7 +53,7 @@ public class ProposeRemoveModalGUIController extends FxController {
 			return;
 		}
 
-		boolean success = TripController.createRemoveProposal(selectedBranch, selectedEvent);
+		boolean success = tripCtrl.createRemoveProposal(selectedBranch, selectedEvent);
 
 		if (success) {
 			outLogTxt.setText("Removal proposal submitted successfully!");

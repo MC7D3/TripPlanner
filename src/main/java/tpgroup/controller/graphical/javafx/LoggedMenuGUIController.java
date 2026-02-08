@@ -25,6 +25,10 @@ public class LoggedMenuGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+
+	private final RoomController roomCtrl = new RoomController();
+	private final AuthController authCtrl = new AuthController();
+
 	@FXML
 	public void joinRoom() {
 		open("joinRoomModal.fxml", (Stage) grid.getScene().getWindow());
@@ -44,12 +48,12 @@ public class LoggedMenuGUIController extends FxController {
 
 	@FXML
 	public void logout() {
-		AuthController.logout();
+		authCtrl.logout();
 		redirect("login.fxml", (Stage) grid.getScene().getWindow());
 	}
 
 	public void handleRoomExit(RoomCardGUIController ctrl) {
-		RoomController.abbandonRoom(ctrl.getRoom());
+		roomCtrl.abbandonRoom(ctrl.getRoom());
 		buildUI();
 	}
 
@@ -63,7 +67,7 @@ public class LoggedMenuGUIController extends FxController {
 			grid.getChildren().clear();
 			grid.getRowConstraints().clear();
 
-			List<RoomBean> rooms = RoomController.getJoinedRooms();
+			List<RoomBean> rooms = roomCtrl.getJoinedRooms();
 
 			int columnsPerRow = 3;
 			int col = 0;

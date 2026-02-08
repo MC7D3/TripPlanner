@@ -88,10 +88,13 @@ public class RoomViewGUIController extends FxController {
 	private SmartGraphPanel<String, String> graphView;
 	private Digraph<String, String> graph;
 
+	private final TripController tripCtrl = new TripController();
+	private final RoomController roomCtrl = new RoomController();
+	
 	@FXML
 	public void initialize() {
 
-		RoomBean currentRoom = RoomController.getEnteredRoom();
+		RoomBean currentRoom = roomCtrl.getEnteredRoom();
 		if (currentRoom != null) {
 			roomNameTxt.setText(currentRoom.getName());
 			roomCodeTxt.setText("Code: " + currentRoom.getCode());
@@ -99,7 +102,7 @@ public class RoomViewGUIController extends FxController {
 					+ currentRoom.getTrip().getCountry());
 		}
 
-		boolean isAdmin = RoomController.amIAdmin();
+		boolean isAdmin = roomCtrl.amIAdmin();
 		adminActionsBox.setVisible(isAdmin);
 		adminActionsBox.setManaged(isAdmin);
 
@@ -109,7 +112,7 @@ public class RoomViewGUIController extends FxController {
 	}
 
 	private void initializeGraph() {
-		TripBean currentTrip = TripController.getTrip();
+		TripBean currentTrip = tripCtrl.getTrip();
 
 		graph = new DigraphEdgeList<>();
 
@@ -118,7 +121,7 @@ public class RoomViewGUIController extends FxController {
 			graph.insertVertex(nodeId);
 		}
 
-		TripController.getTrip().getTripGraph().getConnectionsMapping().forEach((parent, children) -> {
+		tripCtrl.getTrip().getTripGraph().getConnectionsMapping().forEach((parent, children) -> {
 			String parentId = parent.getShortId();
 			children.forEach(child -> {
 				String childId = child.getShortId();
@@ -135,7 +138,7 @@ public class RoomViewGUIController extends FxController {
 
 		graphView.setVertexDoubleClickAction(vertex -> {
 			String nodeId = vertex.getUnderlyingVertex().element();
-			BranchBean selectedBranch = TripController.getAllBranches().stream()
+			BranchBean selectedBranch = tripCtrl.getAllBranches().stream()
 					.filter(b -> b.getId().toString().startsWith(nodeId))
 					.findFirst().get();
 			outLogTxt.setText("Selected branch: " + selectedBranch);
@@ -160,7 +163,7 @@ public class RoomViewGUIController extends FxController {
 	private void loadStagingArea() {
 		stagingContainer.getChildren().clear();
 
-		List<StagingBranchBean> stagingBranches = TripController.getStagingBranches();
+		List<StagingBranchBean> stagingBranches = tripCtrl.getStagingBranches();
 
 		if (stagingBranches.isEmpty()) {
 			Label emptyLabel = new Label("No staging branches");
@@ -243,7 +246,7 @@ public class RoomViewGUIController extends FxController {
 	@FXML
 	public void onCreateBranch() {
 		try {
-			TripController.createBranch();
+			tripCtrl.createBranch();
 			outLogTxt.setText("Branch created successfully!");
 			refreshGraph();
 		} catch (Exception e) {

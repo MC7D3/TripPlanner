@@ -8,6 +8,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class AbbandonRoomFormState extends CliViewState{
 
+	private final LoggedMenuGController loggedMenuGCtrl = new LoggedMenuGController();
+
 	public AbbandonRoomFormState() {
 		super();
 	}
@@ -15,8 +17,8 @@ public class AbbandonRoomFormState extends CliViewState{
 	@Override
 	public void present() {
 		try {
-			RoomBean chosen = FormFieldFactory.getInstance().newSelectItem("select room to leave:", LoggedMenuGController.getJoinedRooms(), true).get();
-			CliViewState next = LoggedMenuGController.abbandonRoom(chosen);
+		RoomBean chosen = FormFieldFactory.getInstance().newSelectItem("select room to leave:", loggedMenuGCtrl.getJoinedRooms(), true).get();
+			CliViewState next = loggedMenuGCtrl.abbandonRoom(chosen);
 			System.out.println("room abbandoned succesfully!");
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {

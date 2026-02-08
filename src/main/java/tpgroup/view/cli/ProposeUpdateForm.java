@@ -11,6 +11,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class ProposeUpdateForm extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
 	public ProposeUpdateForm() {
 		super();
 	}
@@ -19,7 +21,7 @@ public class ProposeUpdateForm extends CliViewState {
 	public void present() {
 		try {
 			BranchBean chosenNode = FormFieldFactory.getInstance().newSelectItem(
-					"select the branch:", RoomGController.getBranches()).get();
+					"select the branch:", roomGCtrl.getBranches()).get();
 			EventBean chosenEvent = FormFieldFactory.getInstance()
 					.newSelectItem("select the event you want to update:",
 							new ArrayList<>(chosenNode.getEvents()))
@@ -30,7 +32,8 @@ public class ProposeUpdateForm extends CliViewState {
 			String endTimeTxt = FormFieldFactory.getInstance()
 					.newDefault("new end time (es 23-01-2025 15:30):", str -> str)
 					.get();
-			RoomGController.createUpdateProposal(chosenNode, chosenEvent, startTimeTxt, endTimeTxt);
+			CliViewState next = roomGCtrl.createUpdateProposal(chosenNode, chosenEvent, startTimeTxt, endTimeTxt);
+			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}

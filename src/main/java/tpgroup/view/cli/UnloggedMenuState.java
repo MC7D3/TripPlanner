@@ -7,7 +7,9 @@ import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
 
-public class UnloggedMenuState extends CliViewState{
+public class UnloggedMenuState extends CliViewState {
+
+	private final UnloggedGController unloggedGCtrl = new UnloggedGController();
 
 	public UnloggedMenuState() {
 		super();
@@ -18,11 +20,11 @@ public class UnloggedMenuState extends CliViewState{
 		String choice = "";
 		try {
 			choice = FormFieldFactory.getInstance().newSelectItem(List.of("login", "register", "exit")).get();
-			CliViewState next = UnloggedGController.process(choice);
+			CliViewState next = unloggedGCtrl.process(choice);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 	}
-	
+
 }

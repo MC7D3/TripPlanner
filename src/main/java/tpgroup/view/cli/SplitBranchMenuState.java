@@ -11,18 +11,26 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class SplitBranchMenuState extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
+	public SplitBranchMenuState() {
+		super();
+	}
+
 	@Override
 	public void present() {
 		try {
 			System.out.println("NOTE: if u want to go back just do not choose anything in the pivot selection");
 			BranchBean toSplit = FormFieldFactory.getInstance()
-					.newSelectItem("select the branch u want to split into two:", RoomGController.getBranches())
+					.newSelectItem("select the branch u want to split into two:", roomGCtrl.getBranches())
 					.get();
-			System.out.println("NOTE: the first event of this node has been hidden to avoid leaving an empty node in the graph\nthe pivot selection is inclusive hence the pivot element will go in the new node");
+			System.out.println(
+					"NOTE: the first event of this node has been hidden to avoid leaving an empty node in the graph\nthe pivot selection is inclusive hence the pivot element will go in the new node");
 			List<EventBean> toSplitEvents = toSplit.getEvents().stream().toList();
 			toSplitEvents.removeFirst();
-			EventBean pivot = FormFieldFactory.getInstance().newSelectItem("select where u want to perform the split:", toSplitEvents, true).get();
-			CliViewState next = RoomGController.splitBranch(toSplit, pivot);
+			EventBean pivot = FormFieldFactory.getInstance()
+					.newSelectItem("select where u want to perform the split:", toSplitEvents, true).get();
+			CliViewState next = roomGCtrl.splitBranch(toSplit, pivot);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

@@ -10,9 +10,11 @@ public class RoomDeleteConfModalGUIController extends FxController{
 	@FXML
 	private Button proceedBtn;
 
+	private final OptionsController optionsCtrl = new OptionsController();
+
 	@FXML
 	private void onSubmit(){
-		OptionsController.deleteAccount();
+		optionsCtrl.deleteAccount();
 		Stage confStage = (Stage) proceedBtn.getScene().getWindow();
 		Stage roomStage = (Stage) confStage.getOwner();
 		confStage.close();

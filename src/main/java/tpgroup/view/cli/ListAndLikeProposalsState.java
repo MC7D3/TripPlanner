@@ -6,7 +6,9 @@ import tpgroup.model.exception.FormFieldIOException;
 import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
 
-public class ListAndLikeProposalsState extends CliViewState{
+public class ListAndLikeProposalsState extends CliViewState {
+
+	private final RoomGController roomGCtrl = new RoomGController();
 
 	public ListAndLikeProposalsState() {
 		super();
@@ -17,12 +19,12 @@ public class ListAndLikeProposalsState extends CliViewState{
 		try {
 			ProposalBean chosen = null;
 			System.out.println("NOTE: if u want to go back, choose the no option value");
-			chosen = FormFieldFactory.getInstance().newSelectItem(RoomGController.getProposalsSortedByLike(), true).get();
-			CliViewState next = RoomGController.likeProposal(chosen);
+			chosen = FormFieldFactory.getInstance().newSelectItem(roomGCtrl.getProposalsSortedByLike(), true).get();
+			CliViewState next = roomGCtrl.likeProposal(chosen);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());
 		}
 	}
-	
+
 }

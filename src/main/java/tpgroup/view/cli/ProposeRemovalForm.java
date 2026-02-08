@@ -11,6 +11,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class ProposeRemovalForm extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
 	public ProposeRemovalForm() {
 		super();
 	}
@@ -20,10 +22,13 @@ public class ProposeRemovalForm extends CliViewState {
 		try {
 			System.out.println("NOTE: if u want to go back keep the event selection after the node selection empty");
 			BranchBean chosenNode = FormFieldFactory.getInstance().newSelectItem(
-					"select the branch where you want to propose the removal of the event:", RoomGController.getBranches()).get();
+					"select the branch where you want to propose the removal of the event:", roomGCtrl.getBranches(),
+					true).get();
 			EventBean chosenEvent = FormFieldFactory.getInstance()
-					.newSelectItem("select the event you want to remove:", new ArrayList<>(chosenNode.getEvents()), true).get();
-			CliViewState next = RoomGController.createRemoveProposal(chosenNode, chosenEvent);
+					.newSelectItem("select the event you want to remove:", new ArrayList<>(chosenNode.getEvents()),
+							true)
+					.get();
+			CliViewState next = roomGCtrl.createRemoveProposal(chosenNode, chosenEvent);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

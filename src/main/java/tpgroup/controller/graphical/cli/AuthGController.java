@@ -11,17 +11,19 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class AuthGController {
 
-	private AuthGController() {
+	private final AuthController authCtrl = new AuthController();
+
+	public AuthGController() {
 	}
 
-	public static CliViewState login(String email, String password) {
+	public CliViewState login(String email, String password) {
 		if (email.isEmpty() && password.isEmpty()) {
 			return new UnloggedMenuState();
 		}
 
 		CliViewState ret = new LoginFormState();
 		try {
-			boolean result = AuthController.validateCredentials(new UserBean(email, password));
+			boolean result = authCtrl.validateCredentials(new UserBean(email, password));
 			if (result) {
 				ret = new LoggedMenuState();
 				ret.setOutLogTxt("login Succesful");
@@ -34,13 +36,13 @@ public class AuthGController {
 		return ret;
 	}
 
-	public static CliViewState register(String email, String password, String confPassword){
+	public CliViewState register(String email, String password, String confPassword){
 		CliViewState ret = new RegistrationFormState();
 		if (email.isEmpty() && password.isEmpty() && confPassword.isEmpty()) {
 			return new UnloggedMenuState();
 		}
 		try {
-			boolean result = AuthController.executeRegistration(new UserBean(email, password, confPassword));
+			boolean result = authCtrl.executeRegistration(new UserBean(email, password, confPassword));
 			if(result) {
 				ret = new LoggedMenuState();
 				ret.setOutLogTxt("registration Succesful");

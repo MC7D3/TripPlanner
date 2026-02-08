@@ -20,6 +20,8 @@ public class OptionsGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final OptionsController optionsCtrl = new OptionsController();
+
 	@FXML
 	public void updatePassword(){
 		try {
@@ -27,7 +29,7 @@ public class OptionsGUIController extends FxController {
 			String confPwd = confNewPwdTxt.getText();
 			if(!password.isEmpty() && !confPwd.isEmpty()){
 				UserBean passwordBean = new UserBean("updatepwd@invalidprovider.com", password, confPwd);
-				OptionsController.updatePassword(passwordBean);
+				optionsCtrl.updatePassword(passwordBean);
 				Stage optionStage = (Stage) outLogTxt.getScene().getWindow();
 				Stage rootStage = (Stage) optionStage.getOwner();
 				optionStage.close();

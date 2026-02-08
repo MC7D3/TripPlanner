@@ -6,7 +6,8 @@ import tpgroup.view.cli.component.FormFieldFactory;
 import tpgroup.view.cli.statemachine.CliViewState;
 
 public class LoginFormState extends CliViewState {
-	
+
+	private final AuthGController authGCtrl = new AuthGController();
 
 	public LoginFormState() {
 		super();
@@ -19,7 +20,7 @@ public class LoginFormState extends CliViewState {
 			System.out.println("NOTE: if u want to go back keep both field blank");
 			String email = ref.newDefault("email:", str -> str).get();
 			String password = ref.newPwdField("password:").get();
-			CliViewState next = AuthGController.login(email, password);
+			CliViewState next = authGCtrl.login(email, password);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

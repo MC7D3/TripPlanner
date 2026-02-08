@@ -11,11 +11,11 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class OptionsController {
 
-	private OptionsController() {
+	public OptionsController() {
 		super();
 	}
 
-	public static void updatePassword(UserBean newPassword) {
+	public void updatePassword(UserBean newPassword) {
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		String encPassword = BCrypt.hashpw(newPassword.getPassword(), BCrypt.gensalt());
 		User updatedCred = new User(Session.getInstance().getLogged().getEmail(), encPassword);
@@ -23,7 +23,7 @@ public class OptionsController {
 		Session.getInstance().setLogged(updatedCred);
 	}
 
-	public static void deleteAccount() {
+	public void deleteAccount() {
 		DAO<User> userDao = DAOFactory.getInstance().getDAO(User.class);
 		try {
 			userDao.delete(Session.getInstance().getLogged());

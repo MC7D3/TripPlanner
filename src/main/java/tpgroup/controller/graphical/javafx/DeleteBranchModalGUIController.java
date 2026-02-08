@@ -20,9 +20,11 @@ public class DeleteBranchModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+	
 	@FXML
 	public void initialize() {
-		List<BranchBean> branches = TripController.getDeletionCandidates();
+		List<BranchBean> branches = tripCtrl.getDeletionCandidates();
 		branchCmBox.getItems().addAll(branches);
 	}
 
@@ -35,7 +37,7 @@ public class DeleteBranchModalGUIController extends FxController {
 			return;
 		}
 
-		TripController.removeBranch(selectedBranch);
+		tripCtrl.removeBranch(selectedBranch);
 		outLogTxt.setText("Branch deleted successfully!");
 		Stage stage = (Stage) outLogTxt.getScene().getWindow();
 		stage.close();

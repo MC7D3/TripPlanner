@@ -77,15 +77,18 @@ public class ProposeAddModalGUIController extends FxController {
 
     private List<POIBean> availablePOIs;
 
+	private final TripController tripCtrl = new TripController();
+	private final POIController poiCtrl = new POIController();
+
     @FXML
     public void initialize() {
-        List<BranchBean> branches = TripController.getAllBranches();
+        List<BranchBean> branches = tripCtrl.getAllBranches();
         branchCmBox.getItems().addAll(branches);
 
         minRatingCmBox.getItems().addAll("one star", "two star", "three star", "four star", "five star");
         maxRatingCmBox.getItems().addAll("one star", "two star", "three star", "four star", "five star");
 
-        availablePOIs = POIController.getAllPOI();
+        availablePOIs = poiCtrl.getAllPOI();
         poiCmBox.getItems().addAll(availablePOIs);
 
         initializeSpinners();
@@ -153,7 +156,7 @@ public class ProposeAddModalGUIController extends FxController {
 
         try {
             POIFilterBean filters = new POIFilterBean(minRating, maxRating, tags);
-            availablePOIs = POIController.getPOIFiltered(filters);
+            availablePOIs = poiCtrl.getPOIFiltered(filters);
             poiCmBox.getItems().clear();
             poiCmBox.getItems().addAll(availablePOIs);
         } catch (InvalidBeanParamException e) {
@@ -204,7 +207,7 @@ public class ProposeAddModalGUIController extends FxController {
                 return;
             }
             
-            boolean success = TripController.createAddProposal(selectedBranch, selectedPOI, interval);
+            boolean success = tripCtrl.createAddProposal(selectedBranch, selectedPOI, interval);
 
             if (success) {
                 outLogTxt.setText("Proposal submitted successfully!");

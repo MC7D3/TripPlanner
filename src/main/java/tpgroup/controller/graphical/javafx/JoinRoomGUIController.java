@@ -17,6 +17,8 @@ public class JoinRoomGUIController extends FxController{
 	@FXML
 	private Text outLogTxt;
 
+	private final RoomController roomCtrl = new RoomController();
+
 	@FXML
 	public void joinRoom(){
 		try {
@@ -25,7 +27,7 @@ public class JoinRoomGUIController extends FxController{
 				outLogTxt.setText("room's code not provided");
 				return;
 			}
-			if(RoomController.joinRoom(new RoomBean(roomCode))){
+			if(roomCtrl.joinRoom(new RoomBean(roomCode))){
 				Stage joinRoomStage = (Stage) outLogTxt.getScene().getWindow();
 				Stage rootStage = (Stage) joinRoomStage.getOwner();
 				joinRoomStage.close();

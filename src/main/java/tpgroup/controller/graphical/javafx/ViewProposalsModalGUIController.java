@@ -32,6 +32,9 @@ public class ViewProposalsModalGUIController extends FxController {
 	@FXML
 	private Text outLogTxt;
 
+	private final TripController tripCtrl = new TripController();
+	private final RoomController roomCtrl = new RoomController();
+
 	@FXML
 	public void initialize() {
 		loadProposals();
@@ -46,8 +49,8 @@ public class ViewProposalsModalGUIController extends FxController {
 		proposalsContainer.getChildren().clear();
 
 		List<ProposalBean> proposals = new ArrayList<>(showMyOnlyChk.isSelected()
-				? TripController.getLoggedUserProposals()
-				: TripController.getAllProposals());
+				? tripCtrl.getLoggedUserProposals()
+				: tripCtrl.getAllProposals());
 
 		if (proposals.isEmpty()) {
 			String emptyMessage = showMyOnlyChk.isSelected()
@@ -110,18 +113,18 @@ public class ViewProposalsModalGUIController extends FxController {
 		likeBtn.setStyle("-fx-font-size: 11; -fx-padding: 4 12;");
 		likeBtn.getStyleClass().add("button-primary");
 		likeBtn.setOnAction(e -> {
-			TripController.likeProposal(proposal);
+			tripCtrl.likeProposal(proposal);
 			loadProposals();
 			outLogTxt.setText("Proposal liked/unliked");
 		});
 		actionsBox.getChildren().add(likeBtn);
 
-		if (RoomController.amIAdmin()) {
+		if (roomCtrl.amIAdmin()) {
 			Button acceptBtn = new Button("Accept");
 			acceptBtn.getStyleClass().add("button-primary");
 			acceptBtn.setStyle("-fx-font-size: 11; -fx-padding: 4 12; -fx-background-color: #27ae60;");
 			acceptBtn.setOnAction(e -> {
-				boolean success = TripController.acceptProposal(proposal);
+				boolean success = tripCtrl.acceptProposal(proposal);
 				if (success) {
 					loadProposals();
 					outLogTxt.setText("Proposal accepted successfully!");
@@ -132,7 +135,7 @@ public class ViewProposalsModalGUIController extends FxController {
 			actionsBox.getChildren().add(acceptBtn);
 		}
 
-		if (TripController.getLoggedUserProposals().contains(proposal)) {
+		if (tripCtrl.getLoggedUserProposals().contains(proposal)) {
 			Region spacer = new Region();
 			HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 			actionsBox.getChildren().add(spacer);
@@ -141,7 +144,7 @@ public class ViewProposalsModalGUIController extends FxController {
 			removeBtn.getStyleClass().add("button-cancel");
 			removeBtn.setStyle("-fx-font-size: 11; -fx-padding: 4 12;");
 			removeBtn.setOnAction(e -> {
-				TripController.removeProposal(proposal);
+				tripCtrl.removeProposal(proposal);
 				loadProposals();
 				outLogTxt.setText("Proposal removed");
 			});

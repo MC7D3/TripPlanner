@@ -11,6 +11,8 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class ProposeAddForm extends CliViewState {
 
+	private final RoomGController roomGCtrl = new RoomGController();
+
 	public ProposeAddForm() {
 		super();
 	}
@@ -19,7 +21,8 @@ public class ProposeAddForm extends CliViewState {
 	public void present() {
 		try {
 			System.out.println("NOTE: if u want to go back keep the following field blank");
-			BranchBean chosenBranch= FormFieldFactory.getInstance().newSelectItem( "select the branch where u want to propose the new event:", RoomGController.getBranches(), true).get();
+			BranchBean chosenBranch = FormFieldFactory.getInstance().newSelectItem(
+					"select the branch where u want to propose the new event:", roomGCtrl.getBranches(), true).get();
 			System.out.println("filter poi search:");
 			System.out.println("insert values only if u want to specify that filter, else keep empty");
 			String minRatingTxt = FormFieldFactory.getInstance()
@@ -29,13 +32,16 @@ public class ProposeAddForm extends CliViewState {
 			List<String> chosenTags = FormFieldFactory.getInstance()
 					.newMultiItem("select tags filters (fun/families/food/culture/gastronomy):", str -> str).get();
 			POIBean poi = FormFieldFactory.getInstance()
-					.newSelectItem("select the point of interest:", RoomGController.getFilteredPOIs(minRatingTxt, maxRatingTxt, chosenTags), true).get();
-			System.out.println("NOTE: u can keep the start time empty, that way the event will put after the last one in the node");
+					.newSelectItem("select the point of interest:",
+							roomGCtrl.getFilteredPOIs(minRatingTxt, maxRatingTxt, chosenTags), true)
+					.get();
+			System.out.println(
+					"NOTE: u can keep the start time empty, that way the event will put after the last one in the node");
 			String startTimeTxt = FormFieldFactory.getInstance()
 					.newDefault("start time (es 23-01-2025 14:30):", str -> str).get();
 			String endTimeTxt = FormFieldFactory.getInstance().newDefault("end time (es 23-01-2025 15:30):", str -> str)
 					.get();
-			CliViewState next = RoomGController.createAddProposal(poi, chosenBranch, startTimeTxt, endTimeTxt);
+			CliViewState next = roomGCtrl.createAddProposal(poi, chosenBranch, startTimeTxt, endTimeTxt);
 			this.machine.setState(next);
 		} catch (FormFieldIOException e) {
 			System.err.println("ERROR: " + e.getMessage());

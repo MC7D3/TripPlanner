@@ -13,54 +13,54 @@ import tpgroup.persistence.factory.DAOFactory;
 
 public class POIController {
 
-	private POIController() {
+	public POIController() {
 		super();
 	}
 
-	public static List<POIBean> getAllPOI(){
+	public List<POIBean> getAllPOI(){
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 		return poiDao.getAll().stream().map(poi -> new POIBean(poi)).toList();
 	}
 
-	private static List<POIBean> getPOIFiltered(List<Tag> tags){
+	private List<POIBean> getPOIFiltered(List<Tag> tags){
 		return getPOIFiltered().stream().filter(poi -> poi.getTags().containsAll(tags)).toList();
 	}
 
-	private static List<POIBean> getPOIFiltered(){
+	private List<POIBean> getPOIFiltered(){
 		String destCountry = Session.getInstance().getEnteredRoom().getTrip().getCountry();
 		String destCity = Session.getInstance().getEnteredRoom().getTrip().getMainCity();
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 		return poiDao.getFiltered(poi -> poi.getCountry().equals(destCountry) && poi.getCity().equals(destCity)).stream().map(poi -> new POIBean(poi)).toList();
 	}
 
-	private static List<POIBean> getPOIFiltered(Rating minRating, List<Tag> tags){
+	private List<POIBean> getPOIFiltered(Rating minRating, List<Tag> tags){
 		return getPOIFiltered(tags).stream().filter(poi -> poi.getRating().ordinal() >= minRating.ordinal()).toList();
 	}
 
-	private static List<POIBean> getPOIFiltered(Rating minRating, Rating maxRating, List<Tag> tags){
+	private List<POIBean> getPOIFiltered(Rating minRating, Rating maxRating, List<Tag> tags){
 		return getPOIFiltered(minRating, tags).stream().filter(poi -> poi.getRating().ordinal() <= maxRating.ordinal()).toList();
 	}
 
-	public static List<POIBean> getPOIFiltered(POIFilterBean filters){
+	public List<POIBean> getPOIFiltered(POIFilterBean filters){
 		return getPOIFiltered(filters.getMinRating(), filters.getMaxRating(), filters.getChosenTags());
 	}
 	
-	public static boolean isValidCountry(String country){
+	public boolean isValidCountry(String country){
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 		return poiDao.getAll().stream().anyMatch(poi -> poi.getCountry().equals(country));
 	}
 
-	public static boolean isValidCity(String city){
+	public boolean isValidCity(String city){
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 		return poiDao.getAll().stream().anyMatch(poi -> poi.getCity().equals(city));
 	}
 
-    public static List<String> getAllCountries() {
+    public List<String> getAllCountries() {
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);
 		return poiDao.getAll().stream().map(poi -> poi.getCountry()).distinct().toList();
     }
 
-    public static List<String> getAllCities(String fromCountry) {
+    public List<String> getAllCities(String fromCountry) {
 		if(!isValidCountry(fromCountry))
 			throw new IllegalArgumentException();
 		DAO<PointOfInterest> poiDao = DAOFactory.getInstance().getDAO(PointOfInterest.class);

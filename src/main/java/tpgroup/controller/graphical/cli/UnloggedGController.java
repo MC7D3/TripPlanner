@@ -6,10 +6,10 @@ import tpgroup.view.cli.statemachine.CliViewState;
 
 public class UnloggedGController {
 
-	private UnloggedGController() {
+	public UnloggedGController() {
 	}
 
-	public static CliViewState process(String choice){
+	public CliViewState process(String choice){
 		switch(choice){
 			case "login": return new LoginFormState();
 			case "register": return new RegistrationFormState();

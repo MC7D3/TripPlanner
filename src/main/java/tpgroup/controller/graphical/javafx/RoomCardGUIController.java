@@ -30,6 +30,8 @@ public class RoomCardGUIController extends FxController{
 	@FXML
 	private Button abbandonRoomBtn;
 
+	private final RoomController roomCtrl = new RoomController();
+
 	public void setRoom(RoomBean room) {
 		this.room = room;
 		updateCardDisplay();
@@ -51,7 +53,7 @@ public class RoomCardGUIController extends FxController{
 		int memberCount = room.getMembers().size();
 		roomMembersTxt.setText(memberCount + " member" + (memberCount != 1 ? "s" : ""));
 
-		if (RoomController.amIAdmin(room)) {
+		if (roomCtrl.amIAdmin(room)) {
 			adminStatusTxt.setText("(Admin)");
 			adminStatusTxt.setVisible(true);
 			adminStatusTxt.setManaged(true);
@@ -67,7 +69,7 @@ public class RoomCardGUIController extends FxController{
 			return;
 		}
 
-		if (RoomController.enterRoom(room)) {
+		if (roomCtrl.enterRoom(room)) {
 			Stage stage = (Stage) roomNameTxt.getScene().getWindow();
 			redirect("roomView.fxml", stage);
 		} else {
@@ -84,7 +86,7 @@ public class RoomCardGUIController extends FxController{
             return;
         }
 
-        boolean success = RoomController.abbandonRoom(room);
+        boolean success = roomCtrl.abbandonRoom(room);
 
         if (success) {
             parentController.buildUI();
