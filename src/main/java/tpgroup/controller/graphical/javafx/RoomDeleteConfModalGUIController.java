@@ -3,18 +3,18 @@ package tpgroup.controller.graphical.javafx;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import tpgroup.controller.OptionsController;
+import tpgroup.controller.RoomController;
 
-public class RoomDeleteConfModalGUIController extends FxController{
+public class RoomDeleteConfModalGUIController extends FxController {
 
 	@FXML
 	private Button proceedBtn;
 
-	private final OptionsController optionsCtrl = new OptionsController();
+	private final RoomController roomCtrl = new RoomController();
 
 	@FXML
-	private void onSubmit(){
-		optionsCtrl.deleteAccount();
+	private void onSubmit() {
+		roomCtrl.deleteRoom();
 		Stage confStage = (Stage) proceedBtn.getScene().getWindow();
 		Stage roomStage = (Stage) confStage.getOwner();
 		confStage.close();
@@ -22,9 +22,9 @@ public class RoomDeleteConfModalGUIController extends FxController{
 	}
 
 	@FXML
-	private void onAbort(){
+	private void onAbort() {
 		Stage confStage = (Stage) proceedBtn.getScene().getWindow();
 		confStage.close();
 	}
-	
+
 }

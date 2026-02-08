@@ -2,8 +2,10 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
@@ -14,21 +16,49 @@
 	<children>
 		<Text styleClass="heading" text="Propose Event Update" style="-fx-font-size: 18;" />
 
-		<Label text="Select Branch:" styleClass="form-label" />
-		<ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field"
-			prefWidth="400" onAction="#onBranchSelected" />
+		<VBox spacing="5">
+			<Label text="Select Branch:" styleClass="combo-label" />
+			<ComboBox fx:id="branchCmBox" promptText="Select branch" styleClass="input-field"
+				prefWidth="400" onAction="#onBranchSelected" />
+		</VBox>
 
-		<Label text="Select Event to Update:" styleClass="form-label" />
-		<ComboBox fx:id="eventCmBox" promptText="Select event" styleClass="input-field"
-			prefWidth="400" />
+		<VBox spacing="5">
+			<Label text="Select Event to Update:" styleClass="combo-label" />
+			<ComboBox fx:id="eventCmBox" promptText="Select event" styleClass="input-field"
+				prefWidth="400" onAction="#onEventSelected"/>
+		</VBox>
 
-		<Label text="New Start Time (dd-MM-yyyy HH:mm):" styleClass="form-label" />
-		<TextField fx:id="newStartTimeTxt" promptText="e.g. 15-06-2024 14:00"
-			styleClass="input-field" />
+		<VBox spacing="5">
+			<Label text="New Start Date:" styleClass="combo-label" />
+			<DatePicker fx:id="startDatePicker" styleClass="input-field" prefWidth="200" />
+		</VBox>
 
-		<Label text="New End Time (dd-MM-yyyy HH:mm):" styleClass="form-label" />
-		<TextField fx:id="newEndTimeTxt" promptText="e.g. 15-06-2024 16:00"
-			styleClass="input-field" />
+		<HBox spacing="10">
+			<VBox spacing="5">
+				<Label text="Start Hour:" styleClass="combo-label" />
+				<Spinner fx:id="startHourSpinner" editable="true" min="0" max="23" initialValue="9" />
+			</VBox>
+			<VBox spacing="5">
+				<Label text="Start Minute:" styleClass="combo-label" />
+				<Spinner fx:id="startMinuteSpinner" editable="true" min="0" max="55" initialValue="0" />
+			</VBox>
+		</HBox>
+
+		<VBox spacing="5">
+			<Label text="New End Date:" styleClass="combo-label" />
+			<DatePicker fx:id="endDatePicker" styleClass="input-field" prefWidth="200" />
+		</VBox>
+
+		<HBox spacing="10">
+			<VBox spacing="5">
+				<Label text="End Hour:" styleClass="combo-label" />
+				<Spinner fx:id="endHourSpinner" editable="true" min="0" max="23" initialValue="17" />
+			</VBox>
+			<VBox spacing="5">
+				<Label text="End Minute:" styleClass="combo-label" />
+				<Spinner fx:id="endMinuteSpinner" editable="true" min="0" max="55" initialValue="0" />
+			</VBox>
+		</HBox>
 
 		<Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
 

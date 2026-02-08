@@ -25,7 +25,7 @@ class RoomTest {
         Room room = new Room("TestRoom", admin, "Italy", "Rome");
         assertEquals("TestRoom", room.getName());
         assertEquals(admin, room.getAdmin());
-        assertTrue(room.getMembers().contains(admin)); // Admin auto-added
+        assertTrue(room.getMembers().contains(admin)); 
         assertEquals("Italy", room.getTrip().getCountry());
         assertEquals("Rome", room.getTrip().getMainCity());
         assertNotNull(room.getCode());
@@ -44,14 +44,14 @@ class RoomTest {
         Room room = new Room("TestRoom", admin, "Italy", "Rome");
         assertTrue(room.add(member));
         assertTrue(room.isMember(member));
-        assertEquals(2, room.size()); // Admin + member1
+        assertEquals(2, room.size());
     }
     
     @Test
     void testAddDuplicateMember() {
         Room room = new Room("TestRoom", admin, "Italy", "Rome");
         room.add(member);
-        assertFalse(room.add(member)); // Should return false
+        assertFalse(room.add(member));
     }
     
     @Test
@@ -66,6 +66,6 @@ class RoomTest {
     void testRoomEquality() {
         Room room1 = new Room("code123");
         Room room2 = new Room("code123");
-        assertEquals(room1, room2); // Equality based on code
+        assertEquals(room1, room2);
     }
 }

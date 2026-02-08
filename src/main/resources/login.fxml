@@ -32,7 +32,7 @@
             </Group>
             <Text fx:id="outLogTxt" strokeType="OUTSIDE" strokeWidth="0.0" />
             <Hyperlink style="-fx-underline: true;" text="Don't have an account? Register" onAction="#redirectRegistration"/>
-            <Button mnemonicParsing="false" styleClass="button-primary" text="Login" onAction="#onLogin"/>
+            <Button fx:id="loginBtn" mnemonicParsing="false" styleClass="button-primary" text="Login" onAction="#onLogin"/>
          </children>
       </VBox>
    </children>
