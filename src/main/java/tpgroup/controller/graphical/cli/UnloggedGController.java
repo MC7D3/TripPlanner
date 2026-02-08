@@ -7,6 +7,7 @@ import tpgroup.view.cli.statemachine.CliViewState;
 public class UnloggedGController {
 
 	public UnloggedGController() {
+		super();
 	}
 
 	public CliViewState process(String choice){

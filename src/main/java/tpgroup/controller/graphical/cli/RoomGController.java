@@ -43,6 +43,7 @@ public class RoomGController {
 	private final POIController poiCtrl = new POIController();
 
 	public RoomGController() {
+		super();
 	}
 
 	public CliViewState process(String choice) {

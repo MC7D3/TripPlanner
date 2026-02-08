@@ -31,6 +31,7 @@ public class LoggedMenuGController {
 	private final OptionsController optionsCtrl = new OptionsController();
 
 	public LoggedMenuGController() {
+		super();
 	}
 
 	public CliViewState process(String choice) {

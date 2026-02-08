@@ -14,6 +14,7 @@ public class AuthGController {
 	private final AuthController authCtrl = new AuthController();
 
 	public AuthGController() {
+		super();
 	}
 
 	public CliViewState login(String email, String password) {
